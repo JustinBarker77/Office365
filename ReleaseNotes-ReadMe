@@ -1,0 +1,9 @@
+PowerShell script to pull back all SKU's in an Office 365 tenancy, and then report on a per SKU basis which components are assigned to which users, in a colour coded Excel workbook.
+
+Also includes friendly name translation for SKU's and components.
+
+Base scripts used to build from are referenced in the script itself. Co-authors for creating the updated script include Mark Lofthouse and Robin Dadswell.
+
+Offered as-is without warranty or support.
+
+Requires MSOnline PowerShell module, and Excel
