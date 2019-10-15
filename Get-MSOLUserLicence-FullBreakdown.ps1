@@ -10,12 +10,13 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.11
+		Version 1.12
 		Updated: 20190602	V1.7	Parameters, Comment based help, creates folder and deletes folder for csv's, require statements
 		Updated: 20190614	V1.8	Added more SKU's and Components
         Updated: 20190627	V1.9	Added more Components
 		Updated: 20190830   V1.10   Added more components. Updated / renamed refreshed licences
-		Updated: 20190916	V.11	Added more components and SKU's
+		Updated: 20190916	V1.11	Added more components and SKU's
+		Updated: 20191015	V1.12	Tidied up old comments
 		Release Date: 20190530
 		Release notes from original:
 			1.0 - Initital Release                                                                                                            	
@@ -36,7 +37,6 @@ param (
 		Mandatory,
 		HelpMessage="Name of the Company you are running this against. This will form part of the output file name")
 		]
-		# Provide the name of the company you are running this against. This will then part of the Excel file name.
 		[string]$CompanyName,
 	[Parameter(
 		Mandatory,
@@ -130,17 +130,14 @@ function componentlicenseswitch {
 		"MIP_S_CLP1"      				{$thisLicence = "Information Protection for Office 365 - Standard"}
 		"MIP_S_CLP2"      				{$thisLicence = "Information Protection for Office 365 - Professional"}
 		"ERP_TRIAL_INSTANCE"      		{$thisLicence = "AX7 Instance"}
-
 		"PROJECT_PROFESSIONAL"      	{$thisLicence = "Project P3"}
 		"FLOW_FOR_PROJECT"      		{$thisLicence = "Data Integration for Project with Flow"}
 		"DYN365_CDS_PROJECT"      		{$thisLicence = "Common Data Service for Project"}
 		"SHAREPOINT_PROJECT"      		{$thisLicence = "Project Online Service"}
 		"PROJECT_CLIENT_SUBSCRIPTION"	{$thisLicence = "Project Online Desktop Client"}
-
 		"ONEDRIVE_BASIC"      			{$thisLicence = "OneDrive Basic"}
 		"VISIOONLINE"      				{$thisLicence = "Visio Online"}
 		"VISIO_CLIENT_SUBSCRIPTION" 	{$thisLicence = "Visio Pro for Office 365"}
-
 		"WHITEBOARD_PLAN1"      	{$thisLicence = "Whiteboard Plan 1"}
 		"OFFICEMOBILE_SUBSCRIPTION" {$thisLicence = "Office Mobile Apps for Office 365"}
 		"BPOS_S_TODO_1"      		{$thisLicence = "To-Do Plan 1"}
@@ -148,16 +145,12 @@ function componentlicenseswitch {
 		"STREAM_O365_E1"      		{$thisLicence = "Microsoft Stream for O365 E1"}
 		"SHAREPOINTSTANDARD"      	{$thisLicence = "SharePoint Online (Plan 1)"}
 		"EXCHANGE_S_STANDARD"      	{$thisLicence = "Exchange Online (Plan 1)"}
-		
 		"WHITEBOARD_PLAN2"      	{$thisLicence = "Whiteboard Plan 2"}
 		"WHITEBOARD_PLAN3"      	{$thisLicence = "Whiteboard Plan 3"}
-
 		"MICROSOFT_SEARCH"      	{$thisLicence = "Microsoft Search"}
 		"PREMIUM_ENCRYPTION"      	{$thisLicence = "Premium Encryption"}
 		"RMS_S_ADHOC"      			{$thisLicence = "Rights Management Adhoc"}
-
         "WIN10_PRO_ENT_SUB"      	{$thisLicence = "Win 10 Enterprise E3"}
-
         "WHITEBOARD_FIRSTLINE1"     {$thisLicence = "Whiteboard for Firstline"}
         "BPOS_S_TODO_FIRSTLINE"     {$thisLicence = "To-Do Firstline"}
         "WIN10_ENT_LOC_F1"          {$thisLicence = "Win 10 Enterprise E3 (Local Only)"}
@@ -203,19 +196,10 @@ function componentlicenseswitch {
 		"DYN365_TALENT_ENTERPRISE"	{$thisLicence = "Dynamics 365 for Talent"}
 		"DYN365_CDS_DYN_P2"			{$thisLicence = "Common Data Service"}
 		"ONEDRIVESTANDARD"			{$thisLicence = "OneDrive for Business (Plan 1)"}
-		
 		"Dynamics_365_Talent_Onboard"			{$thisLicence = "Dynamics 365 for Talent: Onboard"}
         "Dynamics_365_Onboarding_Free_PLAN"	    {$thisLicence = "Dynamics 365 for Talent: Onboard"}
         "Dynamics_365_Hiring_Free_PLAN"		    {$thisLicence = "Dynamics 365 for Talent: Attract"}
 		"Dynamics_365_for_HCM_Trial"		    {$thisLicence = "Dynamics_365_for_HCM_Trial"}
-		
-		#"EXC*" {$thisLicence = "Exchange Online" }
-		#"MCO*" {$thisLicence = "Lync Online" }
-		#"LYN*" {$thisLicence = "Lync Online" }
-		#"OFF*" {$thisLicence = "Office Profesional Plus" }
-		#"SHA*" {$thisLicence = "Sharepoint Online" }
-		#"*WAC*" {$thisLicence = "Office Web Apps" }
-		#"WAC*" {$thisLicence = "Office Web Apps" }
 		default {$thisLicence = $component }
 	}
 	Write-Output $thisLicence
