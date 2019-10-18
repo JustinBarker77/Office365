@@ -348,7 +348,7 @@ function RootLicenceswitch {
 		"POWERAPPS_INDIVIDUAL_USER"			{$RootLicence = "PowerApps and Logic Flows"}
 		"DYN365_AI_SERVICE_INSIGHTS"		{$RootLicence = "Dyn 365 CSI Trial"}
 		"Dynamics_365_for_Operations"		{$RootLicence = "Dyn 365 Unified Operations Plan"}
-		"Dynamics_365_Onboarding_SKU"		{$RootLicence = "Dyn 365 for Talent: Onboard"}
+		"Dynamics_365_Onboarding_SKU"		{$RootLicence = "Dyn 365 for Talent Onboard"}
 		"CCIBOTS_PRIVPREV_VIRAL"			{$RootLicence = "Dyn 365 AI for CSVAV"}
         "DYN365_BUSINESS_MARKETING"			{$RootLicence = "Dyn 365 Marketing"}
         "DYN365_RETAIL_TRIAL"			    {$RootLicence = "Dyn 365 Retail Trial"}
@@ -411,7 +411,7 @@ foreach ($license in $licensetype) {
 	Out-File -FilePath $LogFile -InputObject $headerstring -Encoding UTF8 -append
     # Loop through all users and write them to the CSV file 
     foreach ($user in $users) {
-        Write-Host ("Processing " + $user.displayname) 
+        Write-Verbose ("Processing " + $user.displayname) 
         $thislicense = $user.licenses | Where-Object {$_.accountskuid -eq $license.accountskuid} 
         $datastring = ($user.displayname + "`t" + $user.userprincipalname + "`t" + $rootLicence) 
         foreach ($row in $($thislicense.servicestatus)) {
@@ -419,9 +419,8 @@ foreach ($license in $licensetype) {
 			$datastring = ($datastring + "`t" + $($row.provisioningstatus)) 
         }
         Out-File -FilePath $LogFile -InputObject $datastring -Encoding UTF8 -append 
-    } 
+	}
 }             
-Write-Host ("Script Completed.  Results available in " + $LogFile)
 Write-Host ("Merging CSV Files")
 Function Merge-CSVFiles {
 	$csvFiles = Get-ChildItem ("$CSVPath\*") -Include *.csv
