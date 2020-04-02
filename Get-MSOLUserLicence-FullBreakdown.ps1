@@ -1,4 +1,4 @@
-﻿#Requires -Modules MSOnline
+#Requires -Modules MSOnline
 #Requires -Version 5
 
 <#
@@ -10,13 +10,14 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.12
+		Version 1.13
 		Updated: 20190602	V1.7	Parameters, Comment based help, creates folder and deletes folder for csv's, require statements
 		Updated: 20190614	V1.8	Added more SKU's and Components
-        Updated: 20190627	V1.9	Added more Components
-		Updated: 20190830   V1.10   Added more components. Updated / renamed refreshed licences
+        	Updated: 20190627	V1.9	Added more Components
+		Updated: 20190830   	V1.10   Added more components. Updated / renamed refreshed licences
 		Updated: 20190916	V1.11	Added more components and SKU's
 		Updated: 20191015	V1.12	Tidied up old comments
+        	Updated: 20200204   	V1.13   Added more SKU's and Components
 		Release Date: 20190530
 		Release notes from original:
 			1.0 - Initital Release                                                                                                            	
@@ -200,6 +201,9 @@ function componentlicenseswitch {
         "Dynamics_365_Onboarding_Free_PLAN"	    {$thisLicence = "Dynamics 365 for Talent: Onboard"}
         "Dynamics_365_Hiring_Free_PLAN"		    {$thisLicence = "Dynamics 365 for Talent: Attract"}
 		"Dynamics_365_for_HCM_Trial"		    {$thisLicence = "Dynamics_365_for_HCM_Trial"}
+        "TEAMS_FREE_SERVICE"			{$thisLicence = "Teams Free Service (Not assigned per user)"}
+        "MCOFREE"			        {$thisLicence = "MCO Free for Microsoft Teams (free)"}
+        "TEAMS_FREE"			    {$thisLicence = "Microsoft Teams (free)"}
 		default {$thisLicence = $component }
 	}
 	Write-Output $thisLicence
@@ -355,6 +359,7 @@ function RootLicenceswitch {
         "SKU_Dynamics_365_for_HCM_Trial"	{$RootLicence = "Dyn 365 Talent"}
         "AAD_PREMIUM_P2"			        {$RootLicence = "Azure AD Premium P2"}
         "MCOPSTN1"			                {$RootLicence = "Domestic Calling Plan"}
+        "TEAMS_FREE"			            {$RootLicence = "Microsoft Teams (Free)"}
 		default                             {$RootLicence = $licensesku }
 	}
 	Write-Output $RootLicence
