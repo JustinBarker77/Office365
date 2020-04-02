@@ -191,6 +191,7 @@ function componentlicenseswitch {
         "FLOW_FORMS_PRO"			{$thisLicence = "Flow for Forms Pro"}
         "DYN365_CDS_FORMS_PRO"		{$thisLicence = "Common Data Service"}
         "KAIZALA_O365_P1"		    {$thisLicence = "Microsoft Kaizala Pro (P1)"}
+        "KAIZALA_O365_P2"		    {$thisLicence = "Microsoft Kaizala Pro"}
 		"DYN365_CDS_DYN_APPS"		{$thisLicence = "Common Data Service"}
 		"Forms_Pro_Operations" 		{$thisLicence = "Microsoft Forms Pro for Operations"}
 		"Dynamics_365_for_Retail"	{$thisLicence = "Dynamics 365 for Retail"}
