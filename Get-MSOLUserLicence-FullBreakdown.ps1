@@ -13,7 +13,7 @@
 		Version 1.13
 		Updated: 20190602	V1.7	Parameters, Comment based help, creates folder and deletes folder for csv's, require statements
 		Updated: 20190614	V1.8	Added more SKU's and Components
-        	Updated: 20190627	V1.9	Added more Components
+       		Updated: 20190627	V1.9	Added more Components
 		Updated: 20190830   	V1.10   Added more components. Updated / renamed refreshed licences
 		Updated: 20190916	V1.11	Added more components and SKU's
 		Updated: 20191015	V1.12	Tidied up old comments
@@ -63,12 +63,20 @@ function componentlicenseswitch {
 		[parameter (Mandatory=$true, Position = 1)][string]$component
 	)
 	switch -wildcard ($($component)) {
-		"MYANALYTICS_P2"       {$thisLicence = "MyAnalytics Plan 2" }
-		"PAM_ENTERPRISE"       {$thisLicence = "Priviledged Access Management" }
+		#Office 365 E5
+        	"RECORDS_MANAGEMENT"		{$thisLicence = "Microsoft Records Management"}
+        	"INFO_GOVERNANCE"			{$thisLicence = "Microsoft Information Governance"}
+        	"DATA_INVESTIGATIONS"		{$thisLicence = "Microsoft Data Investigations"}
+        	"CUSTOMER_KEY"			    {$thisLicence = "Microsoft Customer Key"}
+        	"COMMUNICATIONS_DLP"		{$thisLicence = "Microsoft Communications DLP"}
+        	"COMMUNICATIONS_COMPLIANCE"	{$thisLicence = "Microsoft Communications Compliance"}
+        	"M365_ADVANCED_AUDITING"	{$thisLicence = "Microsoft 365 Advanced Auditing"}
+        	"MYANALYTICS_P2"       {$thisLicence = "Insights by MyAnalytics" }
+		"PAM_ENTERPRISE"       {$thisLicence = "O365 Priviledged Access Management" }
 		"BPOS_S_TODO_3"        {$thisLicence = "To-Do (Plan 3)" }
 		"FORMS_PLAN_E5"        {$thisLicence = "Microsoft Forms E5" }
 		"STREAM_O365_E5"       {$thisLicence = "Stream E5" }
-		"THREAT_INTELLIGENCE"  {$thisLicence = "ATP Plan 2" }
+		"THREAT_INTELLIGENCE"  {$thisLicence = "O365 ATP Plan 2" }
 		"Deskless"             {$thisLicence = "Microsoft StaffHub" }
 		"FLOW_O365_P3"         {$thisLicence = "Flow for Office 365" }
 		"POWERAPPS_O365_P3"    {$thisLicence = "PowerApps for Office 365" }
@@ -79,18 +87,19 @@ function componentlicenseswitch {
 		"LOCKBOX_ENTERPRISE"   {$thisLicence = "Customer Lockbox" }
 		"EXCHANGE_ANALYTICS"   {$thisLicence = "Microsoft MyAnalytics (Full)" }
 		"SWAY"                 {$thisLicence = "Sway" }
-		"ATP_ENTERPRISE"       {$thisLicence = "ATP Plan 1" }
-		"MCOEV"                {$thisLicence = "Phone System" }
-		"MCOMEETADV"           {$thisLicence = "Audio Conferencing" }
+		"ATP_ENTERPRISE"       {$thisLicence = "O365 ATP Plan 1 (not licenced individually)" }
+		"MCOEV"                {$thisLicence = "M365 Phone System" }
+		"MCOMEETADV"           {$thisLicence = "M365 Audio Conferencing" }
 		"BI_AZURE_P2"          {$thisLicence = "Power BI Pro" }
-		"INTUNE_O365"          {$thisLicence = "MDM for Office 365" }
+		"INTUNE_O365"          {$thisLicence = "MDM for Office 365 (not licenced individually)" }
 		"PROJECTWORKMANAGEMENT"{$thisLicence = "Microsoft Planner" }
-		"RMS_S_ENTERPRISE"     {$thisLicence = "Microsoft Azure AD Rights" }
+		"RMS_S_ENTERPRISE"     {$thisLicence = "Azure Rights Management" }
 		"YAMMER_ENTERPRISE"    {$thisLicence = "Yammer Enterprise" }
 		"OFFICESUBSCRIPTION"   {$thisLicence = "Office 365 ProPlus" }
-		"MCOSTANDARD"          {$thisLicence = "Skype for Business (Plan 2)" }
+		"MCOSTANDARD"          {$thisLicence = "Skype for Business Online (Plan 2)" }
 		"EXCHANGE_S_ENTERPRISE"{$thisLicence = "Exchange Online (Plan 2)" }
 		"SHAREPOINTENTERPRISE" {$thisLicence = "SharePoint Online (Plan 2)" }
+
 		"SHAREPOINTWAC"        {$thisLicence = "Office Online" }			
 		"EXCHANGE_S_FOUNDATION"{$thisLicence = "Core Exchange for non-Exch SKUs (e.g. setting profile pic)" }
 		"ATA"                  {$thisLicence = "Azure Advanced Threat Protection" }
@@ -129,7 +138,7 @@ function componentlicenseswitch {
 		"POWERAPPS_P2_VIRAL"      		{$thisLicence = "PowerApps Plan 2 Trial"}
 		"FLOW_P2_VIRAL_REAL"      		{$thisLicence = "Flow P2 Viral"}
 		"MIP_S_CLP1"      				{$thisLicence = "Information Protection for Office 365 - Standard"}
-		"MIP_S_CLP2"      				{$thisLicence = "Information Protection for Office 365 - Professional"}
+		"MIP_S_CLP2"      				{$thisLicence = "Information Protection for Office 365 - Premium"}
 		"ERP_TRIAL_INSTANCE"      		{$thisLicence = "AX7 Instance"}
 		"PROJECT_PROFESSIONAL"      	{$thisLicence = "Project P3"}
 		"FLOW_FOR_PROJECT"      		{$thisLicence = "Data Integration for Project with Flow"}
