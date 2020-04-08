@@ -18,7 +18,7 @@
 		Updated: 20190916	V1.11	Added more components and SKU's
 		Updated: 20191015	V1.12	Tidied up old comments
 		Updated: 20200204   	V1.13   Added more SKU's and Components
-		Updated: 20200408   	V1.14   Added more SKU's and Components
+		Updated: 20200408   	V1.14   Added Teams Exploratory SKU
 		Release Date: 20190530
 		Release notes from original:
 			1.0 - Initital Release                                                                                                            	
