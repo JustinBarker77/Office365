@@ -10,14 +10,15 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.13
+		Version 1.14
 		Updated: 20190602	V1.7	Parameters, Comment based help, creates folder and deletes folder for csv's, require statements
 		Updated: 20190614	V1.8	Added more SKU's and Components
-       		Updated: 20190627	V1.9	Added more Components
+       	Updated: 20190627	V1.9	Added more Components
 		Updated: 20190830   	V1.10   Added more components. Updated / renamed refreshed licences
 		Updated: 20190916	V1.11	Added more components and SKU's
 		Updated: 20191015	V1.12	Tidied up old comments
-        	Updated: 20200204   	V1.13   Added more SKU's and Components
+		Updated: 20200204   	V1.13   Added more SKU's and Components
+		Updated: 20200408   	V1.14   Added more SKU's and Components
 		Release Date: 20190530
 		Release notes from original:
 			1.0 - Initital Release                                                                                                            	
@@ -369,7 +370,8 @@ function RootLicenceswitch {
         "SKU_Dynamics_365_for_HCM_Trial"	{$RootLicence = "Dyn 365 Talent"}
         "AAD_PREMIUM_P2"			        {$RootLicence = "Azure AD Premium P2"}
         "MCOPSTN1"			                {$RootLicence = "Domestic Calling Plan"}
-        "TEAMS_FREE"			            {$RootLicence = "Microsoft Teams (Free)"}
+		"TEAMS_FREE"			            {$RootLicence = "Microsoft Teams (Free)"}
+		"TEAMS_EXPLORATORY"					{$RootLicence = "Microsoft Teams Exploratory"}
 		default                             {$RootLicence = $licensesku }
 	}
 	Write-Output $RootLicence
