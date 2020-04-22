@@ -10,15 +10,16 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.14
+		Version 1.15
 		Updated: 20190602	V1.7	Parameters, Comment based help, creates folder and deletes folder for csv's, require statements
 		Updated: 20190614	V1.8	Added more SKU's and Components
        	Updated: 20190627	V1.9	Added more Components
-		Updated: 20190830   	V1.10   Added more components. Updated / renamed refreshed licences
+		Updated: 20190830   V1.10   Added more components. Updated / renamed refreshed licences
 		Updated: 20190916	V1.11	Added more components and SKU's
 		Updated: 20191015	V1.12	Tidied up old comments
-		Updated: 20200204   	V1.13   Added more SKU's and Components
-		Updated: 20200408   	V1.14   Added Teams Exploratory SKU
+		Updated: 20200204   V1.13   Added more SKU's and Components
+		Updated: 20200408   V1.14   Added Teams Exploratory SKU
+		Updated: 20200422	V1.15   Formats to Segoe UI 9pt. Removed unnecessary True output. 
 		Release Date: 20190530
 		Release notes from original:
 			1.0 - Initital Release                                                                                                            	
@@ -474,11 +475,14 @@ Function Merge-CSVFiles {
 		$worksheet.application.activewindow.splitcolumn = 1
 		$worksheet.application.activewindow.splitrow = 1
 		$worksheet.application.activewindow.freezepanes = $true
+		$rows = $worksheet.UsedRange.Rows.count
+		$columns = $worksheet.UsedRange.Columns.count
+		$Selection = $worksheet.Range($worksheet.Cells(1,1), $worksheet.Cells($rows,$columns))
+		$Selection.Font.Name = "Segoe UI"
+		$Selection.Font.Size = 9
 		if ($Worksheet.Name -ne "AllLicences") {
 			Write-Host "Setting Conditional Formatting on "$Worksheet.Name
-			$rows = $worksheet.UsedRange.Rows.count
-			$columns = $worksheet.UsedRange.Columns.count
-			$Selection= $worksheet.range($worksheet.Cells(2,4), $worksheet.Cells($rows,$columns))
+			$Selection= $worksheet.Range($worksheet.Cells(2,4), $worksheet.Cells($rows,$columns))
 			$Selection.FormatConditions.Add($xlTextString, "", $xlContains, 'Success','Success',0,0) | Out-Null
 			$Selection.FormatConditions.Item(1).Interior.ColorIndex = 35
 			$Selection.FormatConditions.Item(1).Font.ColorIndex = 51
@@ -500,7 +504,7 @@ Function Merge-CSVFiles {
 	[System.GC]::Collect()
 	[System.GC]::WaitForPendingFinalizers()
 }
-Merge-CSVFiles -CSVPath $CSVPath -XLOutput $XLOutput
+Merge-CSVFiles -CSVPath $CSVPath -XLOutput $XLOutput | Out-Null
 Write-Host ("Tidying up - deleting CSV Files")
 Remove-Item $CSVPath -Recurse -Confirm:$false -Force
 Write-Host ("CSV Files Deleted")
