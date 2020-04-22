@@ -216,6 +216,9 @@ function componentlicenseswitch {
         "TEAMS_FREE_SERVICE"			{$thisLicence = "Teams Free Service (Not assigned per user)"}
         "MCOFREE"			        {$thisLicence = "MCO Free for Microsoft Teams (free)"}
         "TEAMS_FREE"			    {$thisLicence = "Microsoft Teams (free)"}
+        "ML_CLASSIFICATION"		    {$thisLicence = "Microsoft ML-Based Classification"}
+        "INSIDER_RISK_MANAGEMENT"   {$thisLicence = "Microsoft Insider Risk Management"}
+        "SAFEDOCS"			        {$thisLicence = "Office 365 SafeDocs"}
 		default {$thisLicence = $component }
 	}
 	Write-Output $thisLicence
@@ -357,6 +360,7 @@ function RootLicenceswitch {
         "ENTERPRISEPACKWITHOUTPROPLUS"      {$RootLicence = "Office 365 E3 No Pro Plus"}
 		"Win10_VDA_E3"                      {$RootLicence = "Windows 10 E3"}
 		"IDENTITY_THREAT_PROTECTION"		{$RootLicence = "Microsoft 365 E5 Security"}
+        "INFORMATION_PROTECTION_COMPLIANCE" {$RootLicence = "Microsoft 365 E5 Compliance"}
 		"EMS_FACULTY"						{$RootLicence = "EMS (Plan E3) Faculty"}
 		"POWER_BI_PRO_CE"					{$RootLicence = "Power BI Pro"}
 		"POWER_BI_PRO_FACULTY"				{$RootLicence = "Power BI Pro Faculty"}
