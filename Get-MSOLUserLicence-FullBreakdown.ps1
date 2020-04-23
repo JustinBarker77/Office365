@@ -66,14 +66,14 @@ function componentlicenseswitch {
 	)
 	switch -wildcard ($($component)) {
 		#Office 365 E5
-        	"RECORDS_MANAGEMENT"		{$thisLicence = "Microsoft Records Management"}
-        	"INFO_GOVERNANCE"			{$thisLicence = "Microsoft Information Governance"}
-        	"DATA_INVESTIGATIONS"		{$thisLicence = "Microsoft Data Investigations"}
-        	"CUSTOMER_KEY"			    {$thisLicence = "Microsoft Customer Key"}
-        	"COMMUNICATIONS_DLP"		{$thisLicence = "Microsoft Communications DLP"}
-        	"COMMUNICATIONS_COMPLIANCE"	{$thisLicence = "Microsoft Communications Compliance"}
-        	"M365_ADVANCED_AUDITING"	{$thisLicence = "Microsoft 365 Advanced Auditing"}
-        	"MYANALYTICS_P2"       {$thisLicence = "Insights by MyAnalytics" }
+		"RECORDS_MANAGEMENT"		{$thisLicence = "Microsoft Records Management"}
+		"INFO_GOVERNANCE"			{$thisLicence = "Microsoft Information Governance"}
+		"DATA_INVESTIGATIONS"		{$thisLicence = "Microsoft Data Investigations"}
+		"CUSTOMER_KEY"			    {$thisLicence = "Microsoft Customer Key"}
+		"COMMUNICATIONS_DLP"		{$thisLicence = "Microsoft Communications DLP"}
+		"COMMUNICATIONS_COMPLIANCE"	{$thisLicence = "Microsoft Communications Compliance"}
+		"M365_ADVANCED_AUDITING"	{$thisLicence = "Microsoft 365 Advanced Auditing"}
+		"MYANALYTICS_P2"       {$thisLicence = "Insights by MyAnalytics" }
 		"PAM_ENTERPRISE"       {$thisLicence = "O365 Priviledged Access Management" }
 		"BPOS_S_TODO_3"        {$thisLicence = "To-Do (Plan 3)" }
 		"FORMS_PLAN_E5"        {$thisLicence = "Microsoft Forms E5" }
