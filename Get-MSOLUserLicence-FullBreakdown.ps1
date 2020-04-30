@@ -20,6 +20,7 @@
 		Updated: 20200204   V1.13   Added more SKU's and Components
 		Updated: 20200408   V1.14   Added Teams Exploratory SKU
 		Updated: 20200422	V1.15   Formats to Segoe UI 9pt. Removed unnecessary True output. 
+		Updated: 20200430	V.16	Made script more readable for Product type within component breakdown
 		Release Date: 20190530
 		Release notes from original:
 			1.0 - Initital Release                                                                                                            	
@@ -65,71 +66,10 @@ function componentlicenseswitch {
 		[parameter (Mandatory=$true, Position = 1)][string]$component
 	)
 	switch -wildcard ($($component)) {
-		#Office 365 E5
-		"RECORDS_MANAGEMENT"		{$thisLicence = "Microsoft Records Management"}
-		"INFO_GOVERNANCE"			{$thisLicence = "Microsoft Information Governance"}
-		"DATA_INVESTIGATIONS"		{$thisLicence = "Microsoft Data Investigations"}
-		"CUSTOMER_KEY"			    {$thisLicence = "Microsoft Customer Key"}
-		"COMMUNICATIONS_DLP"		{$thisLicence = "Microsoft Communications DLP"}
-		"COMMUNICATIONS_COMPLIANCE"	{$thisLicence = "Microsoft Communications Compliance"}
-		"M365_ADVANCED_AUDITING"	{$thisLicence = "Microsoft 365 Advanced Auditing"}
-		"MYANALYTICS_P2"       {$thisLicence = "Insights by MyAnalytics" }
-		"PAM_ENTERPRISE"       {$thisLicence = "O365 Priviledged Access Management" }
-		"BPOS_S_TODO_3"        {$thisLicence = "To-Do (Plan 3)" }
-		"FORMS_PLAN_E5"        {$thisLicence = "Microsoft Forms E5" }
-		"STREAM_O365_E5"       {$thisLicence = "Stream E5" }
-		"THREAT_INTELLIGENCE"  {$thisLicence = "O365 ATP Plan 2" }
-		"Deskless"             {$thisLicence = "Microsoft StaffHub" }
-		"FLOW_O365_P3"         {$thisLicence = "Flow for Office 365" }
-		"POWERAPPS_O365_P3"    {$thisLicence = "PowerApps for Office 365" }
-		"TEAMS1"               {$thisLicence = "Microsoft Teams" }
-		"MCO_TEAMS_IW"         {$thisLicence = "Microsoft Teams Trial"}
-		"ADALLOM_S_O365"       {$thisLicence = "Office 365 Cloud App Security" }
-		"EQUIVIO_ANALYTICS"    {$thisLicence = "Office 365 Advanced eDiscovery" }
-		"LOCKBOX_ENTERPRISE"   {$thisLicence = "Customer Lockbox" }
-		"EXCHANGE_ANALYTICS"   {$thisLicence = "Microsoft MyAnalytics (Full)" }
-		"SWAY"                 {$thisLicence = "Sway" }
-		"ATP_ENTERPRISE"       {$thisLicence = "O365 ATP Plan 1 (not licenced individually)" }
-		"MCOEV"                {$thisLicence = "M365 Phone System" }
-		"MCOMEETADV"           {$thisLicence = "M365 Audio Conferencing" }
-		"BI_AZURE_P2"          {$thisLicence = "Power BI Pro" }
-		"INTUNE_O365"          {$thisLicence = "MDM for Office 365 (not licenced individually)" }
-		"PROJECTWORKMANAGEMENT"{$thisLicence = "Microsoft Planner" }
-		"RMS_S_ENTERPRISE"     {$thisLicence = "Azure Rights Management" }
-		"YAMMER_ENTERPRISE"    {$thisLicence = "Yammer Enterprise" }
-		"OFFICESUBSCRIPTION"   {$thisLicence = "Office 365 ProPlus" }
-		"MCOSTANDARD"          {$thisLicence = "Skype for Business Online (Plan 2)" }
-		"EXCHANGE_S_ENTERPRISE"{$thisLicence = "Exchange Online (Plan 2)" }
-		"SHAREPOINTENTERPRISE" {$thisLicence = "SharePoint Online (Plan 2)" }
-
-		"SHAREPOINTWAC"        {$thisLicence = "Office Online" }			
-		"EXCHANGE_S_FOUNDATION"{$thisLicence = "Core Exchange for non-Exch SKUs (e.g. setting profile pic)" }
-		"ATA"                  {$thisLicence = "Azure Advanced Threat Protection" }
-		"ADALLOM_S_STANDALONE" {$thisLicence = "Microsoft Cloud App Security" }
-		"RMS_S_PREMIUM2"       {$thisLicence = "Azure Information Protection Premium P2" }
-		"RMS_S_PREMIUM"        {$thisLicence = "Azure Information Protection Premium P1" } 
-		"INTUNE_A"             {$thisLicence = "Microsoft Intune" }
-		"AAD_PREMIUM_P2"       {$thisLicence = "Azure Active Directory Premium P2" }
-		"MFA_PREMIUM"          {$thisLicence = "Microsoft Azure Multi-Factor Authentication" }
-		"AAD_PREMIUM"          {$thisLicence = "Azure Active Directory Premium P1" }
-		"BPOS_S_TODO_2"        {$thisLicence = "To-Do (Plan 2)" }
-		"FORMS_PLAN_E3"        {$thisLicence = "Microsoft Forms (Plan E3)" }
-		"STREAM_O365_E3"       {$thisLicence = "Microsoft Stream for O365 E3 SKU" }
-		"FLOW_O365_P2"         {$thisLicence = "Flow for Office 365" }
-		"POWERAPPS_O365_P2"    {$thisLicence = "PowerApps for Office 365" }
-		"SPZA"                 {$thisLicence = "App Connect" }
-		"DYN365_CDS_VIRAL"     {$thisLicence = "Common Data Service" }
-		"FLOW_P2_VIRAL"        {$thisLicence = "Flow Free" }
-		"MICROSOFT_BUSINESS_CENTER" {$thisLicence = "Microsoft Business Center" }
-		"BI_AZURE_P0"          {$thisLicence = "Power BI (Free)" }
-		"ADALLOM_S_DISCOVERY"  {$thisLicence = "Cloud App Security Discovery" }
-		"POWERAPPS_O365_P1"    {$thisLicence = "PowerApps for Office 365"}
-		"FLOW_O365_P1"         {$thisLicence = "Flow for Office 365"}
-		"SHAREPOINTDESKLESS"   {$thisLicence = "SharePoint Online Kiosk"}
-		"FLOW_DYN_APPS"        {$thisLicence = "Flow for Dynamics 365"}
-		"POWERAPPS_DYN_APPS"   {$thisLicence = "PowerApps for Dynamics 365"}
-		"PROJECT_ESSENTIALS"   {$thisLicence = "Project Online Essentials"}
-		"NBENTERPRISE"         {$thisLicence = "Microsoft Social Engagement - Service Discontinuation"}
+		#AAD
+		"AAD_PREMIUM"           {$thisLicence = "Azure Active Directory Premium P1" }
+		"AAD_PREMIUM_P2"        {$thisLicence = "Azure Active Directory Premium P2" }
+		#Dynamics
 		"DYN365_ENTERPRISE_SALES" {$thisLicence = "Dynamics 365 for Sales"}
 		"Dynamics_365_for_Talent_Team_members" {$thisLicence = "Dynamics 365 for Talent Team members"}
 		"Dynamics_365_for_Retail_Team_members" {$thisLicence = "Dynamics 365 for Retail Team members"}
@@ -137,88 +77,168 @@ function componentlicenseswitch {
 		"DYN365_Enterprise_Talent_Attract_TeamMember" {$thisLicence = "Dynamics 365 for Talent - Attract Experience Team Member"}
 		"Dynamics_365_for_Operations_Team_members" {$thisLicence = "Dynamics_365_for_Operations_Team_members"}
 		"DYN365_ENTERPRISE_TEAM_MEMBERS"{$thisLicence = "Dynamics 365 for Team Members"}
-		"POWERAPPS_P2_VIRAL"      		{$thisLicence = "PowerApps Plan 2 Trial"}
-		"FLOW_P2_VIRAL_REAL"      		{$thisLicence = "Flow P2 Viral"}
-		"MIP_S_CLP1"      				{$thisLicence = "Information Protection for Office 365 - Standard"}
-		"MIP_S_CLP2"      				{$thisLicence = "Information Protection for Office 365 - Premium"}
-		"ERP_TRIAL_INSTANCE"      		{$thisLicence = "AX7 Instance"}
-		"PROJECT_PROFESSIONAL"      	{$thisLicence = "Project P3"}
-		"FLOW_FOR_PROJECT"      		{$thisLicence = "Data Integration for Project with Flow"}
-		"DYN365_CDS_PROJECT"      		{$thisLicence = "Common Data Service for Project"}
-		"SHAREPOINT_PROJECT"      		{$thisLicence = "Project Online Service"}
-		"PROJECT_CLIENT_SUBSCRIPTION"	{$thisLicence = "Project Online Desktop Client"}
-		"ONEDRIVE_BASIC"      			{$thisLicence = "OneDrive Basic"}
-		"VISIOONLINE"      				{$thisLicence = "Visio Online"}
-		"VISIO_CLIENT_SUBSCRIPTION" 	{$thisLicence = "Visio Pro for Office 365"}
-		"WHITEBOARD_PLAN1"      	{$thisLicence = "Whiteboard Plan 1"}
-		"OFFICEMOBILE_SUBSCRIPTION" {$thisLicence = "Office Mobile Apps for Office 365"}
-		"BPOS_S_TODO_1"      		{$thisLicence = "To-Do Plan 1"}
-		"FORMS_PLAN_E1"      		{$thisLicence = "Microsoft Forms (Plan E1)"}
-		"STREAM_O365_E1"      		{$thisLicence = "Microsoft Stream for O365 E1"}
-		"SHAREPOINTSTANDARD"      	{$thisLicence = "SharePoint Online (Plan 1)"}
-		"EXCHANGE_S_STANDARD"      	{$thisLicence = "Exchange Online (Plan 1)"}
-		"WHITEBOARD_PLAN2"      	{$thisLicence = "Whiteboard Plan 2"}
-		"WHITEBOARD_PLAN3"      	{$thisLicence = "Whiteboard Plan 3"}
-		"MICROSOFT_SEARCH"      	{$thisLicence = "Microsoft Search"}
-		"PREMIUM_ENCRYPTION"      	{$thisLicence = "Premium Encryption"}
-		"RMS_S_ADHOC"      			{$thisLicence = "Rights Management Adhoc"}
-        "WIN10_PRO_ENT_SUB"      	{$thisLicence = "Win 10 Enterprise E3"}
-        "WHITEBOARD_FIRSTLINE1"     {$thisLicence = "Whiteboard for Firstline"}
-        "BPOS_S_TODO_FIRSTLINE"     {$thisLicence = "To-Do Firstline"}
-        "WIN10_ENT_LOC_F1"          {$thisLicence = "Win 10 Enterprise E3 (Local Only)"}
-        "MCOIMP"                    {$thisLicence = "Skype for Business (Plan 1)"}
-        "POWERAPPS_O365_S1"         {$thisLicence = "PowerApps for Office 365 Firstline"}
-        "STREAM_O365_K"             {$thisLicence = "Stream for Office 365 Firstline"}
-        "POWERAPPS_O365_S1"      	{$thisLicence = "PowerApps for Office 365 Firstline"}
-        "FORMS_PLAN_K"      		{$thisLicence = "Microsoft Forms (Plan F1)"}
-        "FLOW_O365_S1"      		{$thisLicence = "Flow for Office 365 (F1)"}
-        "EXCHANGE_S_DESKLESS"      	{$thisLicence = "Exchange Online Firstline"}
-        "WINDEFATP"                	{$thisLicence = "Windows Defender ATP"}
-		"DYN365_ENTERPRISE_P1_IW"	{$thisLicence = "Dyn 365 P1 Trial Info Workers"}
-		"FLOW_DYN_P2"				{$thisLicence = "Flow for Dynamics 365"}
-		"POWERAPPS_DYN_P2"			{$thisLicence = "PowerApps for Dynamics 365"}
-		"DYN365_ENTERPRISE_P1"		{$thisLicence = "Dynamics Enterprise P1"}
-		"D365_CSI_EMBED_CE" 		{$thisLicence = "Dynamics 365 Customer Service Insights for CE Plan"}
-		"EXCHANGE_S_ARCHIVE_ADDON"	{$thisLicence = "Exchange Online Archiving Add-on"}
-		"DYN365_CDS_P1"				{$thisLicence = "Common Data Service"}
-		"FLOW_P1"					{$thisLicence = "Microsoft Flow Plan 1"}
-		"FLOW_P2"					{$thisLicence = "Microsoft Flow Plan 2"}
-		"POWERAPPS_P2"				{$thisLicence = "PowerApps Plan 2"}
-		"DYN365_CDS_P2"				{$thisLicence = "Common Data Service"}
-		"INFORMATION_BARRIERS"		{$thisLicence = "Information Barriers"}
-		"KAIZALA_STANDALONE"		{$thisLicence = "Microsoft Kaizala Pro"}
-		"KAIZALA_O365_P3"			{$thisLicence = "Kaizala for Office 365"}
-		"FLOW_CCI_BOTS"				{$thisLicence = "Flow for CCI Bots"}
 		"CCIBOTS_PRIVPREV_VIRAL"	{$thisLicence = "Dynamics 365 AI for Customer Service Virtual Agents Viral"}
 		"DYN365_CDS_CCI_BOTS"		{$thisLicence = "Common Data Service for CCI Bots"}
 		"DYN365_AI_SERVICE_INSIGHS"	{$thisLicence = "Dynamics 365 Customer Service Insights"}
 		"POWERAPPS_DYN_TEAM"		{$thisLicence = "PowerApps for Dynamics 365"}
 		"FLOW_DYN_TEAM"				{$thisLicence = "Flow for Dynamics 365"}
 		"DYN365_TEAM_MEMBERS"		{$thisLicence = "Dynamics 365 Team Members"}
-		"Forms_Pro_CE"				{$thisLicence = "Forms Pro for Customer Engagement Plan"}
-        "DYN365_BUSINESS_Marketing"	{$thisLicence = "Dynamics 365 Marketing"}
-        "DYN365_RETAIL_TRIAL"		{$thisLicence = "Dynamics 365 Retail Trial"}
-        "FORMS_PRO"			        {$thisLicence = "Forms Pro"}
-        "FLOW_FORMS_PRO"			{$thisLicence = "Flow for Forms Pro"}
-        "DYN365_CDS_FORMS_PRO"		{$thisLicence = "Common Data Service"}
-        "KAIZALA_O365_P1"		    {$thisLicence = "Microsoft Kaizala Pro (P1)"}
-        "KAIZALA_O365_P2"		    {$thisLicence = "Microsoft Kaizala Pro"}
-		"DYN365_CDS_DYN_APPS"		{$thisLicence = "Common Data Service"}
-		"Forms_Pro_Operations" 		{$thisLicence = "Microsoft Forms Pro for Operations"}
+		"DYN365_BUSINESS_Marketing"	{$thisLicence = "Dynamics 365 Marketing"}
+		"DYN365_RETAIL_TRIAL"		{$thisLicence = "Dynamics 365 Retail Trial"}
 		"Dynamics_365_for_Retail"	{$thisLicence = "Dynamics 365 for Retail"}
 		"DYN365_TALENT_ENTERPRISE"	{$thisLicence = "Dynamics 365 for Talent"}
-		"DYN365_CDS_DYN_P2"			{$thisLicence = "Common Data Service"}
-		"ONEDRIVESTANDARD"			{$thisLicence = "OneDrive for Business (Plan 1)"}
+		"ERP_TRIAL_INSTANCE"      		{$thisLicence = "AX7 Instance"}
 		"Dynamics_365_Talent_Onboard"			{$thisLicence = "Dynamics 365 for Talent: Onboard"}
-        "Dynamics_365_Onboarding_Free_PLAN"	    {$thisLicence = "Dynamics 365 for Talent: Onboard"}
-        "Dynamics_365_Hiring_Free_PLAN"		    {$thisLicence = "Dynamics 365 for Talent: Attract"}
+		"Dynamics_365_Onboarding_Free_PLAN"	    {$thisLicence = "Dynamics 365 for Talent: Onboard"}
+		"Dynamics_365_Hiring_Free_PLAN"		    {$thisLicence = "Dynamics 365 for Talent: Attract"}
 		"Dynamics_365_for_HCM_Trial"		    {$thisLicence = "Dynamics_365_for_HCM_Trial"}
-        "TEAMS_FREE_SERVICE"			{$thisLicence = "Teams Free Service (Not assigned per user)"}
-        "MCOFREE"			        {$thisLicence = "MCO Free for Microsoft Teams (free)"}
-        "TEAMS_FREE"			    {$thisLicence = "Microsoft Teams (free)"}
-        "ML_CLASSIFICATION"		    {$thisLicence = "Microsoft ML-Based Classification"}
-        "INSIDER_RISK_MANAGEMENT"   {$thisLicence = "Microsoft Insider Risk Management"}
-        "SAFEDOCS"			        {$thisLicence = "Office 365 SafeDocs"}
+		"DYN365_ENTERPRISE_P1"		{$thisLicence = "Dynamics Enterprise P1"}
+		"D365_CSI_EMBED_CE" 		{$thisLicence = "Dynamics 365 Customer Service Insights for CE Plan"}
+		"DYN365_ENTERPRISE_P1_IW"	{$thisLicence = "Dyn 365 P1 Trial Info Workers"}
+		#Dynamics Common Data Service
+		"DYN365_CDS_P1"				{$thisLicence = "Common Data Service"}
+		"DYN365_CDS_P2"				{$thisLicence = "Common Data Service"}
+		"DYN365_CDS_FORMS_PRO"		{$thisLicence = "Common Data Service"}   
+		"DYN365_CDS_DYN_APPS"		{$thisLicence = "Common Data Service"}
+		"DYN365_CDS_DYN_P2"			{$thisLicence = "Common Data Service"}
+		"DYN365_CDS_VIRAL"     {$thisLicence = "Common Data Service" }
+		#Exchange
+		"EXCHANGE_S_ENTERPRISE"{$thisLicence = "Exchange Online (Plan 2)" }
+		"EXCHANGE_S_FOUNDATION"{$thisLicence = "Core Exchange for non-Exch SKUs (e.g. setting profile pic)" }
+		"EXCHANGE_S_DESKLESS"      	{$thisLicence = "Exchange Online Firstline"}
+		"EXCHANGE_S_STANDARD"      	{$thisLicence = "Exchange Online (Plan 1)"}
+		"EXCHANGE_S_ARCHIVE_ADDON"	{$thisLicence = "Exchange Online Archiving Add-on"}
+		#Flow
+		"FLOW_P1"		{$thisLicence = "Microsoft Flow Plan 1"}
+		"FLOW_P2"	        {$thisLicence = "Microsoft Flow Plan 2"}
+		"FLOW_O365_P1"          {$thisLicence = "Flow for Office 365"}
+		"FLOW_O365_P2"          {$thisLicence = "Flow for Office 365" }
+		"FLOW_O365_P3"          {$thisLicence = "Flow for Office 365" }
+		"FLOW_DYN_APPS"         {$thisLicence = "Flow for Dynamics 365"}
+		"FLOW_P2_VIRAL"         {$thisLicence = "Flow Free" }
+		"FLOW_P2_VIRAL_REAL"    {$thisLicence = "Flow P2 Viral"}
+		"FLOW_CCI_BOTS"		{$thisLicence = "Flow for CCI Bots"}
+		"Forms_Pro_CE"		{$thisLicence = "Forms Pro for Customer Engagement Plan"}
+		"FORMS_PRO"		{$thisLicence = "Forms Pro"}
+		"FLOW_FORMS_PRO"	{$thisLicence = "Flow for Forms Pro"}
+		"FLOW_O365_S1"      	{$thisLicence = "Flow for Office 365 (F1)"}
+		"FLOW_DYN_P2"		{$thisLicence = "Flow for Dynamics 365"}
+		#Forms
+		"FORMS_PLAN_E1"         {$thisLicence = "Microsoft Forms (Plan E1)"}
+		"FORMS_PLAN_E3"         {$thisLicence = "Microsoft Forms (Plan E3)" }
+		"FORMS_PLAN_E5"         {$thisLicence = "Microsoft Forms E5" }
+		"Forms_Pro_Operations" 		{$thisLicence = "Microsoft Forms Pro for Operations"}
+		"Forms_Pro_CE"				{$thisLicence = "Forms Pro for Customer Engagement Plan"}
+		"FORMS_PRO"			        {$thisLicence = "Forms Pro"}
+		"FORMS_PLAN_K"      		{$thisLicence = "Microsoft Forms (Plan F1)"}
+		#Kaizala
+		"KAIZALA_STANDALONE"		{$thisLicence = "Microsoft Kaizala Pro"}
+		"KAIZALA_O365_P1"		    {$thisLicence = "Microsoft Kaizala Pro (P1)"}
+		"KAIZALA_O365_P2"		    {$thisLicence = "Microsoft Kaizala Pro"}
+		"KAIZALA_O365_P3"			{$thisLicence = "Kaizala for Office 365"}
+		#Misc Services
+		"MYANALYTICS_P2"       {$thisLicence = "Insights by MyAnalytics" }
+		"EXCHANGE_ANALYTICS"   {$thisLicence = "Microsoft MyAnalytics (Full)" }
+		"Deskless"             {$thisLicence = "Microsoft StaffHub" }
+		"SWAY"                 {$thisLicence = "Sway" }
+		"PROJECTWORKMANAGEMENT"{$thisLicence = "Microsoft Planner" }
+		"YAMMER_ENTERPRISE"    {$thisLicence = "Yammer Enterprise" }
+		"SPZA"                 {$thisLicence = "App Connect" }
+		"MICROSOFT_BUSINESS_CENTER" {$thisLicence = "Microsoft Business Center" }
+		"NBENTERPRISE"         {$thisLicence = "Microsoft Social Engagement - Service Discontinuation"}
+		"MICROSOFT_SEARCH"      	{$thisLicence = "Microsoft Search"}
+		#Office
+		"SHAREPOINTWAC"        {$thisLicence = "Office Online" }	
+		"OFFICESUBSCRIPTION"   {$thisLicence = "Office 365 ProPlus" }
+		"OFFICEMOBILE_SUBSCRIPTION" {$thisLicence = "Office Mobile Apps for Office 365"}
+		#OneDrive
+		"ONEDRIVESTANDARD"			{$thisLicence = "OneDrive for Business (Plan 1)"}
+		"ONEDRIVE_BASIC"      			{$thisLicence = "OneDrive Basic"}
+		#PowerBI
+		"BI_AZURE_P0"           {$thisLicence = "Power BI (Free)" }
+		"BI_AZURE_P2"           {$thisLicence = "Power BI Pro" }
+		#Phone System
+		"MCOEV"                {$thisLicence = "M365 Phone System" }
+		"MCOMEETADV"           {$thisLicence = "M365 Audio Conferencing" }
+		#PowerApps
+		"POWERAPPS_O365_S1"         {$thisLicence = "PowerApps for Office 365 Firstline"}
+		"POWERAPPS_O365_P1"    {$thisLicence = "PowerApps for Office 365"}
+		"POWERAPPS_O365_P2"    {$thisLicence = "PowerApps for Office 365" }
+		"POWERAPPS_O365_P3"    {$thisLicence = "PowerApps for Office 365" }
+		"POWERAPPS_DYN_APPS"   {$thisLicence = "PowerApps for Dynamics 365"}
+		"POWERAPPS_P2_VIRAL"   {$thisLicence = "PowerApps Plan 2 Trial"}
+		"POWERAPPS_P2"				{$thisLicence = "PowerApps Plan 2"}
+		"POWERAPPS_DYN_P2"			{$thisLicence = "PowerApps for Dynamics 365"}
+		#Project
+		"PROJECT_PROFESSIONAL"      	{$thisLicence = "Project P3"}
+		"FLOW_FOR_PROJECT"      		{$thisLicence = "Data Integration for Project with Flow"}
+		"DYN365_CDS_PROJECT"      		{$thisLicence = "Common Data Service for Project"}
+		"SHAREPOINT_PROJECT"      		{$thisLicence = "Project Online Service"}
+		"PROJECT_CLIENT_SUBSCRIPTION"	{$thisLicence = "Project Online Desktop Client"}
+		"PROJECT_ESSENTIALS"            {$thisLicence = "Project Online Essentials"}
+		#Security & Compliance
+		"RECORDS_MANAGEMENT"		{$thisLicence = "Microsoft Records Management"}
+		"INFO_GOVERNANCE"			{$thisLicence = "Microsoft Information Governance"}
+		"DATA_INVESTIGATIONS"		{$thisLicence = "Microsoft Data Investigations"}
+		"CUSTOMER_KEY"			    {$thisLicence = "Microsoft Customer Key"}
+		"COMMUNICATIONS_DLP"		{$thisLicence = "Microsoft Communications DLP"}
+		"COMMUNICATIONS_COMPLIANCE"	{$thisLicence = "Microsoft Communications Compliance"}
+		"M365_ADVANCED_AUDITING" {$thisLicence = "Microsoft 365 Advanced Auditing"}
+		"ATP_ENTERPRISE"        {$thisLicence = "O365 ATP Plan 1 (not licenced individually)" }
+		"THREAT_INTELLIGENCE"   {$thisLicence = "O365 ATP Plan 2" }
+		"ADALLOM_S_O365"        {$thisLicence = "Office 365 Cloud App Security" }
+		"EQUIVIO_ANALYTICS"     {$thisLicence = "Office 365 Advanced eDiscovery" }
+		"LOCKBOX_ENTERPRISE"    {$thisLicence = "Customer Lockbox" }
+		"ATA"                   {$thisLicence = "Azure Advanced Threat Protection" }
+		"ADALLOM_S_STANDALONE"  {$thisLicence = "Microsoft Cloud App Security" }
+		"RMS_S_PREMIUM"         {$thisLicence = "Azure Information Protection Premium P1" } 
+		"RMS_S_PREMIUM2"        {$thisLicence = "Azure Information Protection Premium P2" }
+		"INTUNE_A"              {$thisLicence = "Microsoft Intune" }
+		"MFA_PREMIUM"           {$thisLicence = "Microsoft Azure Multi-Factor Authentication" }
+		"INTUNE_O365"           {$thisLicence = "MDM for Office 365 (not licenced individually)" }
+		"RMS_S_ENTERPRISE"      {$thisLicence = "Azure Rights Management" }
+		"PAM_ENTERPRISE"        {$thisLicence = "O365 Priviledged Access Management" }
+		"ADALLOM_S_DISCOVERY"   {$thisLicence = "Cloud App Security Discovery" }
+		"MIP_S_CLP1"             {$thisLicence = "Information Protection for Office 365 - Standard"}
+		"MIP_S_CLP2"            {$thisLicence = "Information Protection for Office 365 - Premium"}
+		"PREMIUM_ENCRYPTION"      	{$thisLicence = "Premium Encryption"}
+		"RMS_S_ADHOC"      			{$thisLicence = "Rights Management Adhoc"}
+		"INFORMATION_BARRIERS"		{$thisLicence = "Information Barriers"}
+		"WINDEFATP"                	{$thisLicence = "Windows Defender ATP"}
+		#SharePoint
+		"SHAREPOINTDESKLESS"   {$thisLicence = "SharePoint Online Kiosk"}
+		"SHAREPOINTSTANDARD"   {$thisLicence = "SharePoint Online (Plan 1)"}
+		"SHAREPOINTENTERPRISE" {$thisLicence = "SharePoint Online (Plan 2)" }
+		#Skype
+		"MCOIMP"                    {$thisLicence = "Skype for Business (Plan 1)"}
+		"MCOSTANDARD"          {$thisLicence = "Skype for Business Online (Plan 2)" }
+		#Stream
+		"STREAM_O365_K"        {$thisLicence = "Stream for Office 365 Firstline"}
+		"STREAM_O365_E1"       {$thisLicence = "Microsoft Stream for O365 E1"}
+		"STREAM_O365_E3"       {$thisLicence = "Microsoft Stream for O365 E3 SKU" }
+		"STREAM_O365_E5"       {$thisLicence = "Stream E5" }
+		#Teams
+		"TEAMS1"               {$thisLicence = "Microsoft Teams" }
+		"MCO_TEAMS_IW"         {$thisLicence = "Microsoft Teams Trial"}
+		"TEAMS_FREE_SERVICE"			{$thisLicence = "Teams Free Service (Not assigned per user)"}
+		"MCOFREE"			        {$thisLicence = "MCO Free for Microsoft Teams (free)"}
+		"TEAMS_FREE"			    {$thisLicence = "Microsoft Teams (free)"}
+		#To-Do
+		"BPOS_S_TODO_FIRSTLINE"     {$thisLicence = "To-Do Firstline"}
+		"BPOS_S_TODO_1"      	    {$thisLicence = "To-Do Plan 1"}
+		"BPOS_S_TODO_2"             {$thisLicence = "To-Do (Plan 2)" }
+		"BPOS_S_TODO_3"             {$thisLicence = "To-Do (Plan 3)" }
+		#Visio
+		"VISIOONLINE"      		{$thisLicence = "Visio Online"}
+		"VISIO_CLIENT_SUBSCRIPTION" 	{$thisLicence = "Visio Pro for Office 365"}
+		#Whiteboard
+		"WHITEBOARD_FIRSTLINE1"         {$thisLicence = "Whiteboard for Firstline"}
+		"WHITEBOARD_PLAN1"      	{$thisLicence = "Whiteboard Plan 1"}
+		"WHITEBOARD_PLAN2"      	{$thisLicence = "Whiteboard Plan 2"}
+		"WHITEBOARD_PLAN3"      	{$thisLicence = "Whiteboard Plan 3"}
+		#Windows 10
+		"WIN10_PRO_ENT_SUB"      	{$thisLicence = "Win 10 Enterprise E3"}
+		"WIN10_ENT_LOC_F1"              {$thisLicence = "Win 10 Enterprise E3 (Local Only)"}                
 		default {$thisLicence = $component }
 	}
 	Write-Output $thisLicence
