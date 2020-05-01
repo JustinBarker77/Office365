@@ -250,7 +250,67 @@ function RootLicenceswitch {
 		[parameter (Mandatory=$true, Position = 1)][string]$licensesku
 	)
 	switch -wildcard ($($licensesku)) {
-		
+        #Azure AD
+		"AAD_BASIC"						    {$RootLicence = "Azure Active Directory Basic"}
+		"AAD_PREMIUM"					    {$RootLicence = "Azure Active Directory Premium"}
+		"AAD_PREMIUM_P2"			        {$RootLicence = "Azure AD Premium P2"}
+        #Dynamics
+		"DYN365_ENTERPRISE_PLAN1"		    {$RootLicence = "Dyn 365 Customer Engage Ent Ed"}
+		"PROJECT_MADEIRA_PREVIEW_IW_SKU"	{$RootLicence = "Dynamics 365 for Financials for IWs"}
+        "DYN365_AI_SERVICE_INSIGHTS"		{$RootLicence = "Dyn 365 CSI Trial"}
+		"Dynamics_365_for_Operations"		{$RootLicence = "Dyn 365 Unified Operations Plan"}
+		"Dynamics_365_Onboarding_SKU"		{$RootLicence = "Dyn 365 for Talent Onboard"}
+		"CCIBOTS_PRIVPREV_VIRAL"			{$RootLicence = "Dyn 365 AI for CSVAV"}
+        "DYN365_BUSINESS_MARKETING"			{$RootLicence = "Dyn 365 Marketing"}
+        "DYN365_RETAIL_TRIAL"			    {$RootLicence = "Dyn 365 Retail Trial"}
+        "SKU_Dynamics_365_for_HCM_Trial"	{$RootLicence = "Dyn 365 Talent"}
+        "DYN365_FINANCIALS_BUSINESS_SKU"	{$RootLicence = "Dyn 365 Financials Business Edition"}
+		"DYN365_FINANCIALS_TEAM_MEMBERS_SKU"{$RootLicence = "Dyn 365 Team Members Business Edition"}
+        "AX7_USER_TRIAL"                    {$RootLicence = "Dynamics AX7 Trial"}
+        "DYN365_ENTERPRISE_P1_IW"		    {$RootLicence = "Dyn 365 P1 Trial Info Workers"}
+        "DYN365_ENTERPRISE_TEAM_MEMBERS"	{$RootLicence = "Dyn 365 Team Members Ent Ed"}
+        "DYN365_TEAM_MEMBERS"			    {$RootLicence = "Dynamics 365 Team Members"}
+        "CRMSTORAGE"						{$RootLicence = "Microsoft Dynamics CRM Online Additional Storage"}
+        "CRMSTANDARD"					    {$RootLicence = "Microsoft Dynamics CRM Online Professional"}
+        "DYN365_ENTERPRISE_SALES"		    {$RootLicence = "Dyn 365 Enterprise Sales"}
+        #Exchange
+        "EXCHANGESTANDARD_GOV"			    {$RootLicence = "Microsoft Office 365 Exchange Online (Plan 1) only for Government"}
+        "EXCHANGEENTERPRISE_GOV"			{$RootLicence = "Microsoft Office 365 Exchange Online (Plan 2) only for Government"}
+        "EXCHANGE_S_DESKLESS_GOV"		    {$RootLicence = "Exchange Kiosk"}
+        "ECAL_SERVICES"					    {$RootLicence = "ECAL"}
+        "EXCHANGE_S_ENTERPRISE_GOV"		    {$RootLicence = "Exchange Plan 2G"}
+        "EXCHANGE_S_ARCHIVE_ADDON_GOV"	    {$RootLicence = "Exchange Online Archiving"}
+        "EXCHANGE_S_DESKLESS"			    {$RootLicence = "Exchange Online Kiosk"}
+        "EXCHANGE_L_STANDARD"			    {$RootLicence = "Exchange Online (Plan 1)"}
+        "EXCHANGE_S_STANDARD_MIDMARKET"	    {$RootLicence = "Exchange Online (Plan 1)"}
+        "EXCHANGEENTERPRISE"				{$RootLicence = "Exchange Online Plan 2"}
+        "EOP_ENTERPRISE_FACULTY"			{$RootLicence = "Exchange Online Protection for Faculty"}
+        "EXCHANGESTANDARD_STUDENT"		    {$RootLicence = "Exchange Online (Plan 1) for Students"}
+        "EXCHANGEARCHIVE_ADDON"			    {$RootLicence = "O-Archive for Exchange Online"}
+        "EXCHANGEDESKLESS"				    {$RootLicence = "Exchange Online Kiosk"}
+        #Flow
+        "FLOW_FREE"						    {$RootLicence = "Microsoft Flow Free"}
+        "FLOW_P1"						    {$RootLicence = "Microsoft Flow Plan 1"}
+        "FLOW_P2"						    {$RootLicence = "Microsoft Flow Plan 2"}
+        #Forms
+        "FORMS_PRO"                         {$RootLicence = "Forms Pro Trial"}
+        #Microsoft 365 Subscription
+        "STANDARDPACK_GOV"				    {$RootLicence = "Microsoft Office 365 (Plan G1) for Government"}
+		"STANDARDWOFFPACK_GOV"			    {$RootLicence = "Microsoft Office 365 (Plan G2) for Government"}
+		"ENTERPRISEPACK_GOV"				{$RootLicence = "Microsoft Office 365 (Plan G3) for Government"}
+		"ENTERPRISEWITHSCAL_GOV"			{$RootLicence = "Microsoft Office 365 (Plan G4) for Government"}
+		"DESKLESSPACK_GOV"				    {$RootLicence = "Microsoft Office 365 (Plan K1) for Government"}
+        "DESKLESSWOFFPACK_GOV"			    {$RootLicence = "Microsoft Office 365 (Plan K2) for Government"}
+		"SPE_E3"							{$RootLicence = "Microsoft 365 E3"}
+        "SPE_E5"							{$RootLicence = "Microsoft 365 E5"}
+        "SPE_F1"                            {$RootLicence = "Microsoft 365 F1"}
+        "STANDARDWOFFPACK_STUDENT"		    {$RootLicence = "Microsoft Office 365 (Plan A2) for Students"}
+        #Misc Services
+		"PLANNERSTANDALONE"				    {$RootLicence = "Planner Standalone"}
+		"CRMIUR"							{$RootLicence = "CMRIUR"}
+		"PROJECTWORKMANAGEMENT"			    {$RootLicence = "Office 365 Planner Preview"}
+        "STREAM"							{$RootLicence = "Microsoft Stream Trial"}
+        "SPZA_IW"						    {$RootLicence = "App Connect"}
         #Office 365 Subscription
         "O365_BUSINESS"					    {$RootLicence = "Office 365 Business"}
         "O365_BUSINESS_ESSENTIALS"		    {$RootLicence = "Office 365 Business Essentials"}
@@ -279,18 +339,19 @@ function RootLicenceswitch {
         "STANDARDWOFFPACK_IW_STUDENT"	    {$RootLicence = "Office 365 Education for Students"}
         "STANDARDWOFFPACK_IW_FACULTY"	    {$RootLicence = "Office 365 Education for Faculty"}
         "STANDARDWOFFPACK_FACULTY"		    {$RootLicence = "Office 365 Education E1 for Faculty"}
-		"ENTERPRISEPACKWITHOUTPROPLUS"      {$RootLicence = "Office 365 E3 No Pro Plus"}
-        #Microsoft 365 Subscription
-        "STANDARDPACK_GOV"				    {$RootLicence = "Microsoft Office 365 (Plan G1) for Government"}
-		"STANDARDWOFFPACK_GOV"			    {$RootLicence = "Microsoft Office 365 (Plan G2) for Government"}
-		"ENTERPRISEPACK_GOV"				{$RootLicence = "Microsoft Office 365 (Plan G3) for Government"}
-		"ENTERPRISEWITHSCAL_GOV"			{$RootLicence = "Microsoft Office 365 (Plan G4) for Government"}
-		"DESKLESSPACK_GOV"				    {$RootLicence = "Microsoft Office 365 (Plan K1) for Government"}
-        "DESKLESSWOFFPACK_GOV"			    {$RootLicence = "Microsoft Office 365 (Plan K2) for Government"}
-		"SPE_E3"							{$RootLicence = "Microsoft 365 E3"}
-        "SPE_E5"							{$RootLicence = "Microsoft 365 E5"}
-        "SPE_F1"                            {$RootLicence = "Microsoft 365 F1"}
-        "STANDARDWOFFPACK_STUDENT"		    {$RootLicence = "Microsoft Office 365 (Plan A2) for Students"}
+        "ENTERPRISEPACKWITHOUTPROPLUS"      {$RootLicence = "Office 365 E3 No Pro Plus"}
+        #Office Suite
+		"OFFICESUBSCRIPTION_GOV"			{$RootLicence = "Office ProPlus"}
+		"SHAREPOINTWAC_GOV"				    {$RootLicence = "Office Online for Government"}
+		"SHAREPOINTWAC"					    {$RootLicence=  "Office Online"}
+        "OFFICE_PRO_PLUS_SUBSCRIPTION_SMBIZ"{$RootLicence = "Office ProPlus"}
+        "OFFICESUBSCRIPTION"				{$RootLicence = "Office ProPlus"}
+        "OFFICESUBSCRIPTION_STUDENT"		{$RootLicence = "Office ProPlus Student Benefit"}
+        #PowerApps
+		"POWERFLOW_P1"						{$RootLicence = "Microsoft PowerApps Plan 1"}
+		"POWERFLOW_P2"						{$RootLicence = "Microsoft PowerApps Plan 2"}
+        "POWERAPPS_INDIVIDUAL_USER"			{$RootLicence = "PowerApps and Logic Flows"}
+        "POWERAPPS_VIRAL"                   {$RootLicence = "PowerApps Plan 2 Trial"}
         #Power BI
         "POWER_BI_ADDON"					{$RootLicence = "Office 365 Power BI Addon"}
 		"POWER_BI_INDIVIDUAL_USE"		    {$RootLicence = "Power BI Individual User"}
@@ -300,9 +361,6 @@ function RootLicenceswitch {
         "POWER_BI_PRO"					    {$RootLicence = "Power BI Pro"}
 		"POWER_BI_PRO_CE"					{$RootLicence = "Power BI Pro"}
         "POWER_BI_PRO_FACULTY"				{$RootLicence = "Power BI Pro Faculty"}
-        #Visio
-        "VISIOCLIENT"					    {$RootLicence = "Visio Pro Online"}
-        "VISIOONLINE_PLAN1"				    {$RootLicence = "Visio Online Plan 1"}
         #Project
         "PROJECTESSENTIALS"				    {$RootLicence = "Project Lite"}
 		"PROJECTCLIENT"					    {$RootLicence = "Project Professional"}
@@ -310,6 +368,29 @@ function RootLicenceswitch {
 		"PROJECTONLINE_PLAN_2"			    {$RootLicence = "Project Online and PRO"}
 		"ProjectPremium"					{$RootLicence = "Project Online Premium"}
         "PROJECTPROFESSIONAL"			    {$RootLicence = "Project Professional"}
+        #Security and Compliance
+        "EMS"							    {$RootLicence = "EMS (Plan E3)"}
+        "EMSPREMIUM"                        {$RootLicence = "EMS (Plan E5)"}
+        "RIGHTSMANAGEMENT_ADHOC"			{$RootLicence = "Windows Azure RMS"}
+        "INTUNE_A"						    {$RootLicence = "Windows Intune Plan A"}
+        "ATP_ENTERPRISE"					{$RootLicence = "Ex Online ATP Plan 1"}
+        "EQUIVIO_ANALYTICS"				    {$RootLicence = "Office 365 Advanced Compliance"}
+        "RMS_S_ENTERPRISE"				    {$RootLicence = "Azure Active Directory Rights Management"}
+        "MFA_PREMIUM"					    {$RootLicence = "Azure Multi-Factor Authentication"}
+        "RMS_S_ENTERPRISE_GOV"			    {$RootLicence = "Windows Azure AD RMS"}
+        "IDENTITY_THREAT_PROTECTION"		{$RootLicence = "Microsoft 365 E5 Security"}
+        "INFORMATION_PROTECTION_COMPLIANCE" {$RootLicence = "Microsoft 365 E5 Compliance"}
+        "EMS_FACULTY"						{$RootLicence = "EMS (Plan E3) Faculty"}
+        "ADALLOM_STANDALONE"                {$RootLicence = "Microsoft Cloud App Security"}
+        "ATA"							    {$RootLicence = "Advanced Threat Analytics"}
+        "WIN_DEF_ATP"                   	{$RootLicence = "Windows 10 Defender ATP"}
+        "RIGHTSMANAGEMENT"				    {$RootLicence = "Rights Management"}
+        #Skype
+        "MCOSTANDARD_GOV"				    {$RootLicence = "Lync Plan 2G"}
+        "MCOLITE"						    {$RootLicence = "Lync Online (Plan 1)"}
+        "MCOSTANDARD_MIDMARKET"			    {$RootLicence = "Lync Online (Plan 1)"}
+        "MCOSTANDARD"					    {$RootLicence = "SFBO Plan 2"}
+        "VIDEO_INTEROP"					    {$RootLicence = "Polycom Skype Meeting Video Interop for Skype for Business"}
         #SharePoint
         "SHAREPOINTSTORAGE"				    {$RootLicence = "SharePoint storage"}
         "SHAREPOINTDESKLESS_GOV"			{$RootLicence = "SharePoint Online Kiosk"}
@@ -317,43 +398,6 @@ function RootLicenceswitch {
         "SHAREPOINTDESKLESS"				{$RootLicence = "SharePoint Online Kiosk"}
         "SHAREPOINTLITE"					{$RootLicence = "SharePoint Online (Plan 1)"}
         "SHAREPOINTENTERPRISE_MIDMARKET"	{$RootLicence = "SharePoint Online (Plan 1)"}
-        #Exchange
-        "EXCHANGESTANDARD_GOV"			    {$RootLicence = "Microsoft Office 365 Exchange Online (Plan 1) only for Government"}
-		"EXCHANGEENTERPRISE_GOV"			{$RootLicence = "Microsoft Office 365 Exchange Online (Plan 2) only for Government"}
-        "EXCHANGE_S_DESKLESS_GOV"		    {$RootLicence = "Exchange Kiosk"}
-        "ECAL_SERVICES"					    {$RootLicence = "ECAL"}
-        "EXCHANGE_S_ENTERPRISE_GOV"		    {$RootLicence = "Exchange Plan 2G"}
-		"EXCHANGE_S_ARCHIVE_ADDON_GOV"	    {$RootLicence = "Exchange Online Archiving"}
-        "EXCHANGE_S_DESKLESS"			    {$RootLicence = "Exchange Online Kiosk"}
-        "EXCHANGE_L_STANDARD"			    {$RootLicence = "Exchange Online (Plan 1)"}
-        "EXCHANGE_S_STANDARD_MIDMARKET"	    {$RootLicence = "Exchange Online (Plan 1)"}
-        "EXCHANGEENTERPRISE"				{$RootLicence = "Exchange Online Plan 2"}
-        "EOP_ENTERPRISE_FACULTY"			{$RootLicence = "Exchange Online Protection for Faculty"}
-		"EXCHANGESTANDARD_STUDENT"		    {$RootLicence = "Exchange Online (Plan 1) for Students"}
-        "EXCHANGEARCHIVE_ADDON"			    {$RootLicence = "O-Archive for Exchange Online"}
-        "EXCHANGEDESKLESS"				    {$RootLicence = "Exchange Online Kiosk"}
-        #Security and Compliance
-        "EMS"							    {$RootLicence = "EMS (Plan E3)"}
-		"EMSPREMIUM"                        {$RootLicence = "EMS (Plan E5)"}
-		"RIGHTSMANAGEMENT_ADHOC"			{$RootLicence = "Windows Azure RMS"}
-		"INTUNE_A"						    {$RootLicence = "Windows Intune Plan A"}
-        "ATP_ENTERPRISE"					{$RootLicence = "Ex Online ATP Plan 1"}
-        "EQUIVIO_ANALYTICS"				    {$RootLicence = "Office 365 Advanced Compliance"}
-        "RMS_S_ENTERPRISE"				    {$RootLicence = "Azure Active Directory Rights Management"}
-        "MFA_PREMIUM"					    {$RootLicence = "Azure Multi-Factor Authentication"}
-        "RMS_S_ENTERPRISE_GOV"			    {$RootLicence = "Windows Azure AD RMS"}
-		"IDENTITY_THREAT_PROTECTION"		{$RootLicence = "Microsoft 365 E5 Security"}
-        "INFORMATION_PROTECTION_COMPLIANCE" {$RootLicence = "Microsoft 365 E5 Compliance"}
-		"EMS_FACULTY"						{$RootLicence = "EMS (Plan E3) Faculty"}
-        "ADALLOM_STANDALONE"                {$RootLicence = "Microsoft Cloud App Security"}
-        "ATA"							    {$RootLicence = "Advanced Threat Analytics"}
-        "WIN_DEF_ATP"                   	{$RootLicence = "Windows 10 Defender ATP"}
-        "RIGHTSMANAGEMENT"				    {$RootLicence = "Rights Management"}
-        #Telephony
-        "MCOMEETADV"						{$RootLicence = "PSTN conferencing"}
-        "MCOPSTN1"			                {$RootLicence = "Domestic Calling Plan"}
-        "MCOPSTN2"						    {$RootLicence = "Domestic and International Calling Plan"}
-        "MCOEV"							    {$RootLicence = "Microsoft Phone System"}
         #Skype
         "MCOSTANDARD_GOV"				    {$RootLicence = "Lync Plan 2G"}
         "MCOLITE"						    {$RootLicence = "Lync Online (Plan 1)"}
@@ -365,61 +409,22 @@ function RootLicenceswitch {
         "TEAMS_EXPLORATORY"					{$RootLicence = "Microsoft Teams Exploratory"}
         "TEAMS_COMMERCIAL_TRIAL"            {$RootLicence = "Teams Commercial Cloud"}
         "MS_TEAMS_IW"                       {$RootLicence = "Microsoft Teams Trial"}
-		#Misc Services
-		"PLANNERSTANDALONE"				    {$RootLicence = "Planner Standalone"}
-		"CRMIUR"							{$RootLicence = "CMRIUR"}
-		"PROJECTWORKMANAGEMENT"			    {$RootLicence = "Office 365 Planner Preview"}
-        "STREAM"							{$RootLicence = "Microsoft Stream Trial"}
-        "SPZA_IW"						    {$RootLicence = "App Connect"}
-		#Azure AD
-		"AAD_BASIC"						    {$RootLicence = "Azure Active Directory Basic"}
-		"AAD_PREMIUM"					    {$RootLicence = "Azure Active Directory Premium"}
-		"AAD_PREMIUM_P2"			        {$RootLicence = "Azure AD Premium P2"}
-		#Office Suite
-		"OFFICESUBSCRIPTION_GOV"			{$RootLicence = "Office ProPlus"}
-		"SHAREPOINTWAC_GOV"				    {$RootLicence = "Office Online for Government"}
-		"SHAREPOINTWAC"					    {$RootLicence=  "Office Online"}
-        "OFFICE_PRO_PLUS_SUBSCRIPTION_SMBIZ"{$RootLicence = "Office ProPlus"}
-        "OFFICESUBSCRIPTION"				{$RootLicence = "Office ProPlus"}
-        "OFFICESUBSCRIPTION_STUDENT"		{$RootLicence = "Office ProPlus Student Benefit"}
-		#Yammer
-		"YAMMER_ENTERPRISE"				    {$RootLicence = "Yammer for the Starship Enterprise"}
-        "YAMMER_MIDSIZE"					{$RootLicence = "Yammer"}
-		#Dynamics
-		"DYN365_ENTERPRISE_PLAN1"		    {$RootLicence = "Dyn 365 Customer Engage Ent Ed"}
-		"PROJECT_MADEIRA_PREVIEW_IW_SKU"	{$RootLicence = "Dynamics 365 for Financials for IWs"}
-        "DYN365_AI_SERVICE_INSIGHTS"		{$RootLicence = "Dyn 365 CSI Trial"}
-		"Dynamics_365_for_Operations"		{$RootLicence = "Dyn 365 Unified Operations Plan"}
-		"Dynamics_365_Onboarding_SKU"		{$RootLicence = "Dyn 365 for Talent Onboard"}
-		"CCIBOTS_PRIVPREV_VIRAL"			{$RootLicence = "Dyn 365 AI for CSVAV"}
-        "DYN365_BUSINESS_MARKETING"			{$RootLicence = "Dyn 365 Marketing"}
-        "DYN365_RETAIL_TRIAL"			    {$RootLicence = "Dyn 365 Retail Trial"}
-        "SKU_Dynamics_365_for_HCM_Trial"	{$RootLicence = "Dyn 365 Talent"}
-        "DYN365_FINANCIALS_BUSINESS_SKU"	{$RootLicence = "Dyn 365 Financials Business Edition"}
-		"DYN365_FINANCIALS_TEAM_MEMBERS_SKU"{$RootLicence = "Dyn 365 Team Members Business Edition"}
-        "AX7_USER_TRIAL"                    {$RootLicence = "Dynamics AX7 Trial"}
-        "DYN365_ENTERPRISE_P1_IW"		    {$RootLicence = "Dyn 365 P1 Trial Info Workers"}
-        "DYN365_ENTERPRISE_TEAM_MEMBERS"	{$RootLicence = "Dyn 365 Team Members Ent Ed"}
-        "DYN365_TEAM_MEMBERS"			    {$RootLicence = "Dynamics 365 Team Members"}
-        "CRMSTORAGE"						{$RootLicence = "Microsoft Dynamics CRM Online Additional Storage"}
-        "CRMSTANDARD"					    {$RootLicence = "Microsoft Dynamics CRM Online Professional"}
-        "DYN365_ENTERPRISE_SALES"		    {$RootLicence = "Dyn 365 Enterprise Sales"}
-        #Flow
-        "FLOW_FREE"						    {$RootLicence = "Microsoft Flow Free"}
-        "FLOW_P1"						    {$RootLicence = "Microsoft Flow Plan 1"}
-		"FLOW_P2"						    {$RootLicence = "Microsoft Flow Plan 2"}
-        #PowerApps
-		"POWERFLOW_P1"						{$RootLicence = "Microsoft PowerApps Plan 1"}
-		"POWERFLOW_P2"						{$RootLicence = "Microsoft PowerApps Plan 2"}
-        "POWERAPPS_INDIVIDUAL_USER"			{$RootLicence = "PowerApps and Logic Flows"}
-        "POWERAPPS_VIRAL"                   {$RootLicence = "PowerApps Plan 2 Trial"}
+        #Telephony
+        "MCOMEETADV"						{$RootLicence = "PSTN conferencing"}
+        "MCOPSTN1"			                {$RootLicence = "Domestic Calling Plan"}
+        "MCOPSTN2"						    {$RootLicence = "Domestic and International Calling Plan"}
+        "MCOEV"							    {$RootLicence = "Microsoft Phone System"}
+        #Visio
+        "VISIOCLIENT"					    {$RootLicence = "Visio Pro Online"}
+        "VISIOONLINE_PLAN1"				    {$RootLicence = "Visio Online Plan 1"}
         #Windows 10
         "Win10_VDA_E3"                      {$RootLicence = "Windows 10 E3"}
         "WINDOWS_STORE"					    {$RootLicence = "Windows Store for Business"}
 		"SMB_APPS"						    {$RootLicence = "Microsoft Business Apps"}
         "MICROSOFT_BUSINESS_CENTER"		    {$RootLicence = "Microsoft Business Center"}
-        #Forms
-        "FORMS_PRO"                         {$RootLicence = "Forms Pro Trial"}
+        #Yammer
+		"YAMMER_ENTERPRISE"				    {$RootLicence = "Yammer for the Starship Enterprise"}
+        "YAMMER_MIDSIZE"					{$RootLicence = "Yammer"}
 		default                             {$RootLicence = $licensesku }
 	}
 	Write-Output $RootLicence
