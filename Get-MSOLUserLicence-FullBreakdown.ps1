@@ -384,6 +384,7 @@ function RootLicenceswitch {
 		"EMS_FACULTY"						{$RootLicence = "EMS (Plan E3) Faculty"}
 		"POWER_BI_PRO_CE"					{$RootLicence = "Power BI Pro"}
 		"POWER_BI_PRO_FACULTY"				{$RootLicence = "Power BI Pro Faculty"}
+		"POWERFLOW_P1"						{$RootLicence = "Microsoft PowerApps Plan 1"}
 		"POWERFLOW_P2"						{$RootLicence = "Microsoft PowerApps Plan 2"}
 		"POWERAPPS_INDIVIDUAL_USER"			{$RootLicence = "PowerApps and Logic Flows"}
 		"DYN365_AI_SERVICE_INSIGHTS"		{$RootLicence = "Dyn 365 CSI Trial"}
