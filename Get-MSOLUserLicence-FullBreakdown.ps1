@@ -290,6 +290,7 @@ function RootLicenceswitch {
         "EXCHANGE_S_DESKLESS"			    {$RootLicence = "Exchange Online Kiosk"}
         "EXCHANGE_L_STANDARD"			    {$RootLicence = "Exchange Online (Plan 1)"}
         "EXCHANGE_S_STANDARD_MIDMARKET"	    {$RootLicence = "Exchange Online (Plan 1)"}
+        "EXCHANGESTANDARD"				    {$RootLicence = "Exchange Online (Plan 1)"}
         "EXCHANGEENTERPRISE"				{$RootLicence = "Exchange Online Plan 2"}
         "EOP_ENTERPRISE_FACULTY"			{$RootLicence = "Exchange Online Protection for Faculty"}
         "EXCHANGESTANDARD_STUDENT"		    {$RootLicence = "Exchange Online (Plan 1) for Students"}
@@ -325,7 +326,6 @@ function RootLicenceswitch {
 		"DESKLESSPACK"					    {$RootLicence = "Office 365 (Plan F1)"}
 		"DESKLESSWOFFPACK"				    {$RootLicence = "Office 365 (Plan K2)"}
 		"LITEPACK"						    {$RootLicence = "Office 365 (Plan P1)"}
-		"EXCHANGESTANDARD"				    {$RootLicence = "Office 365 Exchange Online Only"}
 		"STANDARDPACK"					    {$RootLicence = "Office 365 (Plan E1)"}
 		"STANDARDWOFFPACK"				    {$RootLicence = "Office 365 (Plan E2)"}
 		"ENTERPRISEPACK"					{$RootLicence = "Office 365 (Plan E3)"}
