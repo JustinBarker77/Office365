@@ -398,7 +398,7 @@ function RootLicenceswitch {
         "MCOLITE"						    {$RootLicence = "Lync Online (Plan 1)"}
         "MCOSTANDARD_MIDMARKET"			    {$RootLicence = "Lync Online (Plan 1)"}
         "MCOSTANDARD"					    {$RootLicence = "SFBO Plan 2"}
-        "VIDEO_INTEROP"					    {$RootLicence = "Polycom Skype Meeting Video Interop for Skype for Business"}
+        "VIDEO_INTEROP"					    {$RootLicence = "Polycom Video Interop"}
         #SharePoint
         "SHAREPOINTSTORAGE"				    {$RootLicence = "SharePoint storage"}
         "SHAREPOINTDESKLESS_GOV"			{$RootLicence = "SharePoint Online Kiosk"}
@@ -414,10 +414,10 @@ function RootLicenceswitch {
         "MEETING_ROOM"                      {$RootLicence = "Meeting Room"}
         #Telephony
         "MCOMEETADV"						{$RootLicence = "PSTN conferencing"}
-        "MCOPSTN1"			                {$RootLicence = "Domestic Calling Plan (1200 mins)"}
-        "MCOPSTN2"						    {$RootLicence = "Domestic and International Calling Plan"}
+        "MCOPSTN1"			                {$RootLicence = "Dom Calling Plan (1200 mins)"}
+        "MCOPSTN2"						    {$RootLicence = "Dom and Intl Calling Plan"}
         "MCOEV"							    {$RootLicence = "Microsoft Phone System"}
-        "MCOPSTN_5"                         {$RootLicence = "Domestic Calling Plan (120 mins)"}
+        "MCOPSTN_5"                         {$RootLicence = "Dom Calling Plan (120mins)"}
         #Visio
         "VISIOCLIENT"					    {$RootLicence = "Visio Pro Online"}
         "VISIOONLINE_PLAN1"				    {$RootLicence = "Visio Online Plan 1"}
@@ -427,7 +427,7 @@ function RootLicenceswitch {
 		"SMB_APPS"						    {$RootLicence = "Microsoft Business Apps"}
         "MICROSOFT_BUSINESS_CENTER"		    {$RootLicence = "Microsoft Business Center"}
         #Yammer
-		"YAMMER_ENTERPRISE"				    {$RootLicence = "Yammer for the Starship Enterprise"}
+		"YAMMER_ENTERPRISE"				    {$RootLicence = "Yammer Enterprise"}
         "YAMMER_MIDSIZE"					{$RootLicence = "Yammer"}
 		default                             {$RootLicence = $licensesku }
 	}
