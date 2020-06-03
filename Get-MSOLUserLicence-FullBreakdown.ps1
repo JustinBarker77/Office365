@@ -468,10 +468,10 @@ $licensetype = Get-MsolAccountSku | Where-Object {$_.ConsumedUnits -ge 1}
 #$licensetype = Get-MsolAccountSku | Where-Object {$_.AccountSkuID -like "*Power*"}
 # Get all licences for a summary view
 if ($NoNameTranslation) {
-	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$(RootLicenceswitch($_.SkuPartNumber))}}, ActiveUnits, ConsumedUnits | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
+	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$($_.SkuPartNumber)}}, ActiveUnits, ConsumedUnits | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
 }
 else {
-	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$($_.SkuPartNumber)}}, ActiveUnits, ConsumedUnits | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
+	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$(RootLicenceswitch($_.SkuPartNumber))}}, ActiveUnits, ConsumedUnits | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
 }
 #get all users with licence
 Write-Host "Retrieving all licensed users - this may take a while."
@@ -483,10 +483,10 @@ foreach ($license in $licensetype) {
     foreach ($row in $($license.ServiceStatus)) {
 		# Build header string
 		if ($NoNameTranslation) {
-			$thisLicence = componentlicenseswitch([string]($row.ServicePlan.servicename))
+			$thisLicence = [string]$row.ServicePlan.servicename
 		}
 		else {
-			$thisLicence = [string]$row.ServicePlan.servicename
+			$thisLicence = componentlicenseswitch([string]($row.ServicePlan.servicename))
 		}
         $headerstring = ($headerstring + "`t" + $thisLicence) 
     } 
@@ -494,10 +494,10 @@ foreach ($license in $licensetype) {
     # Gather users for this particular AccountSku from pre-existing array of users
     $users = $alllicensedusers | Where-Object {$_.licenses.accountskuid -contains $license.accountskuid} 
 	if ($NoNameTranslation) {
-		$RootLicence = RootLicenceswitch($($license.SkuPartNumber))
+		$RootLicence = ($($license.SkuPartNumber))
 	}
 	else {
-		$RootLicence = ($($license.SkuPartNumber))
+		$RootLicence = RootLicenceswitch($($license.SkuPartNumber))
 	}
 	#$logfile = $CompanyName + "-" +$RootLicence + ".csv"
 	$logfile = $CSVpath + "\" +$RootLicence + ".csv"
