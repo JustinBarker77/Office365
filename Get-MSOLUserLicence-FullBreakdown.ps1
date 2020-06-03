@@ -22,7 +22,8 @@
 		Updated: 20200422	V1.15   Formats to Segoe UI 9pt. Removed unnecessary True output. 
 		Updated: 20200430	V1.16	Made script more readable for Product type within component breakdown
 		Updated: 20200501	V1.17	Script readability changes
-        Updated: 20200501	V1.18	Added Telephony SKU's
+		Updated: 20200603	V1.18	Added Telephony SKU's
+		Updated: 20200603	V1.19	Added Switch for no name translation
 
 		Release Date: 20190530
 		Release notes from original:
