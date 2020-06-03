@@ -10,7 +10,7 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.17
+		Version 1.18
 		Updated: 20190602	V1.7	Parameters, Comment based help, creates folder and deletes folder for csv's, require statements
 		Updated: 20190614	V1.8	Added more SKU's and Components
        	Updated: 20190627	V1.9	Added more Components
@@ -22,6 +22,8 @@
 		Updated: 20200422	V1.15   Formats to Segoe UI 9pt. Removed unnecessary True output. 
 		Updated: 20200430	V1.16	Made script more readable for Product type within component breakdown
 		Updated: 20200501	V1.17	Script readability changes
+        Updated: 20200501	V1.18	Added Telephony SKU's
+
 		Release Date: 20190530
 		Release notes from original:
 			1.0 - Initital Release                                                                                                            	
@@ -68,8 +70,8 @@ function componentlicenseswitch {
 	)
 	switch -wildcard ($($component)) {
 		#AAD
-		"AAD_PREMIUM"           {$thisLicence = "Azure Active Directory Premium P1" }
-		"AAD_PREMIUM_P2"        {$thisLicence = "Azure Active Directory Premium P2" }
+		"AAD_PREMIUM"           {$thisLicence = "Azure Active Directory Premium P1"}
+		"AAD_PREMIUM_P2"        {$thisLicence = "Azure Active Directory Premium P2"}
 		#Dynamics
 		"DYN365_ENTERPRISE_SALES" {$thisLicence = "Dynamics 365 for Sales"}
 		"Dynamics_365_for_Talent_Team_members" {$thisLicence = "Dynamics 365 for Talent Team members"}
@@ -102,10 +104,10 @@ function componentlicenseswitch {
 		"DYN365_CDS_FORMS_PRO"		{$thisLicence = "Common Data Service"}   
 		"DYN365_CDS_DYN_APPS"		{$thisLicence = "Common Data Service"}
 		"DYN365_CDS_DYN_P2"			{$thisLicence = "Common Data Service"}
-		"DYN365_CDS_VIRAL"     {$thisLicence = "Common Data Service" }
+		"DYN365_CDS_VIRAL"     {$thisLicence = "Common Data Service"}
 		#Exchange
-		"EXCHANGE_S_ENTERPRISE"{$thisLicence = "Exchange Online (Plan 2)" }
-		"EXCHANGE_S_FOUNDATION"{$thisLicence = "Core Exchange for non-Exch SKUs (e.g. setting profile pic)" }
+		"EXCHANGE_S_ENTERPRISE"{$thisLicence = "Exchange Online (Plan 2)"}
+		"EXCHANGE_S_FOUNDATION"{$thisLicence = "Core Exchange for non-Exch SKUs (e.g. setting profile pic)"}
 		"EXCHANGE_S_DESKLESS"      	{$thisLicence = "Exchange Online Firstline"}
 		"EXCHANGE_S_STANDARD"      	{$thisLicence = "Exchange Online (Plan 1)"}
 		"EXCHANGE_S_ARCHIVE_ADDON"	{$thisLicence = "Exchange Online Archiving Add-on"}
@@ -113,10 +115,10 @@ function componentlicenseswitch {
 		"FLOW_P1"		{$thisLicence = "Microsoft Flow Plan 1"}
 		"FLOW_P2"	        {$thisLicence = "Microsoft Flow Plan 2"}
 		"FLOW_O365_P1"          {$thisLicence = "Flow for Office 365"}
-		"FLOW_O365_P2"          {$thisLicence = "Flow for Office 365" }
-		"FLOW_O365_P3"          {$thisLicence = "Flow for Office 365" }
+		"FLOW_O365_P2"          {$thisLicence = "Flow for Office 365"}
+		"FLOW_O365_P3"          {$thisLicence = "Flow for Office 365"}
 		"FLOW_DYN_APPS"         {$thisLicence = "Flow for Dynamics 365"}
-		"FLOW_P2_VIRAL"         {$thisLicence = "Flow Free" }
+		"FLOW_P2_VIRAL"         {$thisLicence = "Flow Free"}
 		"FLOW_P2_VIRAL_REAL"    {$thisLicence = "Flow P2 Viral"}
 		"FLOW_CCI_BOTS"		{$thisLicence = "Flow for CCI Bots"}
 		"Forms_Pro_CE"		{$thisLicence = "Forms Pro for Customer Engagement Plan"}
@@ -126,8 +128,8 @@ function componentlicenseswitch {
 		"FLOW_DYN_P2"		{$thisLicence = "Flow for Dynamics 365"}
 		#Forms
 		"FORMS_PLAN_E1"         {$thisLicence = "Microsoft Forms (Plan E1)"}
-		"FORMS_PLAN_E3"         {$thisLicence = "Microsoft Forms (Plan E3)" }
-		"FORMS_PLAN_E5"         {$thisLicence = "Microsoft Forms E5" }
+		"FORMS_PLAN_E3"         {$thisLicence = "Microsoft Forms (Plan E3)"}
+		"FORMS_PLAN_E5"         {$thisLicence = "Microsoft Forms E5"}
 		"Forms_Pro_Operations" 		{$thisLicence = "Microsoft Forms Pro for Operations"}
 		"Forms_Pro_CE"				{$thisLicence = "Forms Pro for Customer Engagement Plan"}
 		"FORMS_PRO"			        {$thisLicence = "Forms Pro"}
@@ -138,34 +140,34 @@ function componentlicenseswitch {
 		"KAIZALA_O365_P2"		    {$thisLicence = "Microsoft Kaizala Pro"}
 		"KAIZALA_O365_P3"			{$thisLicence = "Kaizala for Office 365"}
 		#Misc Services
-		"MYANALYTICS_P2"       {$thisLicence = "Insights by MyAnalytics" }
-		"EXCHANGE_ANALYTICS"   {$thisLicence = "Microsoft MyAnalytics (Full)" }
-		"Deskless"             {$thisLicence = "Microsoft StaffHub" }
-		"SWAY"                 {$thisLicence = "Sway" }
-		"PROJECTWORKMANAGEMENT"{$thisLicence = "Microsoft Planner" }
-		"YAMMER_ENTERPRISE"    {$thisLicence = "Yammer Enterprise" }
-		"SPZA"                 {$thisLicence = "App Connect" }
-		"MICROSOFT_BUSINESS_CENTER" {$thisLicence = "Microsoft Business Center" }
+		"MYANALYTICS_P2"       {$thisLicence = "Insights by MyAnalytics"}
+		"EXCHANGE_ANALYTICS"   {$thisLicence = "Microsoft MyAnalytics (Full)"}
+		"Deskless"             {$thisLicence = "Microsoft StaffHub"}
+		"SWAY"                 {$thisLicence = "Sway"}
+		"PROJECTWORKMANAGEMENT"{$thisLicence = "Microsoft Planner"}
+		"YAMMER_ENTERPRISE"    {$thisLicence = "Yammer Enterprise"}
+		"SPZA"                 {$thisLicence = "App Connect"}
+		"MICROSOFT_BUSINESS_CENTER" {$thisLicence = "Microsoft Business Center"}
 		"NBENTERPRISE"         {$thisLicence = "Microsoft Social Engagement - Service Discontinuation"}
 		"MICROSOFT_SEARCH"      	{$thisLicence = "Microsoft Search"}
 		#Office
-		"SHAREPOINTWAC"        {$thisLicence = "Office Online" }	
-		"OFFICESUBSCRIPTION"   {$thisLicence = "Office 365 ProPlus" }
+		"SHAREPOINTWAC"        {$thisLicence = "Office Online"}	
+		"OFFICESUBSCRIPTION"   {$thisLicence = "Office 365 ProPlus"}
 		"OFFICEMOBILE_SUBSCRIPTION" {$thisLicence = "Office Mobile Apps for Office 365"}
 		#OneDrive
 		"ONEDRIVESTANDARD"			{$thisLicence = "OneDrive for Business (Plan 1)"}
 		"ONEDRIVE_BASIC"      			{$thisLicence = "OneDrive Basic"}
 		#PowerBI
-		"BI_AZURE_P0"           {$thisLicence = "Power BI (Free)" }
-		"BI_AZURE_P2"           {$thisLicence = "Power BI Pro" }
+		"BI_AZURE_P0"           {$thisLicence = "Power BI (Free)"}
+		"BI_AZURE_P2"           {$thisLicence = "Power BI Pro"}
 		#Phone System
-		"MCOEV"                {$thisLicence = "M365 Phone System" }
-		"MCOMEETADV"           {$thisLicence = "M365 Audio Conferencing" }
+		"MCOEV"                {$thisLicence = "M365 Phone System"}
+		"MCOMEETADV"           {$thisLicence = "M365 Audio Conferencing"}
 		#PowerApps
 		"POWERAPPS_O365_S1"         {$thisLicence = "PowerApps for Office 365 Firstline"}
 		"POWERAPPS_O365_P1"    {$thisLicence = "PowerApps for Office 365"}
-		"POWERAPPS_O365_P2"    {$thisLicence = "PowerApps for Office 365" }
-		"POWERAPPS_O365_P3"    {$thisLicence = "PowerApps for Office 365" }
+		"POWERAPPS_O365_P2"    {$thisLicence = "PowerApps for Office 365"}
+		"POWERAPPS_O365_P3"    {$thisLicence = "PowerApps for Office 365"}
 		"POWERAPPS_DYN_APPS"   {$thisLicence = "PowerApps for Dynamics 365"}
 		"POWERAPPS_P2_VIRAL"   {$thisLicence = "PowerApps Plan 2 Trial"}
 		"POWERAPPS_P2"				{$thisLicence = "PowerApps Plan 2"}
@@ -185,21 +187,22 @@ function componentlicenseswitch {
 		"COMMUNICATIONS_DLP"		{$thisLicence = "Microsoft Communications DLP"}
 		"COMMUNICATIONS_COMPLIANCE"	{$thisLicence = "Microsoft Communications Compliance"}
 		"M365_ADVANCED_AUDITING" {$thisLicence = "Microsoft 365 Advanced Auditing"}
-		"ATP_ENTERPRISE"        {$thisLicence = "O365 ATP Plan 1 (not licenced individually)" }
-		"THREAT_INTELLIGENCE"   {$thisLicence = "O365 ATP Plan 2" }
-		"ADALLOM_S_O365"        {$thisLicence = "Office 365 Cloud App Security" }
-		"EQUIVIO_ANALYTICS"     {$thisLicence = "Office 365 Advanced eDiscovery" }
-		"LOCKBOX_ENTERPRISE"    {$thisLicence = "Customer Lockbox" }
-		"ATA"                   {$thisLicence = "Azure Advanced Threat Protection" }
-		"ADALLOM_S_STANDALONE"  {$thisLicence = "Microsoft Cloud App Security" }
-		"RMS_S_PREMIUM"         {$thisLicence = "Azure Information Protection Premium P1" } 
-		"RMS_S_PREMIUM2"        {$thisLicence = "Azure Information Protection Premium P2" }
-		"INTUNE_A"              {$thisLicence = "Microsoft Intune" }
-		"MFA_PREMIUM"           {$thisLicence = "Microsoft Azure Multi-Factor Authentication" }
-		"INTUNE_O365"           {$thisLicence = "MDM for Office 365 (not licenced individually)" }
-		"RMS_S_ENTERPRISE"      {$thisLicence = "Azure Rights Management" }
-		"PAM_ENTERPRISE"        {$thisLicence = "O365 Priviledged Access Management" }
-		"ADALLOM_S_DISCOVERY"   {$thisLicence = "Cloud App Security Discovery" }
+		"ATP_ENTERPRISE"        {$thisLicence = "O365 ATP Plan 1 (not licenced individually)"}
+		"THREAT_INTELLIGENCE"   {$thisLicence = "O365 ATP Plan 2"}
+		"ADALLOM_S_O365"        {$thisLicence = "Office 365 Cloud App Security"}
+		"EQUIVIO_ANALYTICS"     {$thisLicence = "Office 365 Advanced eDiscovery"}
+		"LOCKBOX_ENTERPRISE"    {$thisLicence = "Customer Lockbox"}
+		"ATA"                   {$thisLicence = "Azure Advanced Threat Protection"}
+		"ADALLOM_S_STANDALONE"  {$thisLicence = "Microsoft Cloud App Security"}
+		"RMS_S_PREMIUM"         {$thisLicence = "Azure Information Protection Premium P1"} 
+		"RMS_S_PREMIUM2"        {$thisLicence = "Azure Information Protection Premium P2"}
+		"INTUNE_A"              {$thisLicence = "Microsoft Intune"}
+        "INTUNE_A_VL"           {$thisLicence = "Microsoft Intune"}
+		"MFA_PREMIUM"           {$thisLicence = "Microsoft Azure Multi-Factor Authentication"}
+		"INTUNE_O365"           {$thisLicence = "MDM for Office 365 (not licenced individually)"}
+		"RMS_S_ENTERPRISE"      {$thisLicence = "Azure Rights Management"}
+		"PAM_ENTERPRISE"        {$thisLicence = "O365 Priviledged Access Management"}
+		"ADALLOM_S_DISCOVERY"   {$thisLicence = "Cloud App Security Discovery"}
 		"MIP_S_CLP1"             {$thisLicence = "Information Protection for Office 365 - Standard"}
 		"MIP_S_CLP2"            {$thisLicence = "Information Protection for Office 365 - Premium"}
 		"PREMIUM_ENCRYPTION"      	{$thisLicence = "Premium Encryption"}
@@ -209,26 +212,30 @@ function componentlicenseswitch {
 		#SharePoint
 		"SHAREPOINTDESKLESS"   {$thisLicence = "SharePoint Online Kiosk"}
 		"SHAREPOINTSTANDARD"   {$thisLicence = "SharePoint Online (Plan 1)"}
-		"SHAREPOINTENTERPRISE" {$thisLicence = "SharePoint Online (Plan 2)" }
+		"SHAREPOINTENTERPRISE" {$thisLicence = "SharePoint Online (Plan 2)"}
 		#Skype
 		"MCOIMP"                    {$thisLicence = "Skype for Business (Plan 1)"}
-		"MCOSTANDARD"          {$thisLicence = "Skype for Business Online (Plan 2)" }
+		"MCOSTANDARD"          {$thisLicence = "Skype for Business Online (Plan 2)"}
 		#Stream
 		"STREAM_O365_K"        {$thisLicence = "Stream for Office 365 Firstline"}
 		"STREAM_O365_E1"       {$thisLicence = "Microsoft Stream for O365 E1"}
-		"STREAM_O365_E3"       {$thisLicence = "Microsoft Stream for O365 E3 SKU" }
-		"STREAM_O365_E5"       {$thisLicence = "Stream E5" }
+		"STREAM_O365_E3"       {$thisLicence = "Microsoft Stream for O365 E3 SKU"}
+		"STREAM_O365_E5"       {$thisLicence = "Stream E5"}
 		#Teams
-		"TEAMS1"               {$thisLicence = "Microsoft Teams" }
+		"TEAMS1"               {$thisLicence = "Microsoft Teams"}
 		"MCO_TEAMS_IW"         {$thisLicence = "Microsoft Teams Trial"}
 		"TEAMS_FREE_SERVICE"			{$thisLicence = "Teams Free Service (Not assigned per user)"}
 		"MCOFREE"			        {$thisLicence = "MCO Free for Microsoft Teams (free)"}
 		"TEAMS_FREE"			    {$thisLicence = "Microsoft Teams (free)"}
+        #Telephony
+        "MCOPSTN1"                  {$thisLicence = "Domestic Calling Plan (1200 min)"}
+        "MCOPSTN2"                  {$thisLicence = "Domestic and International Calling Plan"}
+        "MCOPSTN5"                  {$thisLicence = "Domestic Calling Plan (120 min)"}
 		#To-Do
 		"BPOS_S_TODO_FIRSTLINE"     {$thisLicence = "To-Do Firstline"}
 		"BPOS_S_TODO_1"      	    {$thisLicence = "To-Do Plan 1"}
-		"BPOS_S_TODO_2"             {$thisLicence = "To-Do (Plan 2)" }
-		"BPOS_S_TODO_3"             {$thisLicence = "To-Do (Plan 3)" }
+		"BPOS_S_TODO_2"             {$thisLicence = "To-Do (Plan 2)"}
+		"BPOS_S_TODO_3"             {$thisLicence = "To-Do (Plan 3)"}
 		#Visio
 		"VISIOONLINE"      		{$thisLicence = "Visio Online"}
 		"VISIO_CLIENT_SUBSCRIPTION" 	{$thisLicence = "Visio Pro for Office 365"}
@@ -372,8 +379,9 @@ function RootLicenceswitch {
         "EMS"							    {$RootLicence = "EMS (Plan E3)"}
         "EMSPREMIUM"                        {$RootLicence = "EMS (Plan E5)"}
         "RIGHTSMANAGEMENT_ADHOC"			{$RootLicence = "Windows Azure RMS"}
-        "INTUNE_A"						    {$RootLicence = "Windows Intune Plan A"}
-        "ATP_ENTERPRISE"					{$RootLicence = "Ex Online ATP Plan 1"}
+        "INTUNE_A"						    {$RootLicence = "Microsoft Intune"}
+        "INTUNE_A_VL"                       {$RootLicence = "Microsoft Intune"}
+        "ATP_ENTERPRISE"					{$RootLicence = "Office 365 ATP Plan 1"}
         "EQUIVIO_ANALYTICS"				    {$RootLicence = "Office 365 Advanced Compliance"}
         "RMS_S_ENTERPRISE"				    {$RootLicence = "Azure Active Directory Rights Management"}
         "MFA_PREMIUM"					    {$RootLicence = "Azure Multi-Factor Authentication"}
@@ -398,22 +406,18 @@ function RootLicenceswitch {
         "SHAREPOINTDESKLESS"				{$RootLicence = "SharePoint Online Kiosk"}
         "SHAREPOINTLITE"					{$RootLicence = "SharePoint Online (Plan 1)"}
         "SHAREPOINTENTERPRISE_MIDMARKET"	{$RootLicence = "SharePoint Online (Plan 1)"}
-        #Skype
-        "MCOSTANDARD_GOV"				    {$RootLicence = "Lync Plan 2G"}
-        "MCOLITE"						    {$RootLicence = "Lync Online (Plan 1)"}
-        "MCOSTANDARD_MIDMARKET"			    {$RootLicence = "Lync Online (Plan 1)"}
-        "MCOSTANDARD"					    {$RootLicence = "SFBO Plan 2"}
-        "VIDEO_INTEROP"					    {$RootLicence = "Polycom Skype Meeting Video Interop for Skype for Business"}
         #Teams
 		"TEAMS_FREE"			            {$RootLicence = "Microsoft Teams (Free)"}
         "TEAMS_EXPLORATORY"					{$RootLicence = "Microsoft Teams Exploratory"}
         "TEAMS_COMMERCIAL_TRIAL"            {$RootLicence = "Teams Commercial Cloud"}
         "MS_TEAMS_IW"                       {$RootLicence = "Microsoft Teams Trial"}
+        "MEETING_ROOM"                      {$RootLicence = "Meeting Room"}
         #Telephony
         "MCOMEETADV"						{$RootLicence = "PSTN conferencing"}
-        "MCOPSTN1"			                {$RootLicence = "Domestic Calling Plan"}
+        "MCOPSTN1"			                {$RootLicence = "Domestic Calling Plan (1200 mins)"}
         "MCOPSTN2"						    {$RootLicence = "Domestic and International Calling Plan"}
         "MCOEV"							    {$RootLicence = "Microsoft Phone System"}
+        "MCOPSTN_5"                         {$RootLicence = "Domestic Calling Plan (120 mins)"
         #Visio
         "VISIOCLIENT"					    {$RootLicence = "Visio Pro Online"}
         "VISIOONLINE_PLAN1"				    {$RootLicence = "Visio Online Plan 1"}
