@@ -63,7 +63,7 @@ param (
 	[PSCredential]$Office365Credentials,
 	[Parameter(
 		HelpMessage="This stops translation into Friendly Names of SKU's and Components"
-	)][switch]$TranslateNames
+	)][switch]$NoNameTranslation
 )
 #Following Function Switches Complicated Component Names with Friendly Names
 function componentlicenseswitch {
@@ -466,7 +466,7 @@ $licensetype = Get-MsolAccountSku | Where-Object {$_.ConsumedUnits -ge 1}
 # Replace the above with the below if only a single SKU is required
 #$licensetype = Get-MsolAccountSku | Where-Object {$_.AccountSkuID -like "*Power*"}
 # Get all licences for a summary view
-if ($TranslateNames) {
+if ($NoNameTranslation) {
 	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$(RootLicenceswitch($_.SkuPartNumber))}}, ActiveUnits, ConsumedUnits | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
 }
 else {
@@ -481,7 +481,7 @@ foreach ($license in $licensetype) {
     $headerstring = "DisplayName`tUserPrincipalName`tAccountSku" 
     foreach ($row in $($license.ServiceStatus)) {
 		# Build header string
-		if ($TranslateNames) {
+		if ($NoNameTranslation) {
 			$thisLicence = componentlicenseswitch([string]($row.ServicePlan.servicename))
 		}
 		else {
@@ -492,7 +492,7 @@ foreach ($license in $licensetype) {
     Write-Host ("Gathering users with the following subscription: " + $license.accountskuid) 
     # Gather users for this particular AccountSku from pre-existing array of users
     $users = $alllicensedusers | Where-Object {$_.licenses.accountskuid -contains $license.accountskuid} 
-	if ($TranslateNames) {
+	if ($NoNameTranslation) {
 		$RootLicence = RootLicenceswitch($($license.SkuPartNumber))
 	}
 	else {
