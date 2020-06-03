@@ -99,6 +99,7 @@ function componentlicenseswitch {
 		"D365_CSI_EMBED_CE" 		{$thisLicence = "Dynamics 365 Customer Service Insights for CE Plan"}
 		"DYN365_ENTERPRISE_P1_IW"	{$thisLicence = "Dyn 365 P1 Trial Info Workers"}
 		#Dynamics Common Data Service
+		"DYN365_CDS_O365_P1"			{$thisLicence = "Common Data Service"}
 		"DYN365_CDS_P1"				{$thisLicence = "Common Data Service"}
 		"DYN365_CDS_P2"				{$thisLicence = "Common Data Service"}
 		"DYN365_CDS_FORMS_PRO"		{$thisLicence = "Common Data Service"}   
