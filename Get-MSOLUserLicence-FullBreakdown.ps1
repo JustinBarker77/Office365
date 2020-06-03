@@ -22,7 +22,8 @@
 		Updated: 20200422	V1.15   Formats to Segoe UI 9pt. Removed unnecessary True output. 
 		Updated: 20200430	V1.16	Made script more readable for Product type within component breakdown
 		Updated: 20200501	V1.17	Script readability changes
-        Updated: 20200501	V1.18	Added Telephony SKU's
+		Updated: 20200603	V1.18	Added Telephony SKU's
+		Updated: 20200603	V1.19	Added Switch for no name translation
 
 		Release Date: 20190530
 		Release notes from original:
@@ -60,7 +61,10 @@ param (
 	[Parameter(
 		HelpMessage = "Credentials to connect to Office 365 if not already connected"
 	)]
-	[PSCredential]$Office365Credentials
+	[PSCredential]$Office365Credentials,
+	[Parameter(
+		HelpMessage="This stops translation into Friendly Names of SKU's and Components"
+	)][switch]$NoNameTranslation
 )
 #Following Function Switches Complicated Component Names with Friendly Names
 function componentlicenseswitch {
@@ -464,7 +468,12 @@ $licensetype = Get-MsolAccountSku | Where-Object {$_.ConsumedUnits -ge 1}
 # Replace the above with the below if only a single SKU is required
 #$licensetype = Get-MsolAccountSku | Where-Object {$_.AccountSkuID -like "*Power*"}
 # Get all licences for a summary view
-get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$(RootLicenceswitch($_.SkuPartNumber))}}, ActiveUnits, ConsumedUnits | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
+if ($NoNameTranslation) {
+	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$($_.SkuPartNumber)}}, ActiveUnits, ConsumedUnits | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
+}
+else {
+	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$(RootLicenceswitch($_.SkuPartNumber))}}, ActiveUnits, ConsumedUnits | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
+}
 #get all users with licence
 Write-Host "Retrieving all licensed users - this may take a while."
 $alllicensedusers = Get-MsolUser -All | Where-Object {$_.isLicensed -eq $true}
@@ -474,13 +483,23 @@ foreach ($license in $licensetype) {
     $headerstring = "DisplayName`tUserPrincipalName`tAccountSku" 
     foreach ($row in $($license.ServiceStatus)) {
 		# Build header string
-		$thisLicence = componentlicenseswitch([string]($row.ServicePlan.servicename))
+		if ($NoNameTranslation) {
+			$thisLicence = [string]$row.ServicePlan.servicename
+		}
+		else {
+			$thisLicence = componentlicenseswitch([string]($row.ServicePlan.servicename))
+		}
         $headerstring = ($headerstring + "`t" + $thisLicence) 
     } 
     Write-Host ("Gathering users with the following subscription: " + $license.accountskuid) 
     # Gather users for this particular AccountSku from pre-existing array of users
     $users = $alllicensedusers | Where-Object {$_.licenses.accountskuid -contains $license.accountskuid} 
-	$RootLicence = RootLicenceswitch($($license.SkuPartNumber))
+	if ($NoNameTranslation) {
+		$RootLicence = ($($license.SkuPartNumber))
+	}
+	else {
+		$RootLicence = RootLicenceswitch($($license.SkuPartNumber))
+	}
 	#$logfile = $CompanyName + "-" +$RootLicence + ".csv"
 	$logfile = $CSVpath + "\" +$RootLicence + ".csv"
 	Out-File -FilePath $LogFile -InputObject $headerstring -Encoding UTF8 -append
