@@ -418,7 +418,8 @@ function RootLicenceswitch {
         "TEAMS_EXPLORATORY"					{$RootLicence = "Microsoft Teams Exploratory"}
         "TEAMS_COMMERCIAL_TRIAL"            {$RootLicence = "Teams Commercial Cloud"}
         "MS_TEAMS_IW"                       {$RootLicence = "Microsoft Teams Trial"}
-        "MEETING_ROOM"                      {$RootLicence = "Meeting Room"}
+		"MEETING_ROOM"                      {$RootLicence = "Meeting Room"}
+		"MCOCAP"							{$RootLicence = "Common Area Phone"}
         #Telephony
         "MCOMEETADV"						{$RootLicence = "PSTN conferencing"}
         "MCOPSTN1"			                {$RootLicence = "Dom Calling Plan (1200 mins)"}
