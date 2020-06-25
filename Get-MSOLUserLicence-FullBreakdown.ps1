@@ -10,7 +10,7 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.20
+		Version 1.21
 		Updated: 20190602	V1.07	Parameters, Comment based help, creates folder and deletes folder for csv's, require statements
 		Updated: 20190614	V1.08	Added more SKU's and Components
        	Updated: 20190627	V1.09	Added more Components
@@ -25,6 +25,7 @@
 		Updated: 20200603	V1.18	Added Telephony SKU's
 		Updated: 20200603	V1.19	Added Switch for no name translation
 		Updated: 20200625	V1.20	Added Telephony Virtual User
+		Updated: 20200626 	V1.21	Updated F1 to D3 as per Microsoft's update
 
 		Release Date: 20190530
 		Release notes from original:
@@ -318,7 +319,7 @@ function RootLicenceswitch {
         "DESKLESSWOFFPACK_GOV"			    {$RootLicence = "Microsoft Office 365 (Plan K2) for Government"}
 		"SPE_E3"							{$RootLicence = "Microsoft 365 E3"}
         "SPE_E5"							{$RootLicence = "Microsoft 365 E5"}
-        "SPE_F1"                            {$RootLicence = "Microsoft 365 F1"}
+        "SPE_F1"                            {$RootLicence = "Microsoft 365 D1"}
         "STANDARDWOFFPACK_STUDENT"		    {$RootLicence = "Microsoft Office 365 (Plan A2) for Students"}
         #Misc Services
 		"PLANNERSTANDALONE"				    {$RootLicence = "Planner Standalone"}
@@ -330,7 +331,7 @@ function RootLicenceswitch {
         "O365_BUSINESS"					    {$RootLicence = "Office 365 Business"}
         "O365_BUSINESS_ESSENTIALS"		    {$RootLicence = "Office 365 Business Essentials"}
         "O365_BUSINESS_PREMIUM"			    {$RootLicence = "Office 365 Business Premium"}
-		"DESKLESSPACK"					    {$RootLicence = "Office 365 (Plan F1)"}
+		"DESKLESSPACK"					    {$RootLicence = "Office 365 (Plan D3)"}
 		"DESKLESSWOFFPACK"				    {$RootLicence = "Office 365 (Plan K2)"}
 		"LITEPACK"						    {$RootLicence = "Office 365 (Plan P1)"}
 		"STANDARDPACK"					    {$RootLicence = "Office 365 (Plan E1)"}
