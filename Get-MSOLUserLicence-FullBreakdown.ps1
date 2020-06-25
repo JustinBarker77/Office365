@@ -10,10 +10,10 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.18
-		Updated: 20190602	V1.7	Parameters, Comment based help, creates folder and deletes folder for csv's, require statements
-		Updated: 20190614	V1.8	Added more SKU's and Components
-       	Updated: 20190627	V1.9	Added more Components
+		Version 1.20
+		Updated: 20190602	V1.07	Parameters, Comment based help, creates folder and deletes folder for csv's, require statements
+		Updated: 20190614	V1.08	Added more SKU's and Components
+       	Updated: 20190627	V1.09	Added more Components
 		Updated: 20190830   V1.10   Added more components. Updated / renamed refreshed licences
 		Updated: 20190916	V1.11	Added more components and SKU's
 		Updated: 20191015	V1.12	Tidied up old comments
@@ -24,6 +24,7 @@
 		Updated: 20200501	V1.17	Script readability changes
 		Updated: 20200603	V1.18	Added Telephony SKU's
 		Updated: 20200603	V1.19	Added Switch for no name translation
+		Updated: 20200625	V1.20	Added Telephony Virtual User
 
 		Release Date: 20190530
 		Release notes from original:
@@ -234,7 +235,8 @@ function componentlicenseswitch {
         #Telephony
         "MCOPSTN1"                  {$thisLicence = "Domestic Calling Plan (1200 min)"}
         "MCOPSTN2"                  {$thisLicence = "Domestic and International Calling Plan"}
-        "MCOPSTN5"                  {$thisLicence = "Domestic Calling Plan (120 min)"}
+		"MCOPSTN5"                  {$thisLicence = "Domestic Calling Plan (120 min)"}
+		"PHONESYSTEM_VIRTUALUSER"	{$thisLicence = "M365 Phone System - Virtual User"}
 		#To-Do
 		"BPOS_S_TODO_FIRSTLINE"     {$thisLicence = "To-Do Firstline"}
 		"BPOS_S_TODO_1"      	    {$thisLicence = "To-Do Plan 1"}
@@ -421,7 +423,8 @@ function RootLicenceswitch {
         "MCOPSTN1"			                {$RootLicence = "Dom Calling Plan (1200 mins)"}
         "MCOPSTN2"						    {$RootLicence = "Dom and Intl Calling Plan"}
         "MCOEV"							    {$RootLicence = "Microsoft Phone System"}
-        "MCOPSTN_5"                         {$RootLicence = "Dom Calling Plan (120mins)"}
+		"MCOPSTN_5"                         {$RootLicence = "Dom Calling Plan (120mins)"}
+		"PHONESYSTEM_VIRTUALUSER"			{$thisLicence = "M365 Phone System - Virtual User"}
         #Visio
         "VISIOCLIENT"					    {$RootLicence = "Visio Pro Online"}
         "VISIOONLINE_PLAN1"				    {$RootLicence = "Visio Online Plan 1"}
