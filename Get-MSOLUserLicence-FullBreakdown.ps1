@@ -426,7 +426,7 @@ function RootLicenceswitch {
         "MCOPSTN2"						    {$RootLicence = "Dom and Intl Calling Plan"}
         "MCOEV"							    {$RootLicence = "Microsoft Phone System"}
 		"MCOPSTN_5"                         {$RootLicence = "Dom Calling Plan (120mins)"}
-		"PHONESYSTEM_VIRTUALUSER"			{$thisLicence = "M365 Phone System - Virtual User"}
+		"PHONESYSTEM_VIRTUALUSER"			{$RootLicence = "M365 Phone System - Virtual User"}
         #Visio
         "VISIOCLIENT"					    {$RootLicence = "Visio Pro Online"}
         "VISIOONLINE_PLAN1"				    {$RootLicence = "Visio Online Plan 1"}
