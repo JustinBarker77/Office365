@@ -10,22 +10,23 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.21
-		Updated: 20190602	V1.07	Parameters, Comment based help, creates folder and deletes folder for csv's, require statements
-		Updated: 20190614	V1.08	Added more SKU's and Components
-       	Updated: 20190627	V1.09	Added more Components
-		Updated: 20190830   V1.10   Added more components. Updated / renamed refreshed licences
-		Updated: 20190916	V1.11	Added more components and SKU's
-		Updated: 20191015	V1.12	Tidied up old comments
-		Updated: 20200204   V1.13   Added more SKU's and Components
-		Updated: 20200408   V1.14   Added Teams Exploratory SKU
-		Updated: 20200422	V1.15   Formats to Segoe UI 9pt. Removed unnecessary True output. 
-		Updated: 20200430	V1.16	Made script more readable for Product type within component breakdown
-		Updated: 20200501	V1.17	Script readability changes
-		Updated: 20200603	V1.18	Added Telephony SKU's
-		Updated: 20200603	V1.19	Added Switch for no name translation
-		Updated: 20200625	V1.20	Added Telephony Virtual User
+		Version 1.22
+        Updated: 20200706   V1.22   Updated SKU error and added additional friendly names
 		Updated: 20200626 	V1.21	Updated F1 to F3 as per Microsoft's update
+		Updated: 20200625	V1.20	Added Telephony Virtual User
+		Updated: 20200603	V1.19	Added Switch for no name translation		
+		Updated: 20200603	V1.18	Added Telephony SKU's
+		Updated: 20200501	V1.17	Script readability changes
+		Updated: 20200430	V1.16	Made script more readable for Product type within component breakdown
+		Updated: 20200422	V1.15   Formats to Segoe UI 9pt. Removed unnecessary True output. 
+		Updated: 20200408   V1.14   Added Teams Exploratory SKU
+		Updated: 20200204   V1.13   Added more SKU's and Components
+		Updated: 20191015	V1.12	Tidied up old comments
+		Updated: 20190916	V1.11	Added more components and SKU's
+		Updated: 20190830   V1.10   Added more components. Updated / renamed refreshed licences
+       	Updated: 20190627	V1.09	Added more Components
+		Updated: 20190614	V1.08	Added more SKU's and Components
+        Updated: 20190602	V1.07	Parameters, Comment based help, creates folder and deletes folder for csv's, require statements
 
 		Release Date: 20190530
 		Release notes from original:
@@ -78,7 +79,8 @@ function componentlicenseswitch {
 		#AAD
 		"AAD_PREMIUM"           {$thisLicence = "Azure Active Directory Premium P1"}
 		"AAD_PREMIUM_P2"        {$thisLicence = "Azure Active Directory Premium P2"}
-		#Dynamics
+
+        #Dynamics
 		"DYN365_ENTERPRISE_SALES" {$thisLicence = "Dynamics 365 for Sales"}
 		"Dynamics_365_for_Talent_Team_members" {$thisLicence = "Dynamics 365 for Talent Team members"}
 		"Dynamics_365_for_Retail_Team_members" {$thisLicence = "Dynamics 365 for Retail Team members"}
@@ -104,20 +106,26 @@ function componentlicenseswitch {
 		"DYN365_ENTERPRISE_P1"		{$thisLicence = "Dynamics Enterprise P1"}
 		"D365_CSI_EMBED_CE" 		{$thisLicence = "Dynamics 365 Customer Service Insights for CE Plan"}
 		"DYN365_ENTERPRISE_P1_IW"	{$thisLicence = "Dyn 365 P1 Trial Info Workers"}
+
 		#Dynamics Common Data Service
 		"DYN365_CDS_O365_P1"			{$thisLicence = "Common Data Service"}
+		"DYN365_CDS_O365_P2"			{$thisLicence = "Common Data Service"}
+		"DYN365_CDS_O365_P3"			{$thisLicence = "Common Data Service"}
+		"DYN365_CDS_O365_F1"			{$thisLicence = "Common Data Service"}
 		"DYN365_CDS_P1"				{$thisLicence = "Common Data Service"}
 		"DYN365_CDS_P2"				{$thisLicence = "Common Data Service"}
 		"DYN365_CDS_FORMS_PRO"		{$thisLicence = "Common Data Service"}   
 		"DYN365_CDS_DYN_APPS"		{$thisLicence = "Common Data Service"}
 		"DYN365_CDS_DYN_P2"			{$thisLicence = "Common Data Service"}
 		"DYN365_CDS_VIRAL"     {$thisLicence = "Common Data Service"}
+
 		#Exchange
 		"EXCHANGE_S_ENTERPRISE"{$thisLicence = "Exchange Online (Plan 2)"}
 		"EXCHANGE_S_FOUNDATION"{$thisLicence = "Core Exchange for non-Exch SKUs (e.g. setting profile pic)"}
 		"EXCHANGE_S_DESKLESS"      	{$thisLicence = "Exchange Online Firstline"}
 		"EXCHANGE_S_STANDARD"      	{$thisLicence = "Exchange Online (Plan 1)"}
 		"EXCHANGE_S_ARCHIVE_ADDON"	{$thisLicence = "Exchange Online Archiving Add-on"}
+
 		#Flow
 		"FLOW_P1"		{$thisLicence = "Microsoft Flow Plan 1"}
 		"FLOW_P2"	        {$thisLicence = "Microsoft Flow Plan 2"}
@@ -133,6 +141,7 @@ function componentlicenseswitch {
 		"FLOW_FORMS_PRO"	{$thisLicence = "Flow for Forms Pro"}
 		"FLOW_O365_S1"      	{$thisLicence = "Flow for Office 365 (F1)"}
 		"FLOW_DYN_P2"		{$thisLicence = "Flow for Dynamics 365"}
+
 		#Forms
 		"FORMS_PLAN_E1"         {$thisLicence = "Microsoft Forms (Plan E1)"}
 		"FORMS_PLAN_E3"         {$thisLicence = "Microsoft Forms (Plan E3)"}
@@ -141,11 +150,13 @@ function componentlicenseswitch {
 		"Forms_Pro_CE"				{$thisLicence = "Forms Pro for Customer Engagement Plan"}
 		"FORMS_PRO"			        {$thisLicence = "Forms Pro"}
 		"FORMS_PLAN_K"      		{$thisLicence = "Microsoft Forms (Plan F1)"}
+
 		#Kaizala
 		"KAIZALA_STANDALONE"		{$thisLicence = "Microsoft Kaizala Pro"}
 		"KAIZALA_O365_P1"		    {$thisLicence = "Microsoft Kaizala Pro (P1)"}
 		"KAIZALA_O365_P2"		    {$thisLicence = "Microsoft Kaizala Pro"}
 		"KAIZALA_O365_P3"			{$thisLicence = "Kaizala for Office 365"}
+
 		#Misc Services
 		"MYANALYTICS_P2"       {$thisLicence = "Insights by MyAnalytics"}
 		"EXCHANGE_ANALYTICS"   {$thisLicence = "Microsoft MyAnalytics (Full)"}
@@ -157,19 +168,26 @@ function componentlicenseswitch {
 		"MICROSOFT_BUSINESS_CENTER" {$thisLicence = "Microsoft Business Center"}
 		"NBENTERPRISE"         {$thisLicence = "Microsoft Social Engagement - Service Discontinuation"}
 		"MICROSOFT_SEARCH"      	{$thisLicence = "Microsoft Search"}
-		#Office
+		"MICROSOFTBOOKINGS"      	{$thisLicence = "Microsoft Bookings"}
+		"EXCEL_PREMIUM"      	{$thisLicence = "Microsoft Excel Advanced Analytics"}
+		
+        #Office
 		"SHAREPOINTWAC"        {$thisLicence = "Office Online"}	
 		"OFFICESUBSCRIPTION"   {$thisLicence = "Office 365 ProPlus"}
 		"OFFICEMOBILE_SUBSCRIPTION" {$thisLicence = "Office Mobile Apps for Office 365"}
+
 		#OneDrive
 		"ONEDRIVESTANDARD"			{$thisLicence = "OneDrive for Business (Plan 1)"}
 		"ONEDRIVE_BASIC"      			{$thisLicence = "OneDrive Basic"}
+
 		#PowerBI
 		"BI_AZURE_P0"           {$thisLicence = "Power BI (Free)"}
 		"BI_AZURE_P2"           {$thisLicence = "Power BI Pro"}
+
 		#Phone System
 		"MCOEV"                {$thisLicence = "M365 Phone System"}
 		"MCOMEETADV"           {$thisLicence = "M365 Audio Conferencing"}
+
 		#PowerApps
 		"POWERAPPS_O365_S1"         {$thisLicence = "PowerApps for Office 365 Firstline"}
 		"POWERAPPS_O365_P1"    {$thisLicence = "PowerApps for Office 365"}
@@ -179,6 +197,7 @@ function componentlicenseswitch {
 		"POWERAPPS_P2_VIRAL"   {$thisLicence = "PowerApps Plan 2 Trial"}
 		"POWERAPPS_P2"				{$thisLicence = "PowerApps Plan 2"}
 		"POWERAPPS_DYN_P2"			{$thisLicence = "PowerApps for Dynamics 365"}
+
 		#Project
 		"PROJECT_PROFESSIONAL"      	{$thisLicence = "Project P3"}
 		"FLOW_FOR_PROJECT"      		{$thisLicence = "Data Integration for Project with Flow"}
@@ -186,6 +205,7 @@ function componentlicenseswitch {
 		"SHAREPOINT_PROJECT"      		{$thisLicence = "Project Online Service"}
 		"PROJECT_CLIENT_SUBSCRIPTION"	{$thisLicence = "Project Online Desktop Client"}
 		"PROJECT_ESSENTIALS"            {$thisLicence = "Project Online Essentials"}
+
 		#Security & Compliance
 		"RECORDS_MANAGEMENT"		{$thisLicence = "Microsoft Records Management"}
 		"INFO_GOVERNANCE"			{$thisLicence = "Microsoft Information Governance"}
@@ -216,42 +236,52 @@ function componentlicenseswitch {
 		"RMS_S_ADHOC"      			{$thisLicence = "Rights Management Adhoc"}
 		"INFORMATION_BARRIERS"		{$thisLicence = "Information Barriers"}
 		"WINDEFATP"                	{$thisLicence = "Windows Defender ATP"}
+		"MTP"                	{$thisLicence = "Microsoft Threat Protection"}
+
 		#SharePoint
 		"SHAREPOINTDESKLESS"   {$thisLicence = "SharePoint Online Kiosk"}
 		"SHAREPOINTSTANDARD"   {$thisLicence = "SharePoint Online (Plan 1)"}
 		"SHAREPOINTENTERPRISE" {$thisLicence = "SharePoint Online (Plan 2)"}
+
 		#Skype
 		"MCOIMP"                    {$thisLicence = "Skype for Business (Plan 1)"}
 		"MCOSTANDARD"          {$thisLicence = "Skype for Business Online (Plan 2)"}
+
 		#Stream
 		"STREAM_O365_K"        {$thisLicence = "Stream for Office 365 Firstline"}
 		"STREAM_O365_E1"       {$thisLicence = "Microsoft Stream for O365 E1"}
 		"STREAM_O365_E3"       {$thisLicence = "Microsoft Stream for O365 E3 SKU"}
 		"STREAM_O365_E5"       {$thisLicence = "Stream E5"}
+
 		#Teams
 		"TEAMS1"               {$thisLicence = "Microsoft Teams"}
 		"MCO_TEAMS_IW"         {$thisLicence = "Microsoft Teams Trial"}
 		"TEAMS_FREE_SERVICE"			{$thisLicence = "Teams Free Service (Not assigned per user)"}
 		"MCOFREE"			        {$thisLicence = "MCO Free for Microsoft Teams (free)"}
 		"TEAMS_FREE"			    {$thisLicence = "Microsoft Teams (free)"}
+
         #Telephony
         "MCOPSTN1"                  {$thisLicence = "Domestic Calling Plan (1200 min)"}
         "MCOPSTN2"                  {$thisLicence = "Domestic and International Calling Plan"}
 		"MCOPSTN5"                  {$thisLicence = "Domestic Calling Plan (120 min)"}
 		"PHONESYSTEM_VIRTUALUSER"	{$thisLicence = "M365 Phone System - Virtual User"}
+
 		#To-Do
 		"BPOS_S_TODO_FIRSTLINE"     {$thisLicence = "To-Do Firstline"}
 		"BPOS_S_TODO_1"      	    {$thisLicence = "To-Do Plan 1"}
 		"BPOS_S_TODO_2"             {$thisLicence = "To-Do (Plan 2)"}
 		"BPOS_S_TODO_3"             {$thisLicence = "To-Do (Plan 3)"}
+
 		#Visio
 		"VISIOONLINE"      		{$thisLicence = "Visio Online"}
 		"VISIO_CLIENT_SUBSCRIPTION" 	{$thisLicence = "Visio Pro for Office 365"}
+
 		#Whiteboard
 		"WHITEBOARD_FIRSTLINE1"         {$thisLicence = "Whiteboard for Firstline"}
 		"WHITEBOARD_PLAN1"      	{$thisLicence = "Whiteboard Plan 1"}
 		"WHITEBOARD_PLAN2"      	{$thisLicence = "Whiteboard Plan 2"}
 		"WHITEBOARD_PLAN3"      	{$thisLicence = "Whiteboard Plan 3"}
+
 		#Windows 10
 		"WIN10_PRO_ENT_SUB"      	{$thisLicence = "Win 10 Enterprise E3"}
 		"WIN10_ENT_LOC_F1"              {$thisLicence = "Win 10 Enterprise E3 (Local Only)"}                
