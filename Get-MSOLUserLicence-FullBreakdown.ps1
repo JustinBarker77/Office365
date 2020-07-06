@@ -25,7 +25,7 @@
 		Updated: 20200603	V1.18	Added Telephony SKU's
 		Updated: 20200603	V1.19	Added Switch for no name translation
 		Updated: 20200625	V1.20	Added Telephony Virtual User
-		Updated: 20200626 	V1.21	Updated F1 to D3 as per Microsoft's update
+		Updated: 20200626 	V1.21	Updated F1 to F3 as per Microsoft's update
 
 		Release Date: 20190530
 		Release notes from original:
@@ -331,7 +331,7 @@ function RootLicenceswitch {
         "O365_BUSINESS"					    {$RootLicence = "Office 365 Business"}
         "O365_BUSINESS_ESSENTIALS"		    {$RootLicence = "Office 365 Business Essentials"}
         "O365_BUSINESS_PREMIUM"			    {$RootLicence = "Office 365 Business Premium"}
-		"DESKLESSPACK"					    {$RootLicence = "Office 365 (Plan D3)"}
+		"DESKLESSPACK"					    {$RootLicence = "Office 365 (Plan F3)"}
 		"DESKLESSWOFFPACK"				    {$RootLicence = "Office 365 (Plan K2)"}
 		"LITEPACK"						    {$RootLicence = "Office 365 (Plan P1)"}
 		"STANDARDPACK"					    {$RootLicence = "Office 365 (Plan E1)"}
