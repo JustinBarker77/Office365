@@ -10,8 +10,9 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.22
-        Updated: 20200706   V1.22   Updated SKU error and added additional friendly names
+		Version 1.23
+		Updated: 20207018	V1.23	Added AAD Basic friendly component name
+		Updated: 20200706   V1.22   Updated SKU error and added additional friendly names
 		Updated: 20200626 	V1.21	Updated F1 to F3 as per Microsoft's update
 		Updated: 20200625	V1.20	Added Telephony Virtual User
 		Updated: 20200603	V1.19	Added Switch for no name translation		
@@ -77,6 +78,7 @@ function componentlicenseswitch {
 	)
 	switch -wildcard ($($component)) {
 		#AAD
+		"AAD_BASIC"				{$thisLicence = "Azure Acitve Directory Basic"}
 		"AAD_PREMIUM"           {$thisLicence = "Azure Active Directory Premium P1"}
 		"AAD_PREMIUM_P2"        {$thisLicence = "Azure Active Directory Premium P2"}
 
