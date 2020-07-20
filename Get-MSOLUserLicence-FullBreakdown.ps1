@@ -10,8 +10,9 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.23
-		Updated: 20207018	V1.23	Added AAD Basic friendly component name
+		Version 1.24
+		Updated: 20200720	V1.24	Added Virtual User component
+		Updated: 20200718	V1.23	Added AAD Basic friendly component name
 		Updated: 20200706   V1.22   Updated SKU error and added additional friendly names
 		Updated: 20200626 	V1.21	Updated F1 to F3 as per Microsoft's update
 		Updated: 20200625	V1.20	Added Telephony Virtual User
@@ -189,6 +190,7 @@ function componentlicenseswitch {
 		#Phone System
 		"MCOEV"                {$thisLicence = "M365 Phone System"}
 		"MCOMEETADV"           {$thisLicence = "M365 Audio Conferencing"}
+		"MCOEV_VIRTUALUSER"	   {$thisLicence = "Microsoft 365 Phone System Virtual User"}
 
 		#PowerApps
 		"POWERAPPS_O365_S1"         {$thisLicence = "PowerApps for Office 365 Firstline"}
