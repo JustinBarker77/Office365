@@ -10,7 +10,8 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.24
+		Version 1.25
+		Updated: 20200730	V1.25	Added AIP P2 and Project for Office (E3)
 		Updated: 20200720	V1.24	Added Virtual User component
 		Updated: 20200718	V1.23	Added AAD Basic friendly component name
 		Updated: 20200706   V1.22   Updated SKU error and added additional friendly names
@@ -209,6 +210,7 @@ function componentlicenseswitch {
 		"SHAREPOINT_PROJECT"      		{$thisLicence = "Project Online Service"}
 		"PROJECT_CLIENT_SUBSCRIPTION"	{$thisLicence = "Project Online Desktop Client"}
 		"PROJECT_ESSENTIALS"            {$thisLicence = "Project Online Essentials"}
+		"PROJECT_O365_P2"				{$thisLicence = "Project for Office (Plan E3)"}
 
 		#Security & Compliance
 		"RECORDS_MANAGEMENT"		{$thisLicence = "Microsoft Records Management"}
@@ -434,7 +436,9 @@ function RootLicenceswitch {
         "ADALLOM_STANDALONE"                {$RootLicence = "Microsoft Cloud App Security"}
         "ATA"							    {$RootLicence = "Advanced Threat Analytics"}
         "WIN_DEF_ATP"                   	{$RootLicence = "Windows 10 Defender ATP"}
-        "RIGHTSMANAGEMENT"				    {$RootLicence = "Rights Management"}
+		"RIGHTSMANAGEMENT"				    {$RootLicence = "Rights Management"}
+		"INFOPROTECTION_P2"					{$RootLicence = "AIP Premium P2"}
+
         #Skype
         "MCOSTANDARD_GOV"				    {$RootLicence = "Lync Plan 2G"}
         "MCOLITE"						    {$RootLicence = "Lync Online (Plan 1)"}
