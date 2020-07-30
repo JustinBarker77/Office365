@@ -11,7 +11,7 @@
 
 	.NOTES
 		Version 1.25
-		Updated: 20200730	V1.25	Added AIP P2 and Project for Office (E3)
+		Updated: 20200730	V1.25	Added AIP P2 and Project for Office (E3 + E5)
 		Updated: 20200720	V1.24	Added Virtual User component
 		Updated: 20200718	V1.23	Added AAD Basic friendly component name
 		Updated: 20200706   V1.22   Updated SKU error and added additional friendly names
