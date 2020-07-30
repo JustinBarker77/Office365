@@ -211,6 +211,7 @@ function componentlicenseswitch {
 		"PROJECT_CLIENT_SUBSCRIPTION"	{$thisLicence = "Project Online Desktop Client"}
 		"PROJECT_ESSENTIALS"            {$thisLicence = "Project Online Essentials"}
 		"PROJECT_O365_P2"				{$thisLicence = "Project for Office (Plan E3)"}
+		"PROJECT_O365_P3"				{$thisLicence = "Project for Office (Plan E5)"}
 
 		#Security & Compliance
 		"RECORDS_MANAGEMENT"		{$thisLicence = "Microsoft Records Management"}
