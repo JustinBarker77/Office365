@@ -10,7 +10,8 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.25
+		Version 1.26
+		Updated: 20200812	V1.26	Added Links to Licensing Sheets on All Licenses Page and move All Licenses Page to be first worksheet
 		Updated: 20200730	V1.25	Added AIP P2 and Project for Office (E3 + E5)
 		Updated: 20200720	V1.24	Added Virtual User component
 		Updated: 20200718	V1.23	Added AAD Basic friendly component name
@@ -513,10 +514,10 @@ $licensetype = Get-MsolAccountSku | Where-Object {$_.ConsumedUnits -ge 1}
 #$licensetype = Get-MsolAccountSku | Where-Object {$_.AccountSkuID -like "*Power*"}
 # Get all licences for a summary view
 if ($NoNameTranslation) {
-	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$($_.SkuPartNumber)}}, ActiveUnits, ConsumedUnits | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
+	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU';  Expression = {$($_.SkuPartNumber)}}, ActiveUnits, ConsumedUnits | Sort-Object 'AccountLicenseSKU' | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
 }
 else {
-	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$(RootLicenceswitch($_.SkuPartNumber))}}, ActiveUnits, ConsumedUnits | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
+	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$(RootLicenceswitch($_.SkuPartNumber))}}, ActiveUnits, ConsumedUnits | Sort-Object 'AccountLicenseSKU(Friendly)' | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
 }
 #get all users with licence
 Write-Host "Retrieving all licensed users - this may take a while."
@@ -613,8 +614,28 @@ Function Merge-CSVFiles {
 			$Selection.FormatConditions.Item(3).Interior.ColorIndex = 38
 			$Selection.FormatConditions.Item(3).Font.ColorIndex = 30
 		}
+		else {
+			foreach ($Item in (Import-Csv $CSVPath\AllLicences.csv -Delimiter "`t")) {	
+				if ($NoNameTranslation) {
+					$SearchString = $Item.'AccountLicenseSKU'
+					$Selection = $worksheet.Range("A2").EntireColumn
+					$Search = $Selection.find($SearchString,[Type]::Missing,[Type]::Missing,1) 
+					$ResultCell = "A$($Search.Row)"
+					$worksheet.Hyperlinks.Add($worksheet.Range($ResultCell),"","`'$($SearchString)`'!A1","$($SearchString)",$worksheet.Range($ResultCell).text)
+				}
+				else {
+					$SearchString = $Item.'AccountLicenseSKU(Friendly)'
+					$Selection = $worksheet.Range("A2").EntireColumn
+					$Search = $Selection.find($SearchString,[Type]::Missing,[Type]::Missing,1) 
+					$ResultCell = "A$($Search.Row)"
+					$worksheet.Hyperlinks.Add($worksheet.Range($ResultCell),"","`'$($SearchString)`'!A1","$($SearchString)",$worksheet.Range($ResultCell).text)
+				}
+			}
+			$worksheet.Move($worksheets.Item(1))
+		}
 	}
 	$workbooks.Worksheets.Item("AllLicences").Select()
+
 	$workbooks.SaveAs($XLOutput,51)
 	$workbooks.Saved = $true
 	$workbooks.Close()
