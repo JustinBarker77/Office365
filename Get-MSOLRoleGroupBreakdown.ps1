@@ -5,15 +5,18 @@
 		The purpose of this script is is to export MSOL RoleGroups to excel
 
 	.DESCRIPTION
-		This script will log in to Office 365 and then create a RoleGroup report in excel, applying an autofilter.
+		This script will log in to Office 365 and then create a RoleGroup report in excel, applying formating and an autofilter.
 
 	.NOTES
-		Version 0.1
-        Updated: 20200727	V0.1	Initial draft
+		Version: 0.2
+        	Updated: 14-08-2020	v0.2	Updated references
+		Updated: 27-07-2020	v0.1	Initial draft
 
+		Authors: Luke Allinson, Justin Barker
+		
 		References: 
-			https://gallery.technet.microsoft.com/scriptcenter/Export-a-Licence-b200ca2a
 			https://stackoverflow.com/questions/31183106/can-powershell-generate-a-plain-excel-file-with-multiple-sheets
+			https://learn-powershell.net/2015/10/02/quick-hits-adding-a-hyperlink-to-excel-spreadsheet/
 #>
 
 [CmdletBinding()]
@@ -86,7 +89,6 @@ Function Merge-CSVFiles {
         $SummaryInfo += $SheetObj  
         $CSVSheet++
 	}
-	#$Worksheets = $workbooks.worksheets
     Write-Host "Applying formatting to Worksheets..." -ForegroundColor Magenta
     ForEach ($Worksheet in $Worksheets) {
         ## Add links to summary page
