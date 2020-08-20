@@ -10,8 +10,9 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.26
-		Updated: 20200812	V1.26	Added Links to Licensing Sheets on All Licenses Page and move All Licenses Page to be first worksheet
+		Version 1.27
+        Updated: 20200820	V1.27	Added additional Office 365 E1 components
+        Updated: 20200812	V1.26	Added Links to Licensing Sheets on All Licenses Page and move All Licenses Page to be first worksheet
 		Updated: 20200730	V1.25	Added AIP P2 and Project for Office (E3 + E5)
 		Updated: 20200720	V1.24	Added Virtual User component
 		Updated: 20200718	V1.23	Added AAD Basic friendly component name
@@ -123,6 +124,9 @@ function componentlicenseswitch {
 		"DYN365_CDS_DYN_APPS"		{$thisLicence = "Common Data Service"}
 		"DYN365_CDS_DYN_P2"			{$thisLicence = "Common Data Service"}
 		"DYN365_CDS_VIRAL"     {$thisLicence = "Common Data Service"}
+        "CDS_O365_P1"     {$thisLicence = "Common Data Service for Teams"}
+        "CDS_O365_P2"     {$thisLicence = "Common Data Service for Teams"}
+        "CDS_O365_P3"     {$thisLicence = "Common Data Service for Teams"}
 
 		#Exchange
 		"EXCHANGE_S_ENTERPRISE"{$thisLicence = "Exchange Online (Plan 2)"}
@@ -203,6 +207,9 @@ function componentlicenseswitch {
 		"POWERAPPS_P2_VIRAL"   {$thisLicence = "PowerApps Plan 2 Trial"}
 		"POWERAPPS_P2"				{$thisLicence = "PowerApps Plan 2"}
 		"POWERAPPS_DYN_P2"			{$thisLicence = "PowerApps for Dynamics 365"}
+        "POWER_VIRTUAL_AGENTS_O365_P1"	{$thisLicence = "Power Virtual Agents for Office 365"}
+        "POWER_VIRTUAL_AGENTS_O365_P2"	{$thisLicence = "Power Virtual Agents for Office 365"}
+        "POWER_VIRTUAL_AGENTS_O365_P3"	{$thisLicence = "Power Virtual Agents for Office 365"}
 
 		#Project
 		"PROJECT_PROFESSIONAL"      	{$thisLicence = "Project P3"}
@@ -211,7 +218,8 @@ function componentlicenseswitch {
 		"SHAREPOINT_PROJECT"      		{$thisLicence = "Project Online Service"}
 		"PROJECT_CLIENT_SUBSCRIPTION"	{$thisLicence = "Project Online Desktop Client"}
 		"PROJECT_ESSENTIALS"            {$thisLicence = "Project Online Essentials"}
-		"PROJECT_O365_P2"				{$thisLicence = "Project for Office (Plan E3)"}
+		"PROJECT_O365_P1"				{$thisLicence = "Project for Office (Plan E1)"}
+        "PROJECT_O365_P2"				{$thisLicence = "Project for Office (Plan E3)"}
 		"PROJECT_O365_P3"				{$thisLicence = "Project for Office (Plan E5)"}
 
 		#Security & Compliance
