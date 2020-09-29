@@ -10,8 +10,9 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.28
-		Updated: 20200929	V1.28	Added code for group assigned and direct assigned licensing
+		Version 1.29
+        Updated: 20200929	V1.29	Added components for E5 Compliance
+        Updated: 20200929	V1.28	Added code for group assigned and direct assigned licensing
 		Updated: 20200820	V1.27	Added additional Office 365 E1 components
         Updated: 20200812	V1.26	Added Links to Licensing Sheets on All Licenses Page and move All Licenses Page to be first worksheet
 		Updated: 20200730	V1.25	Added AIP P2 and Project for Office (E3 + E5)
@@ -437,6 +438,7 @@ function RootLicenceswitch {
         "INTUNE_A"						    {$RootLicence = "Microsoft Intune"}
         "INTUNE_A_VL"                       {$RootLicence = "Microsoft Intune"}
         "ATP_ENTERPRISE"					{$RootLicence = "Office 365 ATP Plan 1"}
+        "THREAT_INTELLIGENCE"               {$RootLicence = "Office 365 ATP Plan 2"}
         "EQUIVIO_ANALYTICS"				    {$RootLicence = "Office 365 Advanced Compliance"}
         "RMS_S_ENTERPRISE"				    {$RootLicence = "Azure Active Directory Rights Management"}
         "MFA_PREMIUM"					    {$RootLicence = "Azure Multi-Factor Authentication"}
@@ -449,7 +451,10 @@ function RootLicenceswitch {
         "WIN_DEF_ATP"                   	{$RootLicence = "Windows 10 Defender ATP"}
 		"RIGHTSMANAGEMENT"				    {$RootLicence = "Rights Management"}
 		"INFOPROTECTION_P2"					{$RootLicence = "AIP Premium P2"}
-
+        "Content_Explorer"					{$RootLicence = "Content Explorer (Assigned at Org Level)"}
+        "MICROSOFTENDPOINTDLP"				{$RootLicence = "Microsoft Endpoint DLP"}
+        "INSIDER_RISK"   					{$RootLicence = "Microsoft Insider Risk Management"}
+        "ML_CLASSIFICATION"   				{$RootLicence = "Microsoft ML_based Classification"}
         #Skype
         "MCOSTANDARD_GOV"				    {$RootLicence = "Lync Plan 2G"}
         "MCOLITE"						    {$RootLicence = "Lync Online (Plan 1)"}
