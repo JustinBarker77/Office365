@@ -10,8 +10,9 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.27
-        Updated: 20200820	V1.27	Added additional Office 365 E1 components
+		Version 1.28
+		Updated: 20200929	V1.28	Added code for group assigned and direct assigned licensing
+		Updated: 20200820	V1.27	Added additional Office 365 E1 components
         Updated: 20200812	V1.26	Added Links to Licensing Sheets on All Licenses Page and move All Licenses Page to be first worksheet
 		Updated: 20200730	V1.25	Added AIP P2 and Project for Office (E3 + E5)
 		Updated: 20200720	V1.24	Added Virtual User component
@@ -629,7 +630,7 @@ Function Merge-CSVFiles {
 		$Selection.Font.Size = 9
 		if ($Worksheet.Name -ne "AllLicences") {
 			Write-Host "Setting Conditional Formatting on "$Worksheet.Name
-			$Selection= $worksheet.Range($worksheet.Cells(2,4), $worksheet.Cells($rows,$columns))
+			$Selection= $worksheet.Range($worksheet.Cells(2,6), $worksheet.Cells($rows,$columns))
 			$Selection.FormatConditions.Add($xlTextString, "", $xlContains, 'Success','Success',0,0) | Out-Null
 			$Selection.FormatConditions.Item(1).Interior.ColorIndex = 35
 			$Selection.FormatConditions.Item(1).Font.ColorIndex = 51
