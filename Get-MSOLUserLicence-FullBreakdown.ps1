@@ -533,7 +533,7 @@ $alllicensedusers = Get-MsolUser -All | Where-Object {$_.isLicensed -eq $true}
 # Loop through all licence types found in the tenant 
 foreach ($license in $licensetype) {    
     # Build and write the Header for the CSV file 
-    $headerstring = "DisplayName`tUserPrincipalName`tAccountSku" 
+    $headerstring = "DisplayName`tUserPrincipalName`tAccountSku`tDirectAssigned`tGroupsAssigning" 
     foreach ($row in $($license.ServiceStatus)) {
 		# Build header string
 		if ($NoNameTranslation) {
@@ -560,7 +560,25 @@ foreach ($license in $licensetype) {
     foreach ($user in $users) {
         Write-Verbose ("Processing " + $user.displayname) 
         $thislicense = $user.licenses | Where-Object {$_.accountskuid -eq $license.accountskuid} 
-        $datastring = ($user.displayname + "`t" + $user.userprincipalname + "`t" + $rootLicence) 
+		$datastring = ($user.displayname + "`t" + $user.userprincipalname + "`t" + $rootLicence)
+		if ($thislicense.GroupsAssigningLicense.Count -eq 0) {
+			$datastring = $datastring + "`t" + $true + "`t" + $false
+		}
+		else {
+			if ($thislicense.GroupsAssigningLicense -contains $user.ObjectID) {
+				$groups = $thislicense.groupsassigninglicense.guid | Where-Object {$_ -notlike $user.objectid}
+				if ($null -eq $groups) {
+					$groups = $false
+				} else {
+					$groups = ($groups | Select-Object @{label="DisplayName";expression={(Get-MsolGroup -ObjectID $_).DisplayName}}).DisplayName -Join ";"
+				}
+				$datastring = $datastring + "`t" + $true + "`t" + $groups
+			} else {
+				$groups = $thislicense.groupsassigninglicense.guid | Where-Object {$_ -notlike $user.objectid}
+				$groups = ($groups | Select-Object @{label="DisplayName";expression={(Get-MsolGroup -ObjectID $_).DisplayName}}).DisplayName -Join ";"
+				$datastring = $datastring + "`t" + $false + "`t" + $groups
+			}
+		}
         foreach ($row in $($thislicense.servicestatus)) {
             # Build data string 
 			$datastring = ($datastring + "`t" + $($row.provisioningstatus)) 
