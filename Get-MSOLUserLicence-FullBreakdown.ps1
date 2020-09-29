@@ -255,6 +255,10 @@ function componentlicenseswitch {
 		"INFORMATION_BARRIERS"		{$thisLicence = "Information Barriers"}
 		"WINDEFATP"                	{$thisLicence = "Windows Defender ATP"}
 		"MTP"                	{$thisLicence = "Microsoft Threat Protection"}
+        "Content_Explorer"					{$thisLicence = "Content Explorer (Assigned at Org Level)"}
+        "MICROSOFTENDPOINTDLP"				{$thisLicence = "Microsoft Endpoint DLP"}
+        "INSIDER_RISK"   					{$thisLicence = "Microsoft Insider Risk Management"}
+        "ML_CLASSIFICATION"   				{$thisLicence = "Microsoft ML_based Classification"}
 
 		#SharePoint
 		"SHAREPOINTDESKLESS"   {$thisLicence = "SharePoint Online Kiosk"}
@@ -451,10 +455,7 @@ function RootLicenceswitch {
         "WIN_DEF_ATP"                   	{$RootLicence = "Windows 10 Defender ATP"}
 		"RIGHTSMANAGEMENT"				    {$RootLicence = "Rights Management"}
 		"INFOPROTECTION_P2"					{$RootLicence = "AIP Premium P2"}
-        "Content_Explorer"					{$RootLicence = "Content Explorer (Assigned at Org Level)"}
-        "MICROSOFTENDPOINTDLP"				{$RootLicence = "Microsoft Endpoint DLP"}
-        "INSIDER_RISK"   					{$RootLicence = "Microsoft Insider Risk Management"}
-        "ML_CLASSIFICATION"   				{$RootLicence = "Microsoft ML_based Classification"}
+
         #Skype
         "MCOSTANDARD_GOV"				    {$RootLicence = "Lync Plan 2G"}
         "MCOLITE"						    {$RootLicence = "Lync Online (Plan 1)"}
