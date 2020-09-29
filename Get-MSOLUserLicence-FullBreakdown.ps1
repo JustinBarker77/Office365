@@ -258,6 +258,7 @@ function componentlicenseswitch {
         "Content_Explorer"					{$thisLicence = "Content Explorer (Assigned at Org Level)"}
         "MICROSOFTENDPOINTDLP"				{$thisLicence = "Microsoft Endpoint DLP"}
         "INSIDER_RISK"   					{$thisLicence = "Microsoft Insider Risk Management"}
+        "INSIDER_RISK_MANAGEMENT"			{$thisLicence = "RETIRED - Microsoft Insider Risk Management"}
         "ML_CLASSIFICATION"   				{$thisLicence = "Microsoft ML_based Classification"}
 
 		#SharePoint
@@ -579,7 +580,7 @@ foreach ($license in $licensetype) {
 				} else {
 					$groups = ($groups | Select-Object @{label="DisplayName";expression={(Get-MsolGroup -ObjectID $_).DisplayName}}).DisplayName -Join ";"
 				}
-				$datastring = $datastring + "`t" + $true + "`t" + $groups 
+				$datastring = $datastring + "`t" + $true + "`t" + $groups
 			} else {
 				$groups = $thislicense.groupsassigninglicense.guid | Where-Object {$_ -notlike $user.objectid}
 				$groups = ($groups | Select-Object @{label="DisplayName";expression={(Get-MsolGroup -ObjectID $_).DisplayName}}).DisplayName -Join ";"
@@ -631,8 +632,6 @@ Function Merge-CSVFiles {
 		$worksheet.application.activewindow.freezepanes = $true
 		$rows = $worksheet.UsedRange.Rows.count
 		$columns = $worksheet.UsedRange.Columns.count
-		$Selection = $worksheet.Range($worksheet.Cells(2,5), $worksheet.Cells($rows,5))
-		[void]$Selection.Cells.Replace(";","`n",[Microsoft.Office.Interop.Excel.XlLookAt]::xlPart)
 		$Selection = $worksheet.Range($worksheet.Cells(1,1), $worksheet.Cells($rows,$columns))
 		$Selection.Font.Name = "Segoe UI"
 		$Selection.Font.Size = 9
