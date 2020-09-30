@@ -11,6 +11,7 @@
 
 	.NOTES
 		Version 1.29
+		Updated: 20200929 	V1.30	Added RMS_Basic
         Updated: 20200929	V1.29	Added components for E5 Compliance
         Updated: 20200929	V1.28	Added code for group assigned and direct assigned licensing
 		Updated: 20200820	V1.27	Added additional Office 365 E1 components
@@ -239,6 +240,7 @@ function componentlicenseswitch {
 		"LOCKBOX_ENTERPRISE"    {$thisLicence = "Customer Lockbox"}
 		"ATA"                   {$thisLicence = "Azure Advanced Threat Protection"}
 		"ADALLOM_S_STANDALONE"  {$thisLicence = "Microsoft Cloud App Security"}
+		"RMS_S_BASIC"			{$thisLicence = "Azure Rights Management Service (non-assignable)"}
 		"RMS_S_PREMIUM"         {$thisLicence = "Azure Information Protection Premium P1"} 
 		"RMS_S_PREMIUM2"        {$thisLicence = "Azure Information Protection Premium P2"}
 		"INTUNE_A"              {$thisLicence = "Microsoft Intune"}
@@ -259,7 +261,7 @@ function componentlicenseswitch {
         "MICROSOFTENDPOINTDLP"				{$thisLicence = "Microsoft Endpoint DLP"}
         "INSIDER_RISK"   					{$thisLicence = "Microsoft Insider Risk Management"}
         "INSIDER_RISK_MANAGEMENT"			{$thisLicence = "RETIRED - Microsoft Insider Risk Management"}
-        "ML_CLASSIFICATION"   				{$thisLicence = "Microsoft ML_based Classification"}
+		"ML_CLASSIFICATION"   				{$thisLicence = "Microsoft ML_based Classification"}
 
 		#SharePoint
 		"SHAREPOINTDESKLESS"   {$thisLicence = "SharePoint Online Kiosk"}
