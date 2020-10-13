@@ -10,7 +10,8 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.29
+		Version 1.31
+		Updated: 20201013	V1.31	Added User Enabled column
 		Updated: 20200929 	V1.30	Added RMS_Basic
         Updated: 20200929	V1.29	Added components for E5 Compliance
         Updated: 20200929	V1.28	Added code for group assigned and direct assigned licensing
@@ -543,7 +544,7 @@ $alllicensedusers = Get-MsolUser -All | Where-Object {$_.isLicensed -eq $true}
 # Loop through all licence types found in the tenant 
 foreach ($license in $licensetype) {    
     # Build and write the Header for the CSV file 
-    $headerstring = "DisplayName`tUserPrincipalName`tAccountSku`tDirectAssigned`tGroupsAssigning" 
+    $headerstring = "DisplayName`tUserPrincipalName`tAccountEnabled`tAccountSku`tDirectAssigned`tGroupsAssigning" 
     foreach ($row in $($license.ServiceStatus)) {
 		# Build header string
 		if ($NoNameTranslation) {
@@ -569,8 +570,13 @@ foreach ($license in $licensetype) {
     # Loop through all users and write them to the CSV file 
     foreach ($user in $users) {
         Write-Verbose ("Processing " + $user.displayname) 
-        $thislicense = $user.licenses | Where-Object {$_.accountskuid -eq $license.accountskuid} 
-		$datastring = ($user.displayname + "`t" + $user.userprincipalname + "`t" + $rootLicence)
+		$thislicense = $user.licenses | Where-Object {$_.accountskuid -eq $license.accountskuid} 
+		if ($user.BlockCredential = $true) {
+			$enabled = $false
+		} else { 
+			$enabled = $true
+		}
+		$datastring = ($user.displayname + "`t" + $user.userprincipalname + "`t" + $enabled + "`t" + $rootLicence)
 		if ($thislicense.GroupsAssigningLicense.Count -eq 0) {
 			$datastring = $datastring + "`t" + $true + "`t" + $false
 		}
