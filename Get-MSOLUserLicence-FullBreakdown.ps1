@@ -571,7 +571,7 @@ foreach ($license in $licensetype) {
     foreach ($user in $users) {
         Write-Verbose ("Processing " + $user.displayname) 
 		$thislicense = $user.licenses | Where-Object {$_.accountskuid -eq $license.accountskuid} 
-		if ($user.BlockCredential = $true) {
+		if ($user.BlockCredential -eq $true) {
 			$enabled = $false
 		} else { 
 			$enabled = $true
