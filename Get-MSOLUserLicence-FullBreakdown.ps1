@@ -10,7 +10,8 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.31
+		Version 1.32
+		Updated: 20201013	V1.32	Redid group based licensing to improve performance.
 		Updated: 20201013	V1.31	Added User Enabled column
 		Updated: 20200929 	V1.30	Added RMS_Basic
         Updated: 20200929	V1.29	Added components for E5 Compliance
@@ -502,6 +503,27 @@ function RootLicenceswitch {
 	}
 	Write-Output $RootLicence
 }
+#Helper function for tidier select of Groups for Group Based Licensing
+Function Invoke-GroupGuidConversion { 
+	[CmdletBinding()]
+	param (
+		[Parameter(Mandatory)]
+		[String[]]
+		$GroupGuid,
+		[Parameter(Mandatory)]
+		[Object[]]
+		$LicenseGroups
+	)
+	$output = @()
+	foreach ($guid in $GroupGuid) {
+		$temp = [PSCustomObject]@{
+			DisplayName = ($LicenseGroups | Where-Object {$_.ObjectID -eq $guid}).Displayname
+		}	
+		$output += $temp
+		Remove-Variable temp
+	}
+	Write-Output $output
+}
 $date = get-date -Format yyyyMMdd
 $OutputPath = Get-Item $OutputPath
 if ($OutputPath.FullName -notmatch '\\$') {
@@ -541,6 +563,8 @@ else {
 #get all users with licence
 Write-Host "Retrieving all licensed users - this may take a while."
 $alllicensedusers = Get-MsolUser -All | Where-Object {$_.isLicensed -eq $true}
+Write-Host "Retrieving all groups and filtering based on if they apply licenses - this may take a while."
+$allLicensedGroups = Get-MsolGroup -All | Where-Object {$_.licenses -ne $null}
 # Loop through all licence types found in the tenant 
 foreach ($license in $licensetype) {    
     # Build and write the Header for the CSV file 
@@ -586,12 +610,11 @@ foreach ($license in $licensetype) {
 				if ($null -eq $groups) {
 					$groups = $false
 				} else {
-					$groups = ($groups | Select-Object @{label="DisplayName";expression={(Get-MsolGroup -ObjectID $_).DisplayName}}).DisplayName -Join ";"
+					$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $allLicensedGroups).DisplayName -Join ";"
 				}
 				$datastring = $datastring + "`t" + $true + "`t" + $groups
 			} else {
-				$groups = $thislicense.groupsassigninglicense.guid | Where-Object {$_ -notlike $user.objectid}
-				$groups = ($groups | Select-Object @{label="DisplayName";expression={(Get-MsolGroup -ObjectID $_).DisplayName}}).DisplayName -Join ";"
+				$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $allLicensedGroups).DisplayName -Join ";"
 				$datastring = $datastring + "`t" + $false + "`t" + $groups
 			}
 		}
@@ -640,6 +663,8 @@ Function Merge-CSVFiles {
 		$worksheet.application.activewindow.freezepanes = $true
 		$rows = $worksheet.UsedRange.Rows.count
 		$columns = $worksheet.UsedRange.Columns.count
+		$Selection = $worksheet.Range($worksheet.Cells(2,5), $worksheet.Cells($rows,6))
+		[void]$Selection.Cells.Replace(";","`n",[Microsoft.Office.Interop.Excel.XlLookAt]::xlPart)
 		$Selection = $worksheet.Range($worksheet.Cells(1,1), $worksheet.Cells($rows,$columns))
 		$Selection.Font.Name = "Segoe UI"
 		$Selection.Font.Size = 9
