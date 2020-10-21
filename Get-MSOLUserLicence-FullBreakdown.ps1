@@ -10,7 +10,8 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.32
+		Version 1.33
+		Updated: 20201021	V1.33	Resolved GBL issues
 		Updated: 20201013	V1.32	Redid group based licensing to improve performance.
 		Updated: 20201013	V1.31	Added User Enabled column
 		Updated: 20200929 	V1.30	Added RMS_Basic
@@ -614,6 +615,7 @@ foreach ($license in $licensetype) {
 				}
 				$datastring = $datastring + "`t" + $true + "`t" + $groups
 			} else {
+				$groups = $thislicense.groupsassigninglicense.guid
 				if ($null -eq $groups) {
 					$groups = $false
 				} else {
