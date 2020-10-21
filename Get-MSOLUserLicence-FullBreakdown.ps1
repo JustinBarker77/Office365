@@ -614,7 +614,11 @@ foreach ($license in $licensetype) {
 				}
 				$datastring = $datastring + "`t" + $true + "`t" + $groups
 			} else {
+				if ($null -eq $groups) {
+					$groups = $false
+				} else {
 				$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $allLicensedGroups).DisplayName -Join ";"
+				}
 				$datastring = $datastring + "`t" + $false + "`t" + $groups
 			}
 		}
