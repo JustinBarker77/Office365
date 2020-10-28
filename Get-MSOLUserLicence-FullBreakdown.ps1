@@ -10,7 +10,8 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.33
+		Version 1.34
+		Updated: 20201028	V1.33	Added additional licence components (E5 Suite, PowerApps per IW, Win10 VDAE5)
 		Updated: 20201021	V1.33	Resolved GBL issues
 		Updated: 20201013	V1.32	Redid group based licensing to improve performance.
 		Updated: 20201013	V1.31	Added User Enabled column
@@ -185,11 +186,13 @@ function componentlicenseswitch {
 		"MICROSOFT_SEARCH"      	{$thisLicence = "Microsoft Search"}
 		"MICROSOFTBOOKINGS"      	{$thisLicence = "Microsoft Bookings"}
 		"EXCEL_PREMIUM"      	{$thisLicence = "Microsoft Excel Advanced Analytics"}
+		"GRAPH_CONNECTORS_SEARCH_INDEX"      	{$thisLicence = "Graph Connectors Search with Index"}
 		
         #Office
 		"SHAREPOINTWAC"        {$thisLicence = "Office Online"}	
 		"OFFICESUBSCRIPTION"   {$thisLicence = "Office 365 ProPlus"}
 		"OFFICEMOBILE_SUBSCRIPTION" {$thisLicence = "Office Mobile Apps for Office 365"}
+		"SAFEDOCS"   {$thisLicence = "Office 365 SafeDocs"}
 
 		#OneDrive
 		"ONEDRIVESTANDARD"			{$thisLicence = "OneDrive for Business (Plan 1)"}
@@ -216,6 +219,9 @@ function componentlicenseswitch {
         "POWER_VIRTUAL_AGENTS_O365_P1"	{$thisLicence = "Power Virtual Agents for Office 365"}
         "POWER_VIRTUAL_AGENTS_O365_P2"	{$thisLicence = "Power Virtual Agents for Office 365"}
         "POWER_VIRTUAL_AGENTS_O365_P3"	{$thisLicence = "Power Virtual Agents for Office 365"}
+        "POWERAPPS_PER_APP_IWTRIAL"	    {$thisLicence = "Power Apps per app baseline access"}
+        "Flow_Per_APP_IWTRIAL"	        {$thisLicence = "Flow per app baseline access"}
+        "CDS_PER_APP_IWTRIAL"	        {$thisLicence = "CDS per app baseline access"}
 
 		#Project
 		"PROJECT_PROFESSIONAL"      	{$thisLicence = "Project P3"}
@@ -379,6 +385,8 @@ function RootLicenceswitch {
         "SPE_E5"							{$RootLicence = "Microsoft 365 E5"}
         "SPE_F1"                            {$RootLicence = "Microsoft 365 D1"}
         "STANDARDWOFFPACK_STUDENT"		    {$RootLicence = "Microsoft Office 365 (Plan A2) for Students"}
+        "M365_E5_SUITE_COMPONENTS"		    {$RootLicence = "Microsoft 365 E5 Suite Features"}
+        
         #Misc Services
 		"PLANNERSTANDALONE"				    {$RootLicence = "Planner Standalone"}
 		"CRMIUR"							{$RootLicence = "CMRIUR"}
@@ -425,6 +433,7 @@ function RootLicenceswitch {
 		"POWERFLOW_P2"						{$RootLicence = "Microsoft PowerApps Plan 2"}
         "POWERAPPS_INDIVIDUAL_USER"			{$RootLicence = "PowerApps and Logic Flows"}
         "POWERAPPS_VIRAL"                   {$RootLicence = "PowerApps Plan 2 Trial"}
+        "POWERAPPS_PER_APP_IWL"             {$RootLicence = "PowerApps per app Baselinel"}
         #Power BI
         "POWER_BI_ADDON"					{$RootLicence = "Office 365 Power BI Addon"}
 		"POWER_BI_INDIVIDUAL_USE"		    {$RootLicence = "Power BI Individual User"}
@@ -494,6 +503,7 @@ function RootLicenceswitch {
         "VISIOONLINE_PLAN1"				    {$RootLicence = "Visio Online Plan 1"}
         #Windows 10
         "Win10_VDA_E3"                      {$RootLicence = "Windows 10 E3"}
+        "Win10_VDA_E5"                      {$RootLicence = "Windows 10 E5"}
         "WINDOWS_STORE"					    {$RootLicence = "Windows Store for Business"}
 		"SMB_APPS"						    {$RootLicence = "Microsoft Business Apps"}
         "MICROSOFT_BUSINESS_CENTER"		    {$RootLicence = "Microsoft Business Center"}
