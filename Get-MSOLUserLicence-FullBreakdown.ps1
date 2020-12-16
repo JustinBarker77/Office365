@@ -10,7 +10,8 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.35
+		Version 1.36
+		Updated: 20201216	V1.36	Added components for Power Automate User with RPA Plan
 		Updated: 20201216	V1.35	Added more SKUs (Multi-Geo, Communications Credits, M365 F1, Power Automate User with RPA Plan & Dynamics 365 Remote Assist)
 		Updated: 20201028	V1.34	Added additional licence components (E5 Suite, PowerApps per IW, Win10 VDAE5)
 		Updated: 20201021	V1.33	Resolved GBL issues
@@ -137,6 +138,7 @@ function componentlicenseswitch {
         "CDS_O365_P2"     {$thisLicence = "Common Data Service for Teams"}
 		"CDS_O365_P3"     {$thisLicence = "Common Data Service for Teams"}
 		"CDS_REMOTE_ASSIST"	{$thisLicence = "Common Data Service for Remote Assist"}
+		"CDS_ATTENDED_RPA"	{$thisLicence = "Common Data Service Attended RPA"}
 
 		#Exchange
 		"EXCHANGE_S_ENTERPRISE"{$thisLicence = "Exchange Online (Plan 2)"}
