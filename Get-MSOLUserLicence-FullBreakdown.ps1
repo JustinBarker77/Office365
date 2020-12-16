@@ -11,6 +11,7 @@
 
 	.NOTES
 		Version 1.33
+		Updated: 20201216	V1.34	Added more SKUs (Multi-Geo, Communications Credits, M365 F1 & Dynamics 365 Remote Assist)
 		Updated: 20201021	V1.33	Resolved GBL issues
 		Updated: 20201013	V1.32	Redid group based licensing to improve performance.
 		Updated: 20201013	V1.31	Added User Enabled column
@@ -118,6 +119,7 @@ function componentlicenseswitch {
 		"DYN365_ENTERPRISE_P1"		{$thisLicence = "Dynamics Enterprise P1"}
 		"D365_CSI_EMBED_CE" 		{$thisLicence = "Dynamics 365 Customer Service Insights for CE Plan"}
 		"DYN365_ENTERPRISE_P1_IW"	{$thisLicence = "Dyn 365 P1 Trial Info Workers"}
+		"MICROSOFT_REMOTE_ASSIST"	{$thisLicence = "Dynamics 365 Remote Assist"}
 
 		#Dynamics Common Data Service
 		"DYN365_CDS_O365_P1"			{$thisLicence = "Common Data Service"}
@@ -132,7 +134,8 @@ function componentlicenseswitch {
 		"DYN365_CDS_VIRAL"     {$thisLicence = "Common Data Service"}
         "CDS_O365_P1"     {$thisLicence = "Common Data Service for Teams"}
         "CDS_O365_P2"     {$thisLicence = "Common Data Service for Teams"}
-        "CDS_O365_P3"     {$thisLicence = "Common Data Service for Teams"}
+		"CDS_O365_P3"     {$thisLicence = "Common Data Service for Teams"}
+		"CDS_REMOTE_ASSIST"	{$thisLicence = "Common Data Service for Remote Assist"}
 
 		#Exchange
 		"EXCHANGE_S_ENTERPRISE"{$thisLicence = "Exchange Online (Plan 2)"}
@@ -140,6 +143,7 @@ function componentlicenseswitch {
 		"EXCHANGE_S_DESKLESS"      	{$thisLicence = "Exchange Online Firstline"}
 		"EXCHANGE_S_STANDARD"      	{$thisLicence = "Exchange Online (Plan 1)"}
 		"EXCHANGE_S_ARCHIVE_ADDON"	{$thisLicence = "Exchange Online Archiving Add-on"}
+		"EXCHANGEONLINE_MULTIGEO"	{$thisLicence = "Exchange Online Multi-Geo"}
 
 		#Flow
 		"FLOW_P1"		{$thisLicence = "Microsoft Flow Plan 1"}
@@ -200,12 +204,12 @@ function componentlicenseswitch {
 		"BI_AZURE_P2"           {$thisLicence = "Power BI Pro"}
 
 		#Phone System
-		"MCOEV"                {$thisLicence = "M365 Phone System"}
-		"MCOMEETADV"           {$thisLicence = "M365 Audio Conferencing"}
-		"MCOEV_VIRTUALUSER"	   {$thisLicence = "Microsoft 365 Phone System Virtual User"}
-
+		"MCOEV"                	{$thisLicence = "M365 Phone System"}
+		"MCOMEETADV"           	{$thisLicence = "M365 Audio Conferencing"}
+		"MCOEV_VIRTUALUSER"	  	{$thisLicence = "Microsoft 365 Phone System Virtual User"}
+		"MCOPSTNC"				{$thisLicence = "Communications Credits"}
 		#PowerApps
-		"POWERAPPS_O365_S1"         {$thisLicence = "PowerApps for Office 365 Firstline"}
+		"POWERAPPS_O365_S1"    {$thisLicence = "PowerApps for Office 365 Firstline"}
 		"POWERAPPS_O365_P1"    {$thisLicence = "PowerApps for Office 365"}
 		"POWERAPPS_O365_P2"    {$thisLicence = "PowerApps for Office 365"}
 		"POWERAPPS_O365_P3"    {$thisLicence = "PowerApps for Office 365"}
@@ -270,6 +274,7 @@ function componentlicenseswitch {
 		"SHAREPOINTDESKLESS"   {$thisLicence = "SharePoint Online Kiosk"}
 		"SHAREPOINTSTANDARD"   {$thisLicence = "SharePoint Online (Plan 1)"}
 		"SHAREPOINTENTERPRISE" {$thisLicence = "SharePoint Online (Plan 2)"}
+		"SHAREPOINTONLINE_MULTIGEO"	{$thisLicence = "Sharepoint Multi-Geo"}
 
 		#Skype
 		"MCOIMP"                    {$thisLicence = "Skype for Business (Plan 1)"}
@@ -345,7 +350,9 @@ function RootLicenceswitch {
         "DYN365_TEAM_MEMBERS"			    {$RootLicence = "Dynamics 365 Team Members"}
         "CRMSTORAGE"						{$RootLicence = "Microsoft Dynamics CRM Online Additional Storage"}
         "CRMSTANDARD"					    {$RootLicence = "Microsoft Dynamics CRM Online Professional"}
-        "DYN365_ENTERPRISE_SALES"		    {$RootLicence = "Dyn 365 Enterprise Sales"}
+		"DYN365_ENTERPRISE_SALES"		    {$RootLicence = "Dyn 365 Enterprise Sales"}
+		"MICROSOFT_REMOTE_ASSIST"			{$RootLicence = "Dyn 365 Remote Assist"}
+		"MICROSOFT_REMOTE_ASSIST_ATTACH"	{$RootLicence = "Dyn 365 Remote Assist Attach"}
         #Exchange
         "EXCHANGESTANDARD_GOV"			    {$RootLicence = "Microsoft Office 365 Exchange Online (Plan 1) only for Government"}
         "EXCHANGEENTERPRISE_GOV"			{$RootLicence = "Microsoft Office 365 Exchange Online (Plan 2) only for Government"}
@@ -378,7 +385,8 @@ function RootLicenceswitch {
 		"SPE_E3"							{$RootLicence = "Microsoft 365 E3"}
         "SPE_E5"							{$RootLicence = "Microsoft 365 E5"}
         "SPE_F1"                            {$RootLicence = "Microsoft 365 D1"}
-        "STANDARDWOFFPACK_STUDENT"		    {$RootLicence = "Microsoft Office 365 (Plan A2) for Students"}
+		"STANDARDWOFFPACK_STUDENT"		    {$RootLicence = "Microsoft Office 365 (Plan A2) for Students"}
+		"M365_F1_COMM"						{$RootLicence = "Microsoft 365 F1"}
         #Misc Services
 		"PLANNERSTANDALONE"				    {$RootLicence = "Planner Standalone"}
 		"CRMIUR"							{$RootLicence = "CMRIUR"}
@@ -412,7 +420,8 @@ function RootLicenceswitch {
         "STANDARDWOFFPACK_IW_STUDENT"	    {$RootLicence = "Office 365 Education for Students"}
         "STANDARDWOFFPACK_IW_FACULTY"	    {$RootLicence = "Office 365 Education for Faculty"}
         "STANDARDWOFFPACK_FACULTY"		    {$RootLicence = "Office 365 Education E1 for Faculty"}
-        "ENTERPRISEPACKWITHOUTPROPLUS"      {$RootLicence = "Office 365 E3 No Pro Plus"}
+		"ENTERPRISEPACKWITHOUTPROPLUS"      {$RootLicence = "Office 365 E3 No Pro Plus"}
+		"OFFICE365_MULTIGEO"				{$RootLicence = "Multi-Geo in Office 365"}
         #Office Suite
 		"OFFICESUBSCRIPTION_GOV"			{$RootLicence = "Office ProPlus"}
 		"SHAREPOINTWAC_GOV"				    {$RootLicence = "Office Online for Government"}
@@ -434,7 +443,9 @@ function RootLicenceswitch {
         "POWER_BI_PRO"					    {$RootLicence = "Power BI Pro"}
 		"POWER_BI_PRO_CE"					{$RootLicence = "Power BI Pro"}
         "POWER_BI_PRO_FACULTY"				{$RootLicence = "Power BI Pro Faculty"}
-        #Project
+		#PhoneSystem
+		"MCOPSTNC"							{$RootLicence = "Communications Credits"}
+		#Project
         "PROJECTESSENTIALS"				    {$RootLicence = "Project Lite"}
 		"PROJECTCLIENT"					    {$RootLicence = "Project Professional"}
 		"PROJECTONLINE_PLAN_1"			    {$RootLicence = "Project Online"}
