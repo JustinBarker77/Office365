@@ -161,6 +161,7 @@ function componentlicenseswitch {
 		"FLOW_FORMS_PRO"	{$thisLicence = "Flow for Forms Pro"}
 		"FLOW_O365_S1"      	{$thisLicence = "Flow for Office 365 (F1)"}
 		"FLOW_DYN_P2"		{$thisLicence = "Flow for Dynamics 365"}
+		"POWER_AUTOMATE_ATTENDED_RPA"	{$thisLicence = "Power Automate per user with attended RPA plan"}
 
 		#Forms
 		"FORMS_PLAN_E1"         {$thisLicence = "Microsoft Forms (Plan E1)"}
@@ -378,7 +379,8 @@ function RootLicenceswitch {
         #Flow
         "FLOW_FREE"						    {$RootLicence = "Microsoft Flow Free"}
         "FLOW_P1"						    {$RootLicence = "Microsoft Flow Plan 1"}
-        "FLOW_P2"						    {$RootLicence = "Microsoft Flow Plan 2"}
+		"FLOW_P2"						    {$RootLicence = "Microsoft Flow Plan 2"}
+		"POWER_AUTOMATE_ATTENDED_RPA"		{$RootLicence = "Power Automate User with RPA"}
         #Forms
         "FORMS_PRO"                         {$RootLicence = "Forms Pro Trial"}
         #Microsoft 365 Subscription
