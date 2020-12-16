@@ -11,7 +11,7 @@
 
 	.NOTES
 		Version 1.35
-		Updated: 20201216	V1.35	Added more SKUs (Multi-Geo, Communications Credits, M365 F1 & Dynamics 365 Remote Assist)
+		Updated: 20201216	V1.35	Added more SKUs (Multi-Geo, Communications Credits, M365 F1, Power Automate User with RPA Plan & Dynamics 365 Remote Assist)
 		Updated: 20201028	V1.34	Added additional licence components (E5 Suite, PowerApps per IW, Win10 VDAE5)
 		Updated: 20201021	V1.33	Resolved GBL issues
 		Updated: 20201013	V1.32	Redid group based licensing to improve performance.
