@@ -539,12 +539,12 @@ Function Invoke-GroupGuidConversion {
 		[Object[]]
 		$LicenseGroups
 	)
-	$output = @()
+	$output = New-Object System.Collections.Generic.List[System.Object]
 	foreach ($guid in $GroupGuid) {
 		$temp = [PSCustomObject]@{
 			DisplayName = ($LicenseGroups | Where-Object {$_.ObjectID -eq $guid}).Displayname
 		}	
-		$output += $temp
+		$output.Add($temp)
 		Remove-Variable temp
 	}
 	Write-Output $output
