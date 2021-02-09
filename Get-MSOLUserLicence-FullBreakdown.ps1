@@ -10,7 +10,8 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.36
+		Version 1.37
+		Updated: 20210208	V1.37	No longer out-files for everyline and performance improved
 		Updated: 20201216	V1.36	Added components for Power Automate User with RPA Plan
 		Updated: 20201216	V1.35	Added more SKUs (Multi-Geo, Communications Credits, M365 F1, Power Automate User with RPA Plan & Dynamics 365 Remote Assist)
 		Updated: 20201028	V1.34	Added additional licence components (E5 Suite, PowerApps per IW, Win10 VDAE5)
@@ -539,12 +540,12 @@ Function Invoke-GroupGuidConversion {
 		[Object[]]
 		$LicenseGroups
 	)
-	$output = @()
+	$output = New-Object System.Collections.Generic.List[System.Object]
 	foreach ($guid in $GroupGuid) {
 		$temp = [PSCustomObject]@{
 			DisplayName = ($LicenseGroups | Where-Object {$_.ObjectID -eq $guid}).Displayname
 		}	
-		$output += $temp
+		$output.Add($temp)
 		Remove-Variable temp
 	}
 	Write-Output $output
@@ -575,47 +576,36 @@ if ($null -eq $test365) {
 }
 Write-Host "Connected to Office 365" 
 # Get a list of all licences that exist within the tenant 
-$licensetype = Get-MsolAccountSku | Where-Object {$_.ConsumedUnits -ge 1}
+$licenseType = Get-MsolAccountSku
 # Replace the above with the below if only a single SKU is required
-#$licensetype = Get-MsolAccountSku | Where-Object {$_.AccountSkuID -like "*Power*"}
+#$licenseType = Get-MsolAccountSku | Where-Object {$_.AccountSkuID -like "*Power*"}
 # Get all licences for a summary view
 if ($NoNameTranslation) {
-	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU';  Expression = {$($_.SkuPartNumber)}}, ActiveUnits, ConsumedUnits | Sort-Object 'AccountLicenseSKU' | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
+	$licenseType | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU';  Expression = {$($_.SkuPartNumber)}}, ActiveUnits, ConsumedUnits | Sort-Object 'AccountLicenseSKU' | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
 }
 else {
-	get-msolaccountsku | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$(RootLicenceswitch($_.SkuPartNumber))}}, ActiveUnits, ConsumedUnits | Sort-Object 'AccountLicenseSKU(Friendly)' | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
+	$licenseType | Where-Object {$_.TargetClass -eq "User"} | select-object @{Name = 'AccountLicenseSKU(Friendly)';  Expression = {$(RootLicenceswitch($_.SkuPartNumber))}}, ActiveUnits, ConsumedUnits | Sort-Object 'AccountLicenseSKU(Friendly)' | export-csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
 }
+$licenseType = $licenseType | Where-Object {$_.ConsumedUnits -ge 1}
 #get all users with licence
 Write-Host "Retrieving all licensed users - this may take a while."
 $alllicensedusers = Get-MsolUser -All | Where-Object {$_.isLicensed -eq $true}
 Write-Host "Retrieving all groups and filtering based on if they apply licenses - this may take a while."
 $allLicensedGroups = Get-MsolGroup -All | Where-Object {$_.licenses -ne $null}
 # Loop through all licence types found in the tenant 
-foreach ($license in $licensetype) {    
-    # Build and write the Header for the CSV file 
-    $headerstring = "DisplayName`tUserPrincipalName`tAccountEnabled`tAccountSku`tDirectAssigned`tGroupsAssigning" 
-    foreach ($row in $($license.ServiceStatus)) {
-		# Build header string
-		if ($NoNameTranslation) {
-			$thisLicence = [string]$row.ServicePlan.servicename
-		}
-		else {
-			$thisLicence = componentlicenseswitch([string]($row.ServicePlan.servicename))
-		}
-        $headerstring = ($headerstring + "`t" + $thisLicence) 
-    } 
+foreach ($license in $licenseType) {    
     Write-Host ("Gathering users with the following subscription: " + $license.accountskuid) 
     # Gather users for this particular AccountSku from pre-existing array of users
     $users = $alllicensedusers | Where-Object {$_.licenses.accountskuid -contains $license.accountskuid} 
 	if ($NoNameTranslation) {
-		$RootLicence = ($($license.SkuPartNumber))
+		$rootLicence = ($($license.SkuPartNumber))
 	}
 	else {
-		$RootLicence = RootLicenceswitch($($license.SkuPartNumber))
+		$rootLicence = RootLicenceswitch($($license.SkuPartNumber))
 	}
-	#$logfile = $CompanyName + "-" +$RootLicence + ".csv"
-	$logfile = $CSVpath + "\" +$RootLicence + ".csv"
-	Out-File -FilePath $LogFile -InputObject $headerstring -Encoding UTF8 -append
+	#$logFile = $CompanyName + "-" +$rootLicence + ".csv"
+	$logFile = $CSVpath + "\" +$rootLicence + ".csv"
+	$licensedUsers = New-Object System.Collections.Generic.List[System.Object]
     # Loop through all users and write them to the CSV file 
     foreach ($user in $users) {
         Write-Verbose ("Processing " + $user.displayname) 
@@ -625,9 +615,15 @@ foreach ($license in $licensetype) {
 		} else { 
 			$enabled = $true
 		}
-		$datastring = ($user.displayname + "`t" + $user.userprincipalname + "`t" + $enabled + "`t" + $rootLicence)
+		$userHashTable = @{
+			DisplayName = $user.DisplayName
+			UserPrincipalName = $user.UserPrincipalName
+			AccountEnabled = $enabled
+			AccountSKU = $rootLicence
+		}
 		if ($thislicense.GroupsAssigningLicense.Count -eq 0) {
-			$datastring = $datastring + "`t" + $true + "`t" + $false
+			$userHashTable['DirectAssigned'] = $true
+			$userHashTable['GroupsAssigning'] = $false
 		}
 		else {
 			if ($thislicense.GroupsAssigningLicense -contains $user.ObjectID) {
@@ -637,7 +633,8 @@ foreach ($license in $licensetype) {
 				} else {
 					$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $allLicensedGroups).DisplayName -Join ";"
 				}
-				$datastring = $datastring + "`t" + $true + "`t" + $groups
+				$userHashTable['DirectAssigned'] = $true
+				$userHashTable['GroupsAssigning'] = $groups
 			} else {
 				$groups = $thislicense.groupsassigninglicense.guid
 				if ($null -eq $groups) {
@@ -645,15 +642,17 @@ foreach ($license in $licensetype) {
 				} else {
 				$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $allLicensedGroups).DisplayName -Join ";"
 				}
-				$datastring = $datastring + "`t" + $false + "`t" + $groups
+				$userHashTable['DirectAssigned'] = $false
+				$userHashTable['GroupsAssigning'] = $groups
 			}
 		}
-        foreach ($row in $($thislicense.servicestatus)) {
-            # Build data string 
-			$datastring = ($datastring + "`t" + $($row.provisioningstatus)) 
+        foreach ($row in $($thislicense.ServiceStatus)) {
+            $serviceName = componentlicenseswitch([string]($row.ServicePlan.ServiceName))
+			$userHashTable[$serviceName] = ($thislicense.ServiceStatus | Where-Object {$_.ServicePlan.ServiceName -eq $row.ServicePlan.ServiceName}).ProvisioningStatus
         }
-        Out-File -FilePath $LogFile -InputObject $datastring -Encoding UTF8 -append 
+		$licensedUsers.Add([PSCustomObject]$userHashTable) | Out-Null
 	}
+	$licensedUsers | Select-Object DisplayName,UserPrincipalName,AccountEnabled,AccountSKU,DirectAssigned,GroupsAssigning,*  -ErrorAction SilentlyContinue | Export-Csv -Path $logFile -Delimiter "`t" -Encoding UTF8 -NoClobber -NoTypeInformation
 }             
 Write-Host ("Merging CSV Files")
 Function Merge-CSVFiles {
