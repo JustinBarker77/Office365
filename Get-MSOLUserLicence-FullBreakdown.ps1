@@ -547,13 +547,13 @@ Function Invoke-GroupGuidConversion {
 		[String[]]
 		$GroupGuid,
 		[Parameter(Mandatory)]
-		[Object[]]
+		[hashtable]
 		$LicenseGroups
 	)
 	$output = New-Object System.Collections.Generic.List[System.Object]
 	foreach ($guid in $GroupGuid) {
 		$temp = [PSCustomObject]@{
-			DisplayName = ($LicenseGroups | Where-Object {$_.ObjectID -eq $guid}).Displayname
+			DisplayName = $LicenseGroups[$guid]
 		}	
 		$output.Add($temp)
 		Remove-Variable temp
@@ -599,9 +599,10 @@ else {
 $licenseType = $licenseType | Where-Object {$_.ConsumedUnits -ge 1}
 #get all users with licence
 Write-Host "Retrieving all licensed users - this may take a while."
-$alllicensedusers = Get-MsolUser -All | Where-Object {$_.isLicensed -eq $true}
+$alllicensedusers = Get-MsolUser -All  | Where-Object {$_.isLicensed -eq $true}
 Write-Host "Retrieving all groups and filtering based on if they apply licenses - this may take a while."
-$allLicensedGroups = Get-MsolGroup -All | Where-Object {$_.licenses -ne $null}
+#$allLicensedGroups = Get-MsolGroup -All | Where-Object {$_.licenses -ne $null}
+$licensedGroups = @{}
 # Loop through all licence types found in the tenant 
 foreach ($license in $licenseType) {    
     Write-Host ("Gathering users with the following subscription: " + $license.accountskuid) 
@@ -641,7 +642,13 @@ foreach ($license in $licenseType) {
 				if ($null -eq $groups) {
 					$groups = $false
 				} else {
-					$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $allLicensedGroups).DisplayName -Join ";"
+					foreach ($group in $groups) {
+						if ($null -eq $licensedGroups[$group]) {
+							$getGroup = Get-MsolGroup -ObjectId $group
+							$licensedGroups[$group] = $getGroup.DisplayName
+						}
+					}
+					$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $licensedGroups).DisplayName -Join ";"
 				}
 				$userHashTable['DirectAssigned'] = $true
 				$userHashTable['GroupsAssigning'] = $groups
@@ -650,7 +657,13 @@ foreach ($license in $licenseType) {
 				if ($null -eq $groups) {
 					$groups = $false
 				} else {
-				$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $allLicensedGroups).DisplayName -Join ";"
+					foreach ($group in $groups) {
+						if ($null -eq $licensedGroups[$group]) {
+							$getGroup = Get-MsolGroup -ObjectId $group
+							$licensedGroups[$group] = $getGroup.DisplayName
+						}
+					}
+					$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $licensedGroups).DisplayName -Join ";"
 				}
 				$userHashTable['DirectAssigned'] = $false
 				$userHashTable['GroupsAssigning'] = $groups
