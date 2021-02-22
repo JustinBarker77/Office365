@@ -7,10 +7,11 @@
 		The purpose of this script is is to export licensing details to excel
 
 	.DESCRIPTION
-		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
+		This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.38
+		Version 1.39
+		Updated: 20210222	V1.39	Added some EDU Root Level SKUs
 		Updated: 20210222	V1.38	Moved Autofit and Autofilter to fix autofit on GBL column
 		Updated: 20210208	V1.37	No longer out-files for everyline and performance improved
 		Updated: 20201216	V1.36	Added components for Power Automate User with RPA Plan
@@ -345,6 +346,7 @@ function RootLicenceswitch {
 		"AAD_PREMIUM_P2"			        {$RootLicence = "Azure AD Premium P2"}
         #Dynamics
 		"DYN365_ENTERPRISE_PLAN1"		    {$RootLicence = "Dyn 365 Customer Engage Ent Ed"}
+		"DYN365_ENTERPRISE_CUSTOMER_SERVICE" {$RootLicence = "Dyn 365 Customer Service"}
 		"PROJECT_MADEIRA_PREVIEW_IW_SKU"	{$RootLicence = "Dynamics 365 for Financials for IWs"}
         "DYN365_AI_SERVICE_INSIGHTS"		{$RootLicence = "Dyn 365 CSI Trial"}
 		"Dynamics_365_for_Operations"		{$RootLicence = "Dyn 365 Unified Operations Plan"}
@@ -365,8 +367,8 @@ function RootLicenceswitch {
 		"MICROSOFT_REMOTE_ASSIST"			{$RootLicence = "Dyn 365 Remote Assist"}
 		"MICROSOFT_REMOTE_ASSIST_ATTACH"	{$RootLicence = "Dyn 365 Remote Assist Attach"}
         #Exchange
-        "EXCHANGESTANDARD_GOV"			    {$RootLicence = "Microsoft Office 365 Exchange Online (Plan 1) only for Government"}
-        "EXCHANGEENTERPRISE_GOV"			{$RootLicence = "Microsoft Office 365 Exchange Online (Plan 2) only for Government"}
+        "EXCHANGESTANDARD_GOV"			    {$RootLicence = "Exchange Online (P1) for Government"}
+        "EXCHANGEENTERPRISE_GOV"			{$RootLicence = "Exchange Online (P2) for Government"}
         "EXCHANGE_S_DESKLESS_GOV"		    {$RootLicence = "Exchange Kiosk"}
         "ECAL_SERVICES"					    {$RootLicence = "ECAL"}
         "EXCHANGE_S_ENTERPRISE_GOV"		    {$RootLicence = "Exchange Plan 2G"}
@@ -376,8 +378,9 @@ function RootLicenceswitch {
         "EXCHANGE_S_STANDARD_MIDMARKET"	    {$RootLicence = "Exchange Online (Plan 1)"}
         "EXCHANGESTANDARD"				    {$RootLicence = "Exchange Online (Plan 1)"}
         "EXCHANGEENTERPRISE"				{$RootLicence = "Exchange Online Plan 2"}
+		"EXCHANGEENTERPRISE_FACULTY"		{$RootLicence = "Exchange Online P2 Faculty"}
         "EOP_ENTERPRISE_FACULTY"			{$RootLicence = "Exchange Online Protection for Faculty"}
-        "EXCHANGESTANDARD_STUDENT"		    {$RootLicence = "Exchange Online (Plan 1) for Students"}
+        "EXCHANGESTANDARD_STUDENT"		    {$RootLicence = "Exchange Online (P1) Students"}
         "EXCHANGEARCHIVE_ADDON"			    {$RootLicence = "O-Archive for Exchange Online"}
         "EXCHANGEDESKLESS"				    {$RootLicence = "Exchange Online Kiosk"}
         #Flow
@@ -388,18 +391,20 @@ function RootLicenceswitch {
         #Forms
         "FORMS_PRO"                         {$RootLicence = "Forms Pro Trial"}
         #Microsoft 365 Subscription
-        "STANDARDPACK_GOV"				    {$RootLicence = "Microsoft Office 365 (Plan G1) for Government"}
-		"STANDARDWOFFPACK_GOV"			    {$RootLicence = "Microsoft Office 365 (Plan G2) for Government"}
-		"ENTERPRISEPACK_GOV"				{$RootLicence = "Microsoft Office 365 (Plan G3) for Government"}
-		"ENTERPRISEWITHSCAL_GOV"			{$RootLicence = "Microsoft Office 365 (Plan G4) for Government"}
-		"DESKLESSPACK_GOV"				    {$RootLicence = "Microsoft Office 365 (Plan K1) for Government"}
-        "DESKLESSWOFFPACK_GOV"			    {$RootLicence = "Microsoft Office 365 (Plan K2) for Government"}
+        "STANDARDPACK_GOV"				    {$RootLicence = "O365 (Plan G1) Government"}
+		"STANDARDWOFFPACK_GOV"			    {$RootLicence = "O365 (Plan G2) Government"}
+		"ENTERPRISEPACK_GOV"				{$RootLicence = "O365 (Plan G3) Government"}
+		"ENTERPRISEWITHSCAL_GOV"			{$RootLicence = "O365 (Plan G4) Government"}
+		"DESKLESSPACK_GOV"				    {$RootLicence = "O365 (Plan K1) Government"}
+        "DESKLESSWOFFPACK_GOV"			    {$RootLicence = "O365 (Plan K2) Government"}
 		"SPE_E3"							{$RootLicence = "Microsoft 365 E3"}
         "SPE_E5"							{$RootLicence = "Microsoft 365 E5"}
         "SPE_F1"                            {$RootLicence = "Microsoft 365 D1"}
-		"STANDARDWOFFPACK_STUDENT"		    {$RootLicence = "Microsoft Office 365 (Plan A2) for Students"}
+		"STANDARDWOFFPACK_STUDENT"		    {$RootLicence = "O65 (Plan A2) Students"}
 		"M365_F1_COMM"						{$RootLicence = "Microsoft 365 F1"}
         "M365_E5_SUITE_COMPONENTS"		    {$RootLicence = "Microsoft 365 E5 Suite Features"}
+		"M365EDU_A5_FACULTY"				{$RootLicence = "M365 Education A5 Faculty"}
+		"M365EDU_A5_STUUSEBNFT"				{$RootLicence = "M365 Education A5 Student Benefit"}
         #Misc Services
 		"PLANNERSTANDALONE"				    {$RootLicence = "Planner Standalone"}
 		"CRMIUR"							{$RootLicence = "CMRIUR"}
@@ -420,20 +425,20 @@ function RootLicenceswitch {
 		"ENTERPRISEWITHSCAL"				{$RootLicence = "Office 365 (Plan E4)"}
 		"ENTERPRISEPREMIUM_NOPSTNCONF"	    {$RootLicence = "Office 365 (Plan E5) (without Audio Conferencing)"}
 		"ENTERPRISEPREMIUM"				    {$RootLicence = "Office 365 (Plan E5)"}
-		"STANDARDPACK_STUDENT"			    {$RootLicence = "Office 365 (Plan A1) for Students"}
-		"STANDARDWOFFPACKPACK_STUDENT"	    {$RootLicence = "Office 365 (Plan A2) for Students"}
-		"ENTERPRISEPACK_STUDENT"			{$RootLicence = "Office 365 (Plan A3) for Students"}
-		"ENTERPRISEWITHSCAL_STUDENT"		{$RootLicence = "Office 365 (Plan A4) for Students"}
-		"STANDARDPACK_FACULTY"			    {$RootLicence = "Office 365 (Plan A1) for Faculty"}
-		"STANDARDWOFFPACKPACK_FACULTY"	    {$RootLicence = "Office 365 (Plan A2) for Faculty"}
-		"ENTERPRISEPACK_FACULTY"			{$RootLicence = "Office 365 (Plan A3) for Faculty"}
-		"ENTERPRISEWITHSCAL_FACULTY"		{$RootLicence = "Office 365 (Plan A4) for Faculty"}
-		"ENTERPRISEPACK_B_PILOT"			{$RootLicence = "Office 365 (Enterprise Preview)"}
-        "STANDARD_B_PILOT"				    {$RootLicence = "Office 365 (Small Business Preview)"}
-        "STANDARDWOFFPACK_IW_STUDENT"	    {$RootLicence = "Office 365 Education for Students"}
-        "STANDARDWOFFPACK_IW_FACULTY"	    {$RootLicence = "Office 365 Education for Faculty"}
-        "STANDARDWOFFPACK_FACULTY"		    {$RootLicence = "Office 365 Education E1 for Faculty"}
-		"ENTERPRISEPACKWITHOUTPROPLUS"      {$RootLicence = "Office 365 E3 No Pro Plus"}
+		"STANDARDPACK_STUDENT"			    {$RootLicence = "O365 (Plan A1) Students"}
+		"STANDARDWOFFPACKPACK_STUDENT"	    {$RootLicence = "O365 (Plan A2) Students"}
+		"ENTERPRISEPACK_STUDENT"			{$RootLicence = "O365 (Plan A3) Students"}
+		"ENTERPRISEWITHSCAL_STUDENT"		{$RootLicence = "O365 (Plan A4) Students"}
+		"STANDARDPACK_FACULTY"			    {$RootLicence = "O365 (Plan A1) Faculty"}
+		"STANDARDWOFFPACKPACK_FACULTY"	    {$RootLicence = "O365 (Plan A2) Faculty"}
+		"ENTERPRISEPACK_FACULTY"			{$RootLicence = "O365 (Plan A3) Faculty"}
+		"ENTERPRISEWITHSCAL_FACULTY"		{$RootLicence = "O365 (Plan A4) Faculty"}
+		"ENTERPRISEPACK_B_PILOT"			{$RootLicence = "O365 (Enterprise Preview)"}
+        "STANDARD_B_PILOT"				    {$RootLicence = "O365 (Small Business Preview)"}
+        "STANDARDWOFFPACK_IW_STUDENT"	    {$RootLicence = "O365 Education for Students"}
+        "STANDARDWOFFPACK_IW_FACULTY"	    {$RootLicence = "O365 Education for Faculty"}
+        "STANDARDWOFFPACK_FACULTY"		    {$RootLicence = "O365 Education E1 for Faculty"}
+		"ENTERPRISEPACKWITHOUTPROPLUS"      {$RootLicence = "O365 E3 No Pro Plus"}
 		"OFFICE365_MULTIGEO"				{$RootLicence = "Multi-Geo in Office 365"}
         #Office Suite
 		"OFFICESUBSCRIPTION_GOV"			{$RootLicence = "Office ProPlus"}
@@ -441,10 +446,12 @@ function RootLicenceswitch {
 		"SHAREPOINTWAC"					    {$RootLicence=  "Office Online"}
         "OFFICE_PRO_PLUS_SUBSCRIPTION_SMBIZ"{$RootLicence = "Office ProPlus"}
         "OFFICESUBSCRIPTION"				{$RootLicence = "Office ProPlus"}
+		"OFFICESUBSCRIPTION_FACULTY"		{$RootLicence = "Office ProPlus Faculty"}
         "OFFICESUBSCRIPTION_STUDENT"		{$RootLicence = "Office ProPlus Student Benefit"}
         #PowerApps
-		"POWERFLOW_P1"						{$RootLicence = "Microsoft PowerApps Plan 1"}
-		"POWERFLOW_P2"						{$RootLicence = "Microsoft PowerApps Plan 2"}
+		"POWERFLOW_P1"						{$RootLicence = "PowerApps Plan 1"}
+		"POWERFLOW_P2"						{$RootLicence = "PowerApps Plan 2"}
+		"POWERFLOW_P2_FACULTY"				{$RootLicence = "PowerApps Plan 2 Faculty"}
         "POWERAPPS_INDIVIDUAL_USER"			{$RootLicence = "PowerApps and Logic Flows"}
         "POWERAPPS_VIRAL"                   {$RootLicence = "PowerApps Plan 2 Trial"}
         "POWERAPPS_PER_APP_IWL"             {$RootLicence = "PowerApps per app Baselinel"}
@@ -510,10 +517,12 @@ function RootLicenceswitch {
         #Telephony
         "MCOMEETADV"						{$RootLicence = "PSTN conferencing"}
         "MCOPSTN1"			                {$RootLicence = "Dom Calling Plan (1200 mins)"}
+		"MCOPSTN1_FACULTY"	                {$RootLicence = "Dom Calling Plan (1200 mins) Faculty"}
         "MCOPSTN2"						    {$RootLicence = "Dom and Intl Calling Plan"}
         "MCOEV"							    {$RootLicence = "Microsoft Phone System"}
 		"MCOPSTN_5"                         {$RootLicence = "Dom Calling Plan (120mins)"}
 		"PHONESYSTEM_VIRTUALUSER"			{$RootLicence = "Phone System Virtual User"}
+		"PHONESYSTEM_VIRTUALUSER_FACULTY"	{$RootLicence = "Phone System Virtual User Faculty"}
         #Visio
         "VISIOCLIENT"					    {$RootLicence = "Visio Pro Online"}
         "VISIOONLINE_PLAN1"				    {$RootLicence = "Visio Online Plan 1"}
