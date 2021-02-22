@@ -10,7 +10,8 @@
 		This script will log in to Office 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.37
+		Version 1.38
+		Updated: 20210222	V1.38	Moved Autofit and Autofilter to fix autofit on GBL column
 		Updated: 20210208	V1.37	No longer out-files for everyline and performance improved
 		Updated: 20201216	V1.36	Added components for Power Automate User with RPA Plan
 		Updated: 20201216	V1.35	Added more SKUs (Multi-Geo, Communications Credits, M365 F1, Power Automate User with RPA Plan & Dynamics 365 Remote Assist)
@@ -675,10 +676,6 @@ Function Merge-CSVFiles {
 		$worksheet.QueryTables.item($Connector.name).TextFileParseType  = 1
 		$worksheet.QueryTables.item($Connector.name).Refresh()
 		$worksheet.QueryTables.item($Connector.name).delete()
-		#autofilter
-        [void]$worksheet.UsedRange.Autofilter()
-        #autofit
-        $worksheet.UsedRange.EntireColumn.AutoFit()		
         $CSVSheet++
 	}
 	$worksheets = $workbooks.worksheets
@@ -729,6 +726,8 @@ Function Merge-CSVFiles {
 			}
 			$worksheet.Move($worksheets.Item(1))
 		}
+		[void]$worksheet.UsedRange.Autofilter()
+        $worksheet.UsedRange.EntireColumn.AutoFit()
 	}
 	$workbooks.Worksheets.Item("AllLicences").Select()
 
