@@ -10,7 +10,8 @@
 		This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.39
+		Version 1.40
+		Updated: 20210223	V1.40	performance improvements for Group Based Licensing - no longer gets all groups; only gets the group once the GUID is found as an assigning group
 		Updated: 20210222	V1.39	Added some EDU Root Level SKUs
 		Updated: 20210222	V1.38	Moved Autofit and Autofilter to fix autofit on GBL column
 		Updated: 20210208	V1.37	No longer out-files for everyline and performance improved
@@ -547,13 +548,13 @@ Function Invoke-GroupGuidConversion {
 		[String[]]
 		$GroupGuid,
 		[Parameter(Mandatory)]
-		[Object[]]
+		[hashtable]
 		$LicenseGroups
 	)
-	$output = New-Object System.Collections.Generic.List[System.Object]
+	$output = System.Collections.Generic.List[System.Object]
 	foreach ($guid in $GroupGuid) {
 		$temp = [PSCustomObject]@{
-			DisplayName = ($LicenseGroups | Where-Object {$_.ObjectID -eq $guid}).Displayname
+			DisplayName = $LicenseGroups[$guid]
 		}	
 		$output.Add($temp)
 		Remove-Variable temp
@@ -599,9 +600,8 @@ else {
 $licenseType = $licenseType | Where-Object {$_.ConsumedUnits -ge 1}
 #get all users with licence
 Write-Host "Retrieving all licensed users - this may take a while."
-$alllicensedusers = Get-MsolUser -All | Where-Object {$_.isLicensed -eq $true}
-Write-Host "Retrieving all groups and filtering based on if they apply licenses - this may take a while."
-$allLicensedGroups = Get-MsolGroup -All | Where-Object {$_.licenses -ne $null}
+$alllicensedusers = Get-MsolUser -All  | Where-Object {$_.isLicensed -eq $true}
+$licensedGroups = @{}
 # Loop through all licence types found in the tenant 
 foreach ($license in $licenseType) {    
     Write-Host ("Gathering users with the following subscription: " + $license.accountskuid) 
@@ -615,7 +615,7 @@ foreach ($license in $licenseType) {
 	}
 	#$logFile = $CompanyName + "-" +$rootLicence + ".csv"
 	$logFile = $CSVpath + "\" +$rootLicence + ".csv"
-	$licensedUsers = New-Object System.Collections.Generic.List[System.Object]
+	$licensedUsers = System.Collections.Generic.List[System.Object]
     # Loop through all users and write them to the CSV file 
     foreach ($user in $users) {
         Write-Verbose ("Processing " + $user.displayname) 
@@ -641,7 +641,13 @@ foreach ($license in $licenseType) {
 				if ($null -eq $groups) {
 					$groups = $false
 				} else {
-					$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $allLicensedGroups).DisplayName -Join ";"
+					foreach ($group in $groups) {
+						if ($null -eq $licensedGroups[$group]) {
+							$getGroup = Get-MsolGroup -ObjectId $group
+							$licensedGroups[$group] = $getGroup.DisplayName
+						}
+					}
+					$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $licensedGroups).DisplayName -Join ";"
 				}
 				$userHashTable['DirectAssigned'] = $true
 				$userHashTable['GroupsAssigning'] = $groups
@@ -650,7 +656,13 @@ foreach ($license in $licenseType) {
 				if ($null -eq $groups) {
 					$groups = $false
 				} else {
-				$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $allLicensedGroups).DisplayName -Join ";"
+					foreach ($group in $groups) {
+						if ($null -eq $licensedGroups[$group]) {
+							$getGroup = Get-MsolGroup -ObjectId $group
+							$licensedGroups[$group] = $getGroup.DisplayName
+						}
+					}
+					$groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $licensedGroups).DisplayName -Join ";"
 				}
 				$userHashTable['DirectAssigned'] = $false
 				$userHashTable['GroupsAssigning'] = $groups
