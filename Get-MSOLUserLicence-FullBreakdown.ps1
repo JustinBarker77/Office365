@@ -601,8 +601,6 @@ $licenseType = $licenseType | Where-Object {$_.ConsumedUnits -ge 1}
 #get all users with licence
 Write-Host "Retrieving all licensed users - this may take a while."
 $alllicensedusers = Get-MsolUser -All  | Where-Object {$_.isLicensed -eq $true}
-Write-Host "Retrieving all groups and filtering based on if they apply licenses - this may take a while."
-#$allLicensedGroups = Get-MsolGroup -All | Where-Object {$_.licenses -ne $null}
 $licensedGroups = @{}
 # Loop through all licence types found in the tenant 
 foreach ($license in $licenseType) {    
