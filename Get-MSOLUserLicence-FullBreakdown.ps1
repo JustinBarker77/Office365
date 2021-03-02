@@ -11,7 +11,7 @@
 
 	.NOTES
 		Version 1.41
-		Updated: 20210302	V1.41	Fixed missing New-Objects
+		Updated: 20210302	V1.41	Fixed missing New-Object's
 		Updated: 20210223	V1.40	performance improvements for Group Based Licensing - no longer gets all groups; only gets the group once the GUID is found as an assigning group
 		Updated: 20210222	V1.39	Added some EDU Root Level SKUs
 		Updated: 20210222	V1.38	Moved Autofit and Autofilter to fix autofit on GBL column
