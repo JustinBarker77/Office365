@@ -10,7 +10,8 @@
 		This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.40
+		Version 1.41
+		Updated: 20210302	V1.41	Fixed missing New-Objects
 		Updated: 20210223	V1.40	performance improvements for Group Based Licensing - no longer gets all groups; only gets the group once the GUID is found as an assigning group
 		Updated: 20210222	V1.39	Added some EDU Root Level SKUs
 		Updated: 20210222	V1.38	Moved Autofit and Autofilter to fix autofit on GBL column
@@ -551,7 +552,7 @@ Function Invoke-GroupGuidConversion {
 		[hashtable]
 		$LicenseGroups
 	)
-	$output = System.Collections.Generic.List[System.Object]
+	$output = New-Object System.Collections.Generic.List[System.Object]
 	foreach ($guid in $GroupGuid) {
 		$temp = [PSCustomObject]@{
 			DisplayName = $LicenseGroups[$guid]
@@ -615,7 +616,7 @@ foreach ($license in $licenseType) {
 	}
 	#$logFile = $CompanyName + "-" +$rootLicence + ".csv"
 	$logFile = $CSVpath + "\" +$rootLicence + ".csv"
-	$licensedUsers = System.Collections.Generic.List[System.Object]
+	$licensedUsers = New-Object System.Collections.Generic.List[System.Object]
     # Loop through all users and write them to the CSV file 
     foreach ($user in $users) {
         Write-Verbose ("Processing " + $user.displayname) 
