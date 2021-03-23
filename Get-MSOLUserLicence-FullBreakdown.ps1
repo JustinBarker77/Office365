@@ -10,8 +10,9 @@
 		This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.42
-        Updated: 20210323   V1.42   Added more SKUs (F3, Conf PPM, E5 without Conf) 
+		Version 1.43
+        Updated: 20210323   V1.43   Added more Components
+		Updated: 20210323   V1.42   Added more SKUs (F3, Conf PPM, E5 without Conf) 
 		Updated: 20210302	V1.41	Fixed missing New-Object's
 		Updated: 20210223	V1.40	performance improvements for Group Based Licensing - no longer gets all groups; only gets the group once the GUID is found as an assigning group
 		Updated: 20210222	V1.39	Added some EDU Root Level SKUs
@@ -143,6 +144,7 @@ function componentlicenseswitch {
         "CDS_O365_P1"     {$thisLicence = "Common Data Service for Teams"}
         "CDS_O365_P2"     {$thisLicence = "Common Data Service for Teams"}
 		"CDS_O365_P3"     {$thisLicence = "Common Data Service for Teams"}
+		"CDS_O365_F1"		{$thisLicence = "Common Data Service for Teams"}
 		"CDS_REMOTE_ASSIST"	{$thisLicence = "Common Data Service for Remote Assist"}
 		"CDS_ATTENDED_RPA"	{$thisLicence = "Common Data Service Attended RPA"}
 
@@ -200,6 +202,7 @@ function componentlicenseswitch {
 		"MICROSOFTBOOKINGS"      	{$thisLicence = "Microsoft Bookings"}
 		"EXCEL_PREMIUM"      	{$thisLicence = "Microsoft Excel Advanced Analytics"}
 		"GRAPH_CONNECTORS_SEARCH_INDEX"      	{$thisLicence = "Graph Connectors Search with Index"}
+		"UNIVERSAL_PRINT_01"					{$thisLicence = "Universal Print"}
 		
         #Office
 		"SHAREPOINTWAC"        {$thisLicence = "Office Online"}	
@@ -232,6 +235,7 @@ function componentlicenseswitch {
         "POWER_VIRTUAL_AGENTS_O365_P1"	{$thisLicence = "Power Virtual Agents for Office 365"}
         "POWER_VIRTUAL_AGENTS_O365_P2"	{$thisLicence = "Power Virtual Agents for Office 365"}
         "POWER_VIRTUAL_AGENTS_O365_P3"	{$thisLicence = "Power Virtual Agents for Office 365"}
+		"POWER_VIRTUAL_AGENTS_O365_F1"	{$thisLicence = "Power Virtual Agents for Office 365"}
         "POWERAPPS_PER_APP_IWTRIAL"	    {$thisLicence = "Power Apps per app baseline access"}
         "Flow_Per_APP_IWTRIAL"	        {$thisLicence = "Flow per app baseline access"}
         "CDS_PER_APP_IWTRIAL"	        {$thisLicence = "CDS per app baseline access"}
@@ -246,6 +250,7 @@ function componentlicenseswitch {
 		"PROJECT_O365_P1"				{$thisLicence = "Project for Office (Plan E1)"}
         "PROJECT_O365_P2"				{$thisLicence = "Project for Office (Plan E3)"}
 		"PROJECT_O365_P3"				{$thisLicence = "Project for Office (Plan E5)"}
+		"PROJECT_O365_F3"				{$thisLicence = "Project for Office (Plan F3)"}
 
 		#Security & Compliance
 		"RECORDS_MANAGEMENT"		{$thisLicence = "Microsoft Records Management"}
@@ -275,6 +280,7 @@ function componentlicenseswitch {
 		"ADALLOM_S_DISCOVERY"   {$thisLicence = "Cloud App Security Discovery"}
 		"MIP_S_CLP1"             {$thisLicence = "Information Protection for Office 365 - Standard"}
 		"MIP_S_CLP2"            {$thisLicence = "Information Protection for Office 365 - Premium"}
+		"MIP_S_EXCHANGE"		{$thisLicence = "Data Classification in Microsoft 365"}
 		"PREMIUM_ENCRYPTION"      	{$thisLicence = "Premium Encryption"}
 		"INFORMATION_BARRIERS"		{$thisLicence = "Information Barriers"}
 		"WINDEFATP"                	{$thisLicence = "Windows Defender ATP"}
@@ -284,6 +290,7 @@ function componentlicenseswitch {
         "INSIDER_RISK"   					{$thisLicence = "Microsoft Insider Risk Management"}
         "INSIDER_RISK_MANAGEMENT"			{$thisLicence = "RETIRED - Microsoft Insider Risk Management"}
 		"ML_CLASSIFICATION"   				{$thisLicence = "Microsoft ML_based Classification"}
+		"MICROSOFT_COMMUNICATION_COMPLIANCE" {$thisLicence = "RETIRED - Microsoft Communications Compliance"}
 
 		#SharePoint
 		"SHAREPOINTDESKLESS"   {$thisLicence = "SharePoint Online Kiosk"}
@@ -403,7 +410,7 @@ function RootLicenceswitch {
         "DESKLESSWOFFPACK_GOV"			    {$RootLicence = "O365 (Plan K2) Government"}
 		"SPE_E3"							{$RootLicence = "M365 E3"}
         "SPE_E5"							{$RootLicence = "M365 E5"}
-        "SPE_E5_NOPSTNCONF"					{$RootLicence = "M365 E5 w/o Audio Conf"}
+        "SPE_E5_NOPSTNCONF"					{$RootLicence = "M365 E5 without Audio Conf"}
         "SPE_F1"                            {$RootLicence = "M365 F3"}
 		"STANDARDWOFFPACK_STUDENT"		    {$RootLicence = "O65 (Plan A2) Students"}
 		"M365_F1_COMM"						{$RootLicence = "Microsoft 365 F1"}
@@ -498,6 +505,7 @@ function RootLicenceswitch {
         "WIN_DEF_ATP"                   	{$RootLicence = "Windows 10 Defender ATP"}
 		"RIGHTSMANAGEMENT"				    {$RootLicence = "Rights Management"}
 		"INFOPROTECTION_P2"					{$RootLicence = "AIP Premium P2"}
+		'COMMUNICATIONS_COMPLIANCE'			{$RootLicence = "Communications Compliance"}
 
         #Skype
         "MCOSTANDARD_GOV"				    {$RootLicence = "Lync Plan 2G"}
