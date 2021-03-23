@@ -10,7 +10,8 @@
 		This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.41
+		Version 1.42
+        Updated: 20210323   V1.42   Added more SKUs (F3, Conf PPM, E5 without Conf) 
 		Updated: 20210302	V1.41	Fixed missing New-Object's
 		Updated: 20210223	V1.40	performance improvements for Group Based Licensing - no longer gets all groups; only gets the group once the GUID is found as an assigning group
 		Updated: 20210222	V1.39	Added some EDU Root Level SKUs
@@ -312,6 +313,7 @@ function componentlicenseswitch {
         "MCOPSTN2"                  {$thisLicence = "Domestic and International Calling Plan"}
 		"MCOPSTN5"                  {$thisLicence = "Domestic Calling Plan (120 min)"}
 		"PHONESYSTEM_VIRTUALUSER"	{$thisLicence = "M365 Phone System - Virtual User"}
+		"MCOMEETACPEA"	            {$thisLicence = "M365 Audio Conf Pay-Per-Minute"}
 
 		#To-Do
 		"BPOS_S_TODO_FIRSTLINE"     {$thisLicence = "To-Do Firstline"}
@@ -399,9 +401,10 @@ function RootLicenceswitch {
 		"ENTERPRISEWITHSCAL_GOV"			{$RootLicence = "O365 (Plan G4) Government"}
 		"DESKLESSPACK_GOV"				    {$RootLicence = "O365 (Plan K1) Government"}
         "DESKLESSWOFFPACK_GOV"			    {$RootLicence = "O365 (Plan K2) Government"}
-		"SPE_E3"							{$RootLicence = "Microsoft 365 E3"}
-        "SPE_E5"							{$RootLicence = "Microsoft 365 E5"}
-        "SPE_F1"                            {$RootLicence = "Microsoft 365 D1"}
+		"SPE_E3"							{$RootLicence = "M365 E3"}
+        "SPE_E5"							{$RootLicence = "M365 E5"}
+        "SPE_E5_NOPSTNCONF"					{$RootLicence = "M365 E5 no Conferencing"}
+        "SPE_F1"                            {$RootLicence = "M365 F3"}
 		"STANDARDWOFFPACK_STUDENT"		    {$RootLicence = "O65 (Plan A2) Students"}
 		"M365_F1_COMM"						{$RootLicence = "Microsoft 365 F1"}
         "M365_E5_SUITE_COMPONENTS"		    {$RootLicence = "Microsoft 365 E5 Suite Features"}
@@ -414,27 +417,27 @@ function RootLicenceswitch {
         "STREAM"							{$RootLicence = "Microsoft Stream Trial"}
         "SPZA_IW"						    {$RootLicence = "App Connect"}
         #Office 365 Subscription
-        "O365_BUSINESS"					    {$RootLicence = "Office 365 Business"}
-        "O365_BUSINESS_ESSENTIALS"		    {$RootLicence = "Office 365 Business Essentials"}
-        "O365_BUSINESS_PREMIUM"			    {$RootLicence = "Office 365 Business Premium"}
-		"DESKLESSPACK"					    {$RootLicence = "Office 365 (Plan F3)"}
-		"DESKLESSWOFFPACK"				    {$RootLicence = "Office 365 (Plan K2)"}
-		"LITEPACK"						    {$RootLicence = "Office 365 (Plan P1)"}
-		"STANDARDPACK"					    {$RootLicence = "Office 365 (Plan E1)"}
-		"STANDARDWOFFPACK"				    {$RootLicence = "Office 365 (Plan E2)"}
-		"ENTERPRISEPACK"					{$RootLicence = "Office 365 (Plan E3)"}
-		"ENTERPRISEPACKLRG"				    {$RootLicence = "Office 365 (Plan E3)"}
-		"ENTERPRISEWITHSCAL"				{$RootLicence = "Office 365 (Plan E4)"}
-		"ENTERPRISEPREMIUM_NOPSTNCONF"	    {$RootLicence = "Office 365 (Plan E5) (without Audio Conferencing)"}
-		"ENTERPRISEPREMIUM"				    {$RootLicence = "Office 365 (Plan E5)"}
-		"STANDARDPACK_STUDENT"			    {$RootLicence = "O365 (Plan A1) Students"}
-		"STANDARDWOFFPACKPACK_STUDENT"	    {$RootLicence = "O365 (Plan A2) Students"}
-		"ENTERPRISEPACK_STUDENT"			{$RootLicence = "O365 (Plan A3) Students"}
-		"ENTERPRISEWITHSCAL_STUDENT"		{$RootLicence = "O365 (Plan A4) Students"}
-		"STANDARDPACK_FACULTY"			    {$RootLicence = "O365 (Plan A1) Faculty"}
-		"STANDARDWOFFPACKPACK_FACULTY"	    {$RootLicence = "O365 (Plan A2) Faculty"}
-		"ENTERPRISEPACK_FACULTY"			{$RootLicence = "O365 (Plan A3) Faculty"}
-		"ENTERPRISEWITHSCAL_FACULTY"		{$RootLicence = "O365 (Plan A4) Faculty"}
+        "O365_BUSINESS"					    {$RootLicence = "O365 Business"}
+        "O365_BUSINESS_ESSENTIALS"		    {$RootLicence = "O365 Business Essentials"}
+        "O365_BUSINESS_PREMIUM"			    {$RootLicence = "O365 Business Premium"}
+		"DESKLESSPACK"					    {$RootLicence = "O365 F3"}
+		"DESKLESSWOFFPACK"				    {$RootLicence = "O365 K2"}
+		"LITEPACK"						    {$RootLicence = "O365 P1"}
+		"STANDARDPACK"					    {$RootLicence = "O365 E1"}
+		"STANDARDWOFFPACK"				    {$RootLicence = "O365 E2"}
+		"ENTERPRISEPACK"					{$RootLicence = "O365 E3"}
+		"ENTERPRISEPACKLRG"				    {$RootLicence = "O365 E3"}
+		"ENTERPRISEWITHSCAL"				{$RootLicence = "O365 E4"}
+		"ENTERPRISEPREMIUM_NOPSTNCONF"	    {$RootLicence = "O365 E5 (without Audio Conferencing"}
+		"ENTERPRISEPREMIUM"				    {$RootLicence = "O365 E5"}
+		"STANDARDPACK_STUDENT"			    {$RootLicence = "O365 A1 Students"}
+		"STANDARDWOFFPACKPACK_STUDENT"	    {$RootLicence = "O365 A2 Students"}
+		"ENTERPRISEPACK_STUDENT"			{$RootLicence = "O365 A3 Students"}
+		"ENTERPRISEWITHSCAL_STUDENT"		{$RootLicence = "O365 A4 Students"}
+		"STANDARDPACK_FACULTY"			    {$RootLicence = "O365 A1 Faculty"}
+		"STANDARDWOFFPACKPACK_FACULTY"	    {$RootLicence = "O365 A2 Faculty"}
+		"ENTERPRISEPACK_FACULTY"			{$RootLicence = "O365 A3 Faculty"}
+		"ENTERPRISEWITHSCAL_FACULTY"		{$RootLicence = "O365 A4 Faculty"}
 		"ENTERPRISEPACK_B_PILOT"			{$RootLicence = "O365 (Enterprise Preview)"}
         "STANDARD_B_PILOT"				    {$RootLicence = "O365 (Small Business Preview)"}
         "STANDARDWOFFPACK_IW_STUDENT"	    {$RootLicence = "O365 Education for Students"}
@@ -525,6 +528,8 @@ function RootLicenceswitch {
 		"MCOPSTN_5"                         {$RootLicence = "Dom Calling Plan (120mins)"}
 		"PHONESYSTEM_VIRTUALUSER"			{$RootLicence = "Phone System Virtual User"}
 		"PHONESYSTEM_VIRTUALUSER_FACULTY"	{$RootLicence = "Phone System Virtual User Faculty"}
+		"MCOMEETACPEA"	                    {$RootLicence = "M365 Audio Conf PPM"}
+
         #Visio
         "VISIOCLIENT"					    {$RootLicence = "Visio Pro Online"}
         "VISIOONLINE_PLAN1"				    {$RootLicence = "Visio Online Plan 1"}
