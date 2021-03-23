@@ -403,7 +403,7 @@ function RootLicenceswitch {
         "DESKLESSWOFFPACK_GOV"			    {$RootLicence = "O365 (Plan K2) Government"}
 		"SPE_E3"							{$RootLicence = "M365 E3"}
         "SPE_E5"							{$RootLicence = "M365 E5"}
-        "SPE_E5_NOPSTNCONF"					{$RootLicence = "M365 E5 no Conferencing"}
+        "SPE_E5_NOPSTNCONF"					{$RootLicence = "M365 E5 w/o Audio Conf"}
         "SPE_F1"                            {$RootLicence = "M365 F3"}
 		"STANDARDWOFFPACK_STUDENT"		    {$RootLicence = "O65 (Plan A2) Students"}
 		"M365_F1_COMM"						{$RootLicence = "Microsoft 365 F1"}
