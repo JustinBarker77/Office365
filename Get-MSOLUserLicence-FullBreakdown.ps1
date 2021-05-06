@@ -342,7 +342,7 @@ function componentlicenseswitch {
 		#Windows 10
 		"WIN10_PRO_ENT_SUB"      	{$thisLicence = "Win 10 Enterprise E3"}
 		"WIN10_ENT_LOC_F1"              {$thisLicence = "Win 10 Enterprise E3 (Local Only)"}
-		"WINDOWSUPDATEFORBUSINESS_DEPLOYMENTSERVICE"	{$thisLicence = "Windows Update for Business Deployment Service"}            
+		"WINDOWSUPDATEFORBUSINESS_DEPLOYMENTSERVICE"	{$thisLicence = "Windows Update for Business Deployment Service"}
 		default {$thisLicence = $component }
 	}
 	Write-Output $thisLicence
