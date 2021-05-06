@@ -10,8 +10,9 @@
 		This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.43
-        Updated: 20210323   V1.43   Added more Components
+		Version 1.44
+        Updated: 20210506	V1.44	Added Windows Update for Business Deployment Service component
+		Updated: 20210323   V1.43   Added more Components
 		Updated: 20210323   V1.42   Added more SKUs (F3, Conf PPM, E5 without Conf) 
 		Updated: 20210302	V1.41	Fixed missing New-Object's
 		Updated: 20210223	V1.40	performance improvements for Group Based Licensing - no longer gets all groups; only gets the group once the GUID is found as an assigning group
@@ -340,7 +341,8 @@ function componentlicenseswitch {
 
 		#Windows 10
 		"WIN10_PRO_ENT_SUB"      	{$thisLicence = "Win 10 Enterprise E3"}
-		"WIN10_ENT_LOC_F1"              {$thisLicence = "Win 10 Enterprise E3 (Local Only)"}                
+		"WIN10_ENT_LOC_F1"              {$thisLicence = "Win 10 Enterprise E3 (Local Only)"}
+		"WINDOWSUPDATEFORBUSINESS_DEPLOYMENTSERVICE"	{$thisLicence = "Windows Update for Business Deployment Service"}            
 		default {$thisLicence = $component }
 	}
 	Write-Output $thisLicence
