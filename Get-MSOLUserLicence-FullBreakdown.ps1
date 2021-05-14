@@ -10,8 +10,9 @@
 		This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.45
-        Updated: 20210506	V1.45	Formatted Script to remove whitespace etc.
+		Version 1.46
+        Updated: 20210514	V1.46	Added more components, renamed some components and updated/added more SKUs
+		Updated: 20210506	V1.45	Formatted Script to remove whitespace etc.
 		Updated: 20210506	V1.44	Added Windows Update for Business Deployment Service component
 		Updated: 20210323   V1.43   Added more Components
 		Updated: 20210323   V1.42   Added more SKUs (F3, Conf PPM, E5 without Conf)
@@ -113,6 +114,7 @@ function componentlicenseswitch
 		'AAD_BASIC' { $thisLicence = 'Azure Acitve Directory Basic' }
 		'AAD_PREMIUM' { $thisLicence = 'Azure Active Directory Premium P1' }
 		'AAD_PREMIUM_P2' { $thisLicence = 'Azure Active Directory Premium P2' }
+		'AAD_BASIC_EDU' { $thisLicence = 'Azure Active Directory Basic for EDU'}
 
 		#Dynamics
 		'DYN365_ENTERPRISE_SALES' { $thisLicence = 'Dynamics 365 for Sales' }
@@ -139,8 +141,12 @@ function componentlicenseswitch
 		'Dynamics_365_for_HCM_Trial' { $thisLicence = 'Dynamics_365_for_HCM_Trial' }
 		'DYN365_ENTERPRISE_P1' { $thisLicence = 'Dynamics Enterprise P1' }
 		'D365_CSI_EMBED_CE' { $thisLicence = 'Dynamics 365 Customer Service Insights for CE Plan' }
-		'DYN365_ENTERPRISE_P1_IW'	{ $thisLicence = 'Dyn 365 P1 Trial Info Workers' }
-		'MICROSOFT_REMOTE_ASSIST'	{ $thisLicence = 'Dynamics 365 Remote Assist' }
+		'DYN365_ENTERPRISE_P1_IW' { $thisLicence = 'Dyn 365 P1 Trial Info Workers' }
+		'MICROSOFT_REMOTE_ASSIST' { $thisLicence = 'Dynamics 365 Remote Assist' }
+		'D365_ProjectOperations' { $thisLicence = 'Dynamics 365 Project Operations' }
+		'D365_ProjectOperationsCDS'  { $thisLicence = 'Dynamics 365 Project Operations CDS' }
+		'D365_CSI_EMBED_CSEnterprise' { $thisLicence = 'Dynamics 365 Customer Service Insights for CS Enterprise' }
+		'DYN365_ENTERPRISE_CUSTOMER_SERVICE' { $thisLicence = 'Dynamics 365 for Customer Service'}
 
 		#Dynamics Common Data Service
 		'DYN365_CDS_O365_P1' { $thisLicence = 'Common Data Service' }
@@ -193,6 +199,8 @@ function componentlicenseswitch
 		'Forms_Pro_CE' { $thisLicence = 'Forms Pro for Customer Engagement Plan' }
 		'FORMS_PRO' { $thisLicence = 'Forms Pro' }
 		'FORMS_PLAN_K' { $thisLicence = 'Microsoft Forms (Plan F1)' }
+		'OFFICE_FORMS_PLAN_3' { $thisLicence = 'Microsoft Forms (Plan 3)' }
+		'OFFICE_FORMS_PLAN_2' { $thisLicence = 'Microsoft Forms (Plan 2)' }
 
 		#Kaizala
 		'KAIZALA_STANDALONE' { $thisLicence = 'Microsoft Kaizala Pro' }
@@ -215,12 +223,19 @@ function componentlicenseswitch
 		'EXCEL_PREMIUM' { $thisLicence = 'Microsoft Excel Advanced Analytics' }
 		'GRAPH_CONNECTORS_SEARCH_INDEX' { $thisLicence = 'Graph Connectors Search with Index' }
 		'UNIVERSAL_PRINT_01' { $thisLicence = 'Universal Print' }
+		'SCHOOL_DATA_SYNC_P1' { $thisLicence = 'School Data Sync (Plan 1)' }
+		'SCHOOL_DATA_SYNC_P2' { $thisLicence = 'School Data Sync (Plan 2)' }
+		'MINECRAFT_EDUCATION_EDITION' { $thisLicence = 'Minecraft Education Edition' }
+		'EducationAnalyticsP1' { $thisLicence = 'Education Analytics' }
+		'YAMMER_EDU' { $thisLicence = 'Yammer for Academic' }
+
 
 		#Office
 		'SHAREPOINTWAC' { $thisLicence = 'Office Online' }
 		'OFFICESUBSCRIPTION' { $thisLicence = 'Office 365 ProPlus' }
 		'OFFICEMOBILE_SUBSCRIPTION' { $thisLicence = 'Office Mobile Apps for Office 365' }
 		'SAFEDOCS' { $thisLicence = 'Office 365 SafeDocs' }
+		'SHAREPOINTWAC_EDU' { $thisLicence = 'Office for the web (Education)' }
 
 		#OneDrive
 		'ONEDRIVESTANDARD' { $thisLicence = 'OneDrive for Business (Plan 1)' }
@@ -235,6 +250,7 @@ function componentlicenseswitch
 		'MCOMEETADV' { $thisLicence = 'M365 Audio Conferencing' }
 		'MCOEV_VIRTUALUSER' { $thisLicence = 'Microsoft 365 Phone System Virtual User' }
 		'MCOPSTNC' { $thisLicence = 'Communications Credits' }
+
 		#PowerApps
 		'POWERAPPS_O365_S1' { $thisLicence = 'PowerApps for Office 365 Firstline' }
 		'POWERAPPS_O365_P1' { $thisLicence = 'PowerApps for Office 365' }
@@ -263,6 +279,7 @@ function componentlicenseswitch
 		'PROJECT_O365_P2' { $thisLicence = 'Project for Office (Plan E3)' }
 		'PROJECT_O365_P3' { $thisLicence = 'Project for Office (Plan E5)' }
 		'PROJECT_O365_F3' { $thisLicence = 'Project for Office (Plan F3)' }
+		'PROJECT_FOR_PROJECT_OPERATIONS' { $thisLicence = 'Project for Project Operations' }
 
 		#Security & Compliance
 		'RECORDS_MANAGEMENT' { $thisLicence = 'Microsoft Records Management' }
@@ -303,12 +320,15 @@ function componentlicenseswitch
 		'INSIDER_RISK_MANAGEMENT' { $thisLicence = 'RETIRED - Microsoft Insider Risk Management' }
 		'ML_CLASSIFICATION' { $thisLicence = 'Microsoft ML_based Classification' }
 		'MICROSOFT_COMMUNICATION_COMPLIANCE' { $thisLicence = 'RETIRED - Microsoft Communications Compliance' }
+		'INTUNE_EDU' { $thisLicence = 'Intune for Education' }
 
 		#SharePoint
 		'SHAREPOINTDESKLESS' { $thisLicence = 'SharePoint Online Kiosk' }
 		'SHAREPOINTSTANDARD' { $thisLicence = 'SharePoint Online (Plan 1)' }
 		'SHAREPOINTENTERPRISE' { $thisLicence = 'SharePoint Online (Plan 2)' }
 		'SHAREPOINTONLINE_MULTIGEO'	{ $thisLicence = 'Sharepoint Multi-Geo' }
+		'SHAREPOINTSTANDARD_EDU'  { $thisLicence = 'SharePoint Plan 1 for EDU' }
+		'SHAREPOINTENTERPRISE_EDU' { $thisLicence = 'SharePoint Plan 2 for EDU' }
 
 		#Skype
 		'MCOIMP' { $thisLicence = 'Skype for Business (Plan 1)' }
@@ -432,11 +452,11 @@ function RootLicenceswitch
 		'SPE_E5' { $RootLicence = 'M365 E5' }
 		'SPE_E5_NOPSTNCONF' { $RootLicence = 'M365 E5 without Audio Conf' }
 		'SPE_F1' { $RootLicence = 'M365 F3' }
-		'STANDARDWOFFPACK_STUDENT' { $RootLicence = 'O65 (Plan A2) Students' }
+		'STANDARDWOFFPACK_STUDENT' { $RootLicence = 'O365 A1 for Students' }
 		'M365_F1_COMM' { $RootLicence = 'Microsoft 365 F1' }
-		'M365_E5_SUITE_COMPONENTS' { $RootLicence = 'Microsoft 365 E5 Suite Features' }
+		'M365_E5_SUITE_COMPONENTS' { $RootLicence = 'M365 E5 Suite Features' }
 		'M365EDU_A5_FACULTY' { $RootLicence = 'M365 Education A5 Faculty' }
-		'M365EDU_A5_STUUSEBNFT' { $RootLicence = 'M365 Education A5 Student Benefit' }
+		'M365EDU_A5_STUUSEBNFT' { $RootLicence = 'M365 EDU A5 Student Bens' }
 
 		#Misc Services
 		'PLANNERSTANDALONE' { $RootLicence = 'Planner Standalone' }
@@ -444,6 +464,7 @@ function RootLicenceswitch
 		'PROJECTWORKMANAGEMENT' { $RootLicence = 'Office 365 Planner Preview' }
 		'STREAM' { $RootLicence = 'Microsoft Stream Trial' }
 		'SPZA_IW' { $RootLicence = 'App Connect' }
+		'IT_ACADEMY_AD' { $RootLicence = 'MS Imagine Academy' }
 
 		#Office 365 Subscription
 		'O365_BUSINESS' { $RootLicence = 'O365 Business' }
@@ -471,7 +492,7 @@ function RootLicenceswitch
 		'STANDARD_B_PILOT' { $RootLicence = 'O365 (Small Business Preview)' }
 		'STANDARDWOFFPACK_IW_STUDENT' { $RootLicence = 'O365 Education for Students' }
 		'STANDARDWOFFPACK_IW_FACULTY' { $RootLicence = 'O365 Education for Faculty' }
-		'STANDARDWOFFPACK_FACULTY' { $RootLicence = 'O365 Education E1 for Faculty' }
+		'STANDARDWOFFPACK_FACULTY' { $RootLicence = 'O365 A1 for Faculty' }
 		'ENTERPRISEPACKWITHOUTPROPLUS' { $RootLicence = 'O365 E3 No Pro Plus' }
 		'OFFICE365_MULTIGEO' { $RootLicence = 'Multi-Geo in Office 365' }
 
@@ -566,7 +587,7 @@ function RootLicenceswitch
 		'MCOEV' { $RootLicence = 'Microsoft Phone System' }
 		'MCOPSTN_5' { $RootLicence = 'Dom Calling Plan (120mins)' }
 		'PHONESYSTEM_VIRTUALUSER' { $RootLicence = 'Phone System Virtual User' }
-		'PHONESYSTEM_VIRTUALUSER_FACULTY'	{ $RootLicence = 'Phone System Virtual User Faculty' }
+		'PHONESYSTEM_VIRTUALUSER_FACULTY'	{ $RootLicence = 'Phone System V User Faculty' }
 		'MCOMEETACPEA' { $RootLicence = 'M365 Audio Conf PPM' }
 
 		#Visio
