@@ -10,8 +10,9 @@
 		This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
 	.NOTES
-		Version 1.46
-        Updated: 20210514	V1.46	Added more components, renamed some components and updated/added more SKUs
+		Version 1.47
+        Updated: 20210514	V1.47	Added more components, renamed some components and updated/added more SKUs
+		Updated: 20210514	V1.46	Added more components, renamed some components and updated/added more SKUs
 		Updated: 20210506	V1.45	Formatted Script to remove whitespace etc.
 		Updated: 20210506	V1.44	Added Windows Update for Business Deployment Service component
 		Updated: 20210323   V1.43   Added more Components
@@ -229,13 +230,13 @@ function componentlicenseswitch
 		'EducationAnalyticsP1' { $thisLicence = 'Education Analytics' }
 		'YAMMER_EDU' { $thisLicence = 'Yammer for Academic' }
 
-
 		#Office
 		'SHAREPOINTWAC' { $thisLicence = 'Office Online' }
-		'OFFICESUBSCRIPTION' { $thisLicence = 'Office 365 ProPlus' }
+		'OFFICESUBSCRIPTION' { $thisLicence = 'M365 Apps for Enterprise' }
 		'OFFICEMOBILE_SUBSCRIPTION' { $thisLicence = 'Office Mobile Apps for Office 365' }
 		'SAFEDOCS' { $thisLicence = 'Office 365 SafeDocs' }
 		'SHAREPOINTWAC_EDU' { $thisLicence = 'Office for the web (Education)' }
+		'OFFICESUBSCRIPTION_unattended' { $thisLicence = 'M365 Apps for Enterprise (unattended)'}
 
 		#OneDrive
 		'ONEDRIVESTANDARD' { $thisLicence = 'OneDrive for Business (Plan 1)' }
@@ -457,6 +458,7 @@ function RootLicenceswitch
 		'M365_E5_SUITE_COMPONENTS' { $RootLicence = 'M365 E5 Suite Features' }
 		'M365EDU_A5_FACULTY' { $RootLicence = 'M365 Education A5 Faculty' }
 		'M365EDU_A5_STUUSEBNFT' { $RootLicence = 'M365 EDU A5 Student Bens' }
+		'SPE_E3_RPA1' { $RootLicence = 'M365 E3 Unattended' }
 
 		#Misc Services
 		'PLANNERSTANDALONE' { $RootLicence = 'Planner Standalone' }
@@ -465,6 +467,7 @@ function RootLicenceswitch
 		'STREAM' { $RootLicence = 'Microsoft Stream Trial' }
 		'SPZA_IW' { $RootLicence = 'App Connect' }
 		'IT_ACADEMY_AD' { $RootLicence = 'MS Imagine Academy' }
+		'EXTRA_CONNECTOR_CAPACITY' { $RootLicence = 'Extra Graph Connector' }
 
 		#Office 365 Subscription
 		'O365_BUSINESS' { $RootLicence = 'O365 Business' }
@@ -522,6 +525,7 @@ function RootLicenceswitch
 		'POWER_BI_PRO' { $RootLicence = 'Power BI Pro' }
 		'POWER_BI_PRO_CE' { $RootLicence = 'Power BI Pro' }
 		'POWER_BI_PRO_FACULTY' { $RootLicence = 'Power BI Pro Faculty' }
+		'POWER_BI_PRO_DEPT' { $RootLicence = 'Power BI Pro DEPT' }
 
 		#PhoneSystem
 		'MCOPSTNC' { $RootLicence = 'Communications Credits' }
@@ -661,7 +665,7 @@ Function Merge-CSVFile
 	$xlContains = [Microsoft.Office.Interop.Excel.XlContainsOperator]::xlContains
 	foreach ($worksheet in $worksheets)
 	{
-		Write-Information 'Freezing panes on '$Worksheet.Name
+		Write-Information ('Freezing panes on ' + $Worksheet.Name)
 		$worksheet.Select()
 		$worksheet.application.activewindow.splitcolumn = 1
 		$worksheet.application.activewindow.splitrow = 1
@@ -675,7 +679,7 @@ Function Merge-CSVFile
 		$Selection.Font.Size = 9
 		if ($Worksheet.Name -ne 'AllLicences')
 		{
-			Write-Information 'Setting Conditional Formatting on '$Worksheet.Name
+			Write-Information ('Setting Conditional Formatting on ' + $Worksheet.Name)
 			$Selection = $worksheet.Range($worksheet.Cells(2, 6), $worksheet.Cells($rows, $columns))
 			$Selection.FormatConditions.Add($xlTextString, '', $xlContains, 'Success', 'Success', 0, 0) | Out-Null
 			$Selection.FormatConditions.Item(1).Interior.ColorIndex = 35
