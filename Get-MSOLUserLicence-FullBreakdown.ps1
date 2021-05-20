@@ -375,7 +375,7 @@ function componentlicenseswitch
         #Windows 10
         'WIN10_PRO_ENT_SUB' { $thisLicence = 'Win 10 Enterprise E3' }
         'WIN10_ENT_LOC_F1' { $thisLicence = 'Win 10 Enterprise E3 (Local Only)' }
-        'WINDOWSUPDATEFORBUSINESS_DEPLOYMENTSERVICE'    { $thisLicence = 'Windows Update for Business Deployment Service' }
+        'WINDOWSUPDATEFORBUSINESS_DEPLOYMENTSERVICE' { $thisLicence = 'Windows Update for Business Deployment Service' }
         default { $thisLicence = $component }
     }
     Write-Output $thisLicence
@@ -396,25 +396,25 @@ function RootLicenceswitch
         #Dynamics
         'DYN365_ENTERPRISE_PLAN1' { $RootLicence = 'Dyn 365 Customer Engage Ent Ed' }
         'DYN365_ENTERPRISE_CUSTOMER_SERVICE' { $RootLicence = 'Dyn 365 Customer Service' }
-        'PROJECT_MADEIRA_PREVIEW_IW_SKU'    { $RootLicence = 'Dynamics 365 for Financials for IWs' }
+        'PROJECT_MADEIRA_PREVIEW_IW_SKU' { $RootLicence = 'Dynamics 365 for Financials for IWs' }
         'DYN365_AI_SERVICE_INSIGHTS' { $RootLicence = 'Dyn 365 CSI Trial' }
         'Dynamics_365_for_Operations' { $RootLicence = 'Dyn 365 Unified Operations Plan' }
         'Dynamics_365_Onboarding_SKU' { $RootLicence = 'Dyn 365 for Talent Onboard' }
         'CCIBOTS_PRIVPREV_VIRAL' { $RootLicence = 'Dyn 365 AI for CSVAV' }
         'DYN365_BUSINESS_MARKETING' { $RootLicence = 'Dyn 365 Marketing' }
         'DYN365_RETAIL_TRIAL' { $RootLicence = 'Dyn 365 Retail Trial' }
-        'SKU_Dynamics_365_for_HCM_Trial'    { $RootLicence = 'Dyn 365 Talent' }
-        'DYN365_FINANCIALS_BUSINESS_SKU'    { $RootLicence = 'Dyn 365 Financials Business Edition' }
+        'SKU_Dynamics_365_for_HCM_Trial' { $RootLicence = 'Dyn 365 Talent' }
+        'DYN365_FINANCIALS_BUSINESS_SKU' { $RootLicence = 'Dyn 365 Financials Business Edition' }
         'DYN365_FINANCIALS_TEAM_MEMBERS_SKU' { $RootLicence = 'Dyn 365 Team Members Business Edition' }
         'AX7_USER_TRIAL' { $RootLicence = 'Dynamics AX7 Trial' }
         'DYN365_ENTERPRISE_P1_IW' { $RootLicence = 'Dyn 365 P1 Trial Info Workers' }
-        'DYN365_ENTERPRISE_TEAM_MEMBERS'    { $RootLicence = 'Dyn 365 Team Members Ent Ed' }
+        'DYN365_ENTERPRISE_TEAM_MEMBERS' { $RootLicence = 'Dyn 365 Team Members Ent Ed' }
         'DYN365_TEAM_MEMBERS' { $RootLicence = 'Dynamics 365 Team Members' }
         'CRMSTORAGE' { $RootLicence = 'Microsoft Dynamics CRM Online Additional Storage' }
         'CRMSTANDARD' { $RootLicence = 'Microsoft Dynamics CRM Online Professional' }
         'DYN365_ENTERPRISE_SALES' { $RootLicence = 'Dyn 365 Enterprise Sales' }
         'MICROSOFT_REMOTE_ASSIST' { $RootLicence = 'Dyn 365 Remote Assist' }
-        'MICROSOFT_REMOTE_ASSIST_ATTACH'    { $RootLicence = 'Dyn 365 Remote Assist Attach' }
+        'MICROSOFT_REMOTE_ASSIST_ATTACH' { $RootLicence = 'Dyn 365 Remote Assist Attach' }
 
         #Exchange
         'EXCHANGESTANDARD_GOV' { $RootLicence = 'Exchange Online (P1) for Government' }
@@ -810,10 +810,10 @@ foreach ($license in $licenseType)
             $enabled = $true
         }
         $userHashTable = @{
-            DisplayName       = $user.DisplayName
+            DisplayName = $user.DisplayName
             UserPrincipalName = $user.UserPrincipalName
-            AccountEnabled    = $enabled
-            AccountSKU        = $rootLicence
+            AccountEnabled = $enabled
+            AccountSKU = $rootLicence
         }
         if ($thislicense.GroupsAssigningLicense.Count -eq 0)
         {
