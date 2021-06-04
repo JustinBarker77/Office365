@@ -13,8 +13,9 @@
 		Updated: 27-07-2020	v0.1	Initial draft
 
 		Authors: Luke Allinson, Justin Barker
-		
-		References: 
+
+        TODO: Rewrite to use ImportExcel Module and Microsoft.Graph Module
+		References:
 			https://stackoverflow.com/questions/31183106/can-powershell-generate-a-plain-excel-file-with-multiple-sheets
 			https://learn-powershell.net/2015/10/02/quick-hits-adding-a-hyperlink-to-excel-spreadsheet/
 #>
@@ -42,6 +43,7 @@ param (
 	)]
 	[PSCredential]$Office365Credentials
 )
+
 Function Merge-CSVFiles {
 	## Gather all CSV files in temporary folder
     $CsvFiles = Get-ChildItem ("$CSVPath\*") -Include *.csv
@@ -60,7 +62,7 @@ Function Merge-CSVFiles {
 		## Generate truncated sheet names (31 character limit)
         $SheetName = ($CSV.name -split "\.")[0]
         If ($SheetName.Length -gt 30) {
-    		$TruncSheetName = ($SheetName.Split(" ") | ForEach {$_.Substring(0,5)}) -join ""
+    		$TruncSheetName = ($SheetName.Split(" ") | ForEach-Object {$_.Substring(0,5)}) -join ""
         } Else {
             $TruncSheetName = $SheetName.Replace(" ","")
         }
@@ -74,7 +76,7 @@ Function Merge-CSVFiles {
         $Worksheet.Range("A1").Font.FontStyle = "Bold"
         $Worksheet.Range("A1").Font.ColorIndex = 55
         $TxtConnector = ("TEXT;" + $CSVFullPath)
-        ## Import CSV file		
+        ## Import CSV file
         $CellRef = $worksheet.Range("A2")
 		$Connector = $worksheet.QueryTables.Add($TxtConnector,$CellRef)
 		$Worksheet.QueryTables.Item($Connector.Name).TextFileOtherDelimiter = ","
@@ -86,7 +88,7 @@ Function Merge-CSVFiles {
         $SheetObj | Add-Member NoteProperty -Name "Index" -Value $CSVSheet
         $SheetObj | Add-Member NoteProperty -Name "SheetName" -Value $SheetName
         $SheetObj | Add-Member NoteProperty -Name "TruncSheetName" -Value $TruncSheetName
-        $SummaryInfo += $SheetObj  
+        $SummaryInfo += $SheetObj
         $CSVSheet++
 	}
     Write-Host "Applying formatting to Worksheets..." -ForegroundColor Magenta
@@ -99,7 +101,7 @@ Function Merge-CSVFiles {
                     #Write-Host "$($Item.Index) --- $($Item.SheetName) --- $($Item.TruncSheetName)" -ForegroundColor Cyan
                     $SearchString = $Item.Sheetname
                     $Selection = $worksheet.Range("B3").EntireColumn
-                    $Search = $Selection.find($SearchString,[Type]::Missing,[Type]::Missing,1) 
+                    $Search = $Selection.find($SearchString,[Type]::Missing,[Type]::Missing,1)
                     $ResultCell = "B$($Search.Row)"
                     $worksheet.Hyperlinks.Add($worksheet.Range($ResultCell),"","$($Item.TruncSheetName)!A1","$($Item.SheetName)",$worksheet.Range($ResultCell).text)
                 }
@@ -126,7 +128,7 @@ Function Merge-CSVFiles {
         ## Add filter and autofit
         $Selection = $Worksheet.Range($Worksheet.Cells(2,1), $Worksheet.Cells($Rows,$Columns))
         $Selection.AutoFilter()
-        $Selection.EntireColumn.AutoFit()	
+        $Selection.EntireColumn.AutoFit()
     }
     ## Focus the Summary sheet and tidy up
 	$Workbooks.Worksheets.Item("Summary").Select()
@@ -193,8 +195,8 @@ ForEach ($Role in $MSOLRole) {
             $UserObj | Add-Member NoteProperty -Name "EmailAddress" -Value $RoleMember.EmailAddress
             $UserObj | Add-Member NoteProperty -Name "DisplayName" -Value $RoleMember.DisplayName
             $UserObj | Add-Member NoteProperty -Name "isLicensed" -Value $RoleMember.isLicensed
-            $UserObj | Add-Member NoteProperty -Name "LastDirSyncTime" -Value $MSOLUser.LastDirSyncTime
-            $UserOutput += $UserObj  
+            $UserObj | Add-Member NoteProperty -Name "LastDirSyncTime" -Value $LastDirSyncTime
+            $UserOutput += $UserObj
         }
         $UserOutput | Export-Csv -NoClobber -NoTypeInformation -Encoding UTF8 $LogFile2
     }
@@ -202,7 +204,7 @@ ForEach ($Role in $MSOLRole) {
     $RoleObj | Add-Member NoteProperty -Name "ObjectId" -Value $Role.ObjectId
     $RoleObj | Add-Member NoteProperty -Name "Name" -Value $Role.Name
     $RoleObj | Add-Member NoteProperty -Name "MemberCount" -Value $RoleMembersCount
-    $Output += $RoleObj  
+    $Output += $RoleObj
 }
 $Output = $Output | Sort-Object Name
 $Output | Export-Csv -NoClobber -NoTypeInformation -Encoding UTF8 $LogFile1
