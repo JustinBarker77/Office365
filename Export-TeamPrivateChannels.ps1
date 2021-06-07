@@ -37,16 +37,18 @@ $teams = Get-Team
 $total = 0
 $privatechannels = @()
 $count = 0
-foreach ($team in $teams) {
+foreach ($team in $teams)
+{
     $count ++
-    Write-Progress -Activity "Enumerating Private Teams" -Status "Checking Team $count of $($teams.count)" -PercentComplete (($count/($teams.count))*100)
+    Write-Progress -Activity 'Enumerating Private Teams' -Status "Checking Team $count of $($teams.count)" -PercentComplete (($count / ($teams.count)) * 100)
     $private = Get-TeamChannel -GroupId $team.groupid -MembershipType Private
     $privateCount = $private.count
-    if ($privateCount -gt 0) {
+    if ($privateCount -gt 0)
+    {
         $total = $total + $privateCount
         $privatechannels += $private
     }
 }
 $total
 
-$privatechannels | Export-CSV $filepath -NoClobber -NoTypeInformation
+$privatechannels | Export-Csv $filepath -NoClobber -NoTypeInformation
