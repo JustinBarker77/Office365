@@ -1,4 +1,4 @@
-#Requires -Modules ImportExcel, Microsoft.Graph.Authentication, Microsoft.Graph.Identity.DirectoryManagement, Microsoft.Graph.Groups, Microsoft.Graph.Users
+#Requires -Modules @{ ModuleName = "ImportExcel"; ModuleVersion = "7.1.2"}, @{ ModuleName = "Microsoft.Graph.Authentication"; ModuleVersion = "1.5.0"}, @{ ModuleName = "Microsoft.Graph.Identity.DirectoryManagement"; ModuleVersion = "1.5.0" }, @{ ModuleName = "Microsoft.Graph.Groups"; ModuleVersion = "1.5.0" }, @{ ModuleName = "Microsoft.Graph.Users"; ModuleVersion = "1.5.0" }
 
 <#
     .SYNOPSIS
@@ -75,17 +75,46 @@
 
     This example shows how to run the script interactively for the Company Contoso and does not give friendly names for SKUs
 #>
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName = 'DefaultParameters')]
 param (
     [Parameter(
         Mandatory,
-        HelpMessage = 'Name of the Company you are running this against. This will form part of the output file name')
-    ]
+        HelpMessage = 'Name of the Company you are running this against. This will form part of the output file name',
+        Position = 1,
+        ParameterSetName = 'DefaultParameters'
+    )]
+    [Parameter(
+        Mandatory,
+        HelpMessage = 'Name of the Company you are running this against. This will form part of the output file name',
+        Position = 1,
+        ParameterSetName = 'Overwrite'
+    )]
+    [Parameter(
+        Mandatory,
+        HelpMessage = 'Name of the Company you are running this against. This will form part of the output file name',
+        Position = 1,
+        ParameterSetName = 'NoOverWrite'
+    )]
     [string]$CompanyName,
     [Parameter(
         Mandatory,
-        HelpMessage = 'The location you would like the final excel file to reside'
-    )][ValidateScript( {
+        HelpMessage = 'The location you would like the final excel file to reside',
+        Position = 2,
+        ParameterSetName = 'DefaultParameters'
+    )]
+    [Parameter(
+        Mandatory,
+        HelpMessage = 'The location you would like the final excel file to reside',
+        Position = 2,
+        ParameterSetName = 'Overwrite'
+    )]
+    [Parameter(
+        Mandatory,
+        HelpMessage = 'The location you would like the final excel file to reside',
+        Position = 2,
+        ParameterSetName = 'NoOverWrite'
+    )]
+    [ValidateScript( {
             if (!(Test-Path -Path $_))
             {
                 throw "The folder $_ does not exist"
@@ -97,13 +126,35 @@ param (
         })]
     [System.IO.DirectoryInfo]$OutputPath,
     [Parameter(
-        HelpMessage = "This stops translation into Friendly Names of SKU's and Components"
-    )][switch]$NoNameTranslation
+        HelpMessage = "This stops translation into Friendly Names of SKU's and Components",
+        ParameterSetName = 'DefaultParameters'
+    )]
+    [Parameter(
+        HelpMessage = "This stops translation into Friendly Names of SKU's and Components",
+        ParameterSetName = 'Overwrite'
+    )]
+    [Parameter(
+        HelpMessage = "This stops translation into Friendly Names of SKU's and Components",
+        ParameterSetName = 'NoOverWrite'
+    )]
+    [switch]$NoNameTranslation,
+    [Parameter(
+        HelpMessage = "This will remove the output file without prompting in the script",
+        ParameterSetName = 'Overwrite'
+    )]
+    [switch]$OverwriteExistingFile,
+    [Parameter(
+        HelpMessage = "This will not remove the output file and will exit if the file already exists",
+        ParameterSetName = 'NoOverWrite'
+    )]
+    [switch]$DoNotOverwriteExistingFile
 )
 
 #Enables Information Stream
 $initialInformationPreference = $InformationPreference
 $InformationPreference = 'Continue'
+
+Write-Information -MessageData ('Started Script at ' + (Get-Date).ToLongTimeString() + ' on ' + (Get-Date).ToLongDateString())
 
 #Following Function Switches Complicated SKU Names with Friendly Names
 function LicenceTranslate
@@ -177,12 +228,53 @@ else
 {
     $excelfilepath = $OutputPath.FullName
 }
-$XLOutput = $excelfilepath + "$CompanyName - $date.xlsx" ## Output file name
-if (Test-Path $XLOutput)
+$XLOutput = $excelfilepath + "$CompanyName - $date.xlsx"
+
+if (Test-Path $XLOutput -ErrorAction SilentlyContinue)
 {
-    Write-Error -Message "The file $XLOutput already exists, please delete this and rerun the script"
-    return
+    if ($OverwriteExistingFile)
+    {
+        try {
+            Remove-Item -Path $XLOutput -Force -Confirm:$false -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Error "There has been an error removing the file $XLOutput - please remove this file and try again"
+            $InformationPreference = $initialInformationPreference
+            return
+        }
+    }
+    elseif ($DoNotOverwriteExistingFile) {
+        $InformationPreference = $initialInformationPreference
+        return "The file $XLOutput already exists and you do not want to remove it, please move the file and try again"
+    }
+    else
+    {
+        $message = "$XlOutput already exists, do you want to remove the file and continue?
+        [Y]es
+        [N]o"
+        Do {
+            $removeFile = Read-Host -Prompt $message
+        } until ("y","n" -contains $removeFile.ToLower())
+        if ($removeFile -eq "y")
+        {
+            try {
+                Remove-Item -Path $XLOutput -Force -Confirm:$false -ErrorAction Stop
+            }
+            catch
+            {
+                Write-Error "There has been an error removing the file $XLOutput - please remove this file and try again"
+                $InformationPreference = $initialInformationPreference
+                return
+            }
+        }
+        else {
+            $InformationPreference = $initialInformationPreference
+            return "Not deleting file, exiting script"
+        }
+    }
 }
+
 Write-Information 'Checking Connection to Office 365'
 $test365 = Get-MgOrganization -ErrorAction silentlycontinue
 $preConnected = $test365
@@ -283,7 +375,6 @@ foreach ($license in $licenseType)
                     $licensedGroups[$group] = $getGroup.DisplayName
                 }
             }
-            #TODO: work out why line splitting isn't happening
             $groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $licensedGroups).DisplayName -Join "`r`n"
             if (($licenseAssignmentStates | Where-Object { $null -eq $_.AssignedByGroup }).Count -ge 1)
             {
