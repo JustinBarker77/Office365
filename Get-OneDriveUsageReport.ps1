@@ -8,6 +8,7 @@
         The report will contain the following information:
         - Owner (UPN)
         - CurrentUsage (GB)
+        - PercentageOfQuotaUsed
         - Quota (GB)
         - QuotaWarning (GB)
         - QuotaType
@@ -145,7 +146,6 @@ process
         try
         {
             # Cleanup
-            $Stats = $null
             $StatsReport = $null
 
             # Get the dedicated Info for the user
@@ -245,7 +245,6 @@ end
     {
         # Cleanup
         $Report = $null
-        $Excel = $nul
 
         # Disconnect from SharePoint Online
         (Disconnect-SPOService -ErrorAction SilentlyContinue) | Out-Null

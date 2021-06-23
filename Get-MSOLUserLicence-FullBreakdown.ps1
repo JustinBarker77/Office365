@@ -1,4 +1,4 @@
-#Requires -Modules MSOnline
+#Requires -Modules @{ ModuleName = "ImportExcel"; ModuleVersion = "7.1.2"}, @{ ModuleName = "MSOnline"; ModuleVersion = "1.1.183.57" }
 #Requires -Version 5
 
 <#
@@ -10,7 +10,8 @@
         This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
     .NOTES
-        Version 1.49
+        Version 1.50
+        Updated: 20210623    V1.50    Updated to use ImportExcel
         Updated: 20210607    V1.49    Moved Translates to json files
         Updated: 20210520    V1.48    1 tab = 4 spaces
         Updated: 20210520    V1.47    Added more components, renamed some components and added more SKUs
@@ -68,19 +69,47 @@
 
         References:
             https://gallery.technet.microsoft.com/scriptcenter/Export-a-Licence-b200ca2a
-            https://stackoverflow.com/questions/31183106/can-powershell-generate-a-plain-excel-file-with-multiple-sheets
 #>
-[CmdletBinding()]
+[CmdletBinding(DefaultParameterSetName = 'DefaultParameters')]
 param (
     [Parameter(
         Mandatory,
-        HelpMessage = 'Name of the Company you are running this against. This will form part of the output file name')
-    ]
+        HelpMessage = 'Name of the Company you are running this against. This will form part of the output file name',
+        Position = 1,
+        ParameterSetName = 'DefaultParameters'
+    )]
+    [Parameter(
+        Mandatory,
+        HelpMessage = 'Name of the Company you are running this against. This will form part of the output file name',
+        Position = 1,
+        ParameterSetName = 'Overwrite'
+    )]
+    [Parameter(
+        Mandatory,
+        HelpMessage = 'Name of the Company you are running this against. This will form part of the output file name',
+        Position = 1,
+        ParameterSetName = 'NoOverWrite'
+    )]
     [string]$CompanyName,
     [Parameter(
         Mandatory,
-        HelpMessage = 'The location you would like the final excel file to reside'
-    )][ValidateScript( {
+        HelpMessage = 'The location you would like the final excel file to reside',
+        Position = 2,
+        ParameterSetName = 'DefaultParameters'
+    )]
+    [Parameter(
+        Mandatory,
+        HelpMessage = 'The location you would like the final excel file to reside',
+        Position = 2,
+        ParameterSetName = 'Overwrite'
+    )]
+    [Parameter(
+        Mandatory,
+        HelpMessage = 'The location you would like the final excel file to reside',
+        Position = 2,
+        ParameterSetName = 'NoOverWrite'
+    )]
+    [ValidateScript( {
             if (!(Test-Path -Path $_))
             {
                 throw "The folder $_ does not exist"
@@ -92,17 +121,51 @@ param (
         })]
     [System.IO.DirectoryInfo]$OutputPath,
     [Parameter(
-        HelpMessage = 'Credentials to connect to Office 365 if not already connected'
+        HelpMessage = 'Credentials to connect to Office 365 if not already connected',
+        Position = 3,
+        ParameterSetName = 'DefaultParameters'
+    )]
+    [Parameter(
+        HelpMessage = 'Credentials to connect to Office 365 if not already connected',
+        Position = 3,
+        ParameterSetName = 'Overwrite'
+    )]
+    [Parameter(
+        HelpMessage = 'Credentials to connect to Office 365 if not already connected',
+        Position = 3,
+        ParameterSetName = 'NoOverWrite'
     )]
     [PSCredential]$Office365Credentials,
     [Parameter(
-        HelpMessage = "This stops translation into Friendly Names of SKU's and Components"
-    )][switch]$NoNameTranslation
+        HelpMessage = "This stops translation into Friendly Names of SKU's and Components",
+        ParameterSetName = 'DefaultParameters'
+    )]
+    [Parameter(
+        HelpMessage = "This stops translation into Friendly Names of SKU's and Components",
+        ParameterSetName = 'Overwrite'
+    )]
+    [Parameter(
+        HelpMessage = "This stops translation into Friendly Names of SKU's and Components",
+        ParameterSetName = 'NoOverWrite'
+    )]
+    [switch]$NoNameTranslation,
+    [Parameter(
+        HelpMessage = "This will remove the output file without prompting in the script",
+        ParameterSetName = 'Overwrite'
+    )]
+    [switch]$OverwriteExistingFile,
+    [Parameter(
+        HelpMessage = "This will not remove the output file and will exit if the file already exists",
+        ParameterSetName = 'NoOverWrite'
+    )]
+    [switch]$DoNotOverwriteExistingFile
 )
 
 #Enables Information Stream
 $initialInformationPreference = $InformationPreference
 $InformationPreference = 'Continue'
+
+Write-Information -MessageData ('Started Script at ' + (Get-Date).ToLongTimeString() + ' on ' + (Get-Date).ToLongDateString())
 
 #Following Function Switches Complicated SKU Names with Friendly Names
 function LicenceTranslate
@@ -165,113 +228,64 @@ Function Invoke-GroupGuidConversion
     }
     Write-Output $output
 }
-#Helper function for merging CSV files and conditional formatting etc.
-Function Merge-CSVFile
-{
-    $csvFiles = Get-ChildItem ("$CSVPath\*") -Include *.csv
-    $Excel = New-Object -ComObject excel.application
-    $Excel.visible = $false
-    $Excel.sheetsInNewWorkbook = $csvFiles.Count
-    $workbooks = $excel.Workbooks.Add()
-    $CSVSheet = 1
-    Foreach ($CSV in $Csvfiles)
-    {
-        $worksheets = $workbooks.worksheets
-        $CSVFullPath = $CSV.FullName
-        $SheetName = ($CSV.name -split '\.')[0]
-        $worksheet = $worksheets.Item($CSVSheet)
-        $worksheet.Name = $SheetName
-        $TxtConnector = ('TEXT;' + $CSVFullPath)
-        $CellRef = $worksheet.Range('A1')
-        $Connector = $worksheet.QueryTables.add($TxtConnector, $CellRef)
-        $worksheet.QueryTables.item($Connector.name).TextFileOtherDelimiter = "`t"
-        $worksheet.QueryTables.item($Connector.name).TextFileParseType = 1
-        $worksheet.QueryTables.item($Connector.name).Refresh()
-        $worksheet.QueryTables.item($Connector.name).delete()
-        $CSVSheet++
-    }
-    $worksheets = $workbooks.worksheets
-    $xlTextString = [Microsoft.Office.Interop.Excel.XlFormatConditionType]::xlTextString
-    $xlContains = [Microsoft.Office.Interop.Excel.XlContainsOperator]::xlContains
-    foreach ($worksheet in $worksheets)
-    {
-        Write-Information ('Freezing panes on ' + $Worksheet.Name)
-        $worksheet.Select()
-        $worksheet.application.activewindow.splitcolumn = 1
-        $worksheet.application.activewindow.splitrow = 1
-        $worksheet.application.activewindow.freezepanes = $true
-        $rows = $worksheet.UsedRange.Rows.count
-        $columns = $worksheet.UsedRange.Columns.count
-        $Selection = $worksheet.Range($worksheet.Cells(2, 5), $worksheet.Cells($rows, 6))
-        [void]$Selection.Cells.Replace(';', "`n", [Microsoft.Office.Interop.Excel.XlLookAt]::xlPart)
-        $Selection = $worksheet.Range($worksheet.Cells(1, 1), $worksheet.Cells($rows, $columns))
-        $Selection.Font.Name = 'Segoe UI'
-        $Selection.Font.Size = 9
-        if ($Worksheet.Name -ne 'AllLicences')
-        {
-            Write-Information ('Setting Conditional Formatting on ' + $Worksheet.Name)
-            $Selection = $worksheet.Range($worksheet.Cells(2, 6), $worksheet.Cells($rows, $columns))
-            $Selection.FormatConditions.Add($xlTextString, '', $xlContains, 'Success', 'Success', 0, 0) | Out-Null
-            $Selection.FormatConditions.Item(1).Interior.ColorIndex = 35
-            $Selection.FormatConditions.Item(1).Font.ColorIndex = 51
-            $Selection.FormatConditions.Add($xlTextString, '', $xlContains, 'Pending', 'Pending', 0, 0) | Out-Null
-            $Selection.FormatConditions.Item(2).Interior.ColorIndex = 36
-            $Selection.FormatConditions.Item(2).Font.ColorIndex = 12
-            $Selection.FormatConditions.Add($xlTextString, '', $xlContains, 'Disabled', 'Disabled', 0, 0) | Out-Null
-            $Selection.FormatConditions.Item(3).Interior.ColorIndex = 38
-            $Selection.FormatConditions.Item(3).Font.ColorIndex = 30
-        }
-        else
-        {
-            foreach ($Item in (Import-Csv $CSVPath\AllLicences.csv -Delimiter "`t"))
-            {
-                if ($NoNameTranslation)
-                {
-                    $SearchString = $Item.'AccountLicenseSKU'
-                    $Selection = $worksheet.Range('A2').EntireColumn
-                    $Search = $Selection.find($SearchString, [Type]::Missing, [Type]::Missing, 1)
-                    $ResultCell = "A$($Search.Row)"
-                    $worksheet.Hyperlinks.Add($worksheet.Range($ResultCell), '', "`'$($SearchString)`'!A1", "$($SearchString)", $worksheet.Range($ResultCell).text)
-                }
-                else
-                {
-                    $SearchString = $Item.'AccountLicenseSKU(Friendly)'
-                    $Selection = $worksheet.Range('A2').EntireColumn
-                    $Search = $Selection.find($SearchString, [Type]::Missing, [Type]::Missing, 1)
-                    $ResultCell = "A$($Search.Row)"
-                    $worksheet.Hyperlinks.Add($worksheet.Range($ResultCell), '', "`'$($SearchString)`'!A1", "$($SearchString)", $worksheet.Range($ResultCell).text)
-                }
-            }
-            $worksheet.Move($worksheets.Item(1))
-        }
-        [void]$worksheet.UsedRange.Autofilter()
-        $worksheet.UsedRange.EntireColumn.AutoFit()
-    }
-    $workbooks.Worksheets.Item('AllLicences').Select()
-
-    $workbooks.SaveAs($XLOutput, 51)
-    $workbooks.Saved = $true
-    $workbooks.Close()
-    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($workbooks) | Out-Null
-    $excel.Quit()
-    [System.Runtime.Interopservices.Marshal]::ReleaseComObject($excel) | Out-Null
-    [System.GC]::Collect()
-    [System.GC]::WaitForPendingFinalizers()
-}
 
 $date = Get-Date -Format yyyyMMdd
 $OutputPath = Get-Item $OutputPath
-if ($OutputPath.FullName -notmatch '\\$')
+if (!$OutputPath.FullName.EndsWith([IO.Path]::DirectorySeparatorChar))
 {
-    $excelfilepath = $OutputPath.FullName + '\'
+    $excelfilepath = $OutputPath.FullName + [IO.Path]::DirectorySeparatorChar
 }
 else
 {
     $excelfilepath = $OutputPath.FullName
 }
-$XLOutput = $excelfilepath + "$CompanyName - $date.xlsx" ## Output file name
-$CSVPath = $excelfilepath + $( -join ((65..90) + (97..122) | Get-Random -Count 14 | ForEach-Object { [char]$_ }))
-$CSVPath = (New-Item -Type Directory -Path $csvpath).FullName
+$XLOutput = $excelfilepath + "$CompanyName - $date.xlsx"
+
+if (Test-Path $XLOutput -ErrorAction SilentlyContinue)
+{
+    if ($OverwriteExistingFile)
+    {
+        try {
+            Remove-Item -Path $XLOutput -Force -Confirm:$false -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Error "There has been an error removing the file $XLOutput - please remove this file and try again"
+            $InformationPreference = $initialInformationPreference
+            return
+        }
+    }
+    elseif ($DoNotOverwriteExistingFile) {
+        $InformationPreference = $initialInformationPreference
+        return "The file $XLOutput already exists and you do not want to remove it, please move the file and try again"
+    }
+    else
+    {
+        $message = "$XlOutput already exists, do you want to remove the file and continue?
+        [Y]es
+        [N]o"
+        Do {
+            $removeFile = Read-Host -Prompt $message
+        } until ("y","n" -contains $removeFile.ToLower())
+        if ($removeFile -eq "y")
+        {
+            try {
+                Remove-Item -Path $XLOutput -Force -Confirm:$false -ErrorAction Stop
+            }
+            catch
+            {
+                Write-Error "There has been an error removing the file $XLOutput - please remove this file and try again"
+                $InformationPreference = $initialInformationPreference
+                return
+            }
+        }
+        else {
+            $InformationPreference = $initialInformationPreference
+            return "Not deleting file, exiting script"
+        }
+    }
+}
+
 Write-Information 'Checking Connection to Office 365'
 $test365 = Get-MsolCompanyInformation -ErrorAction silentlycontinue
 if ($null -eq $test365)
@@ -297,11 +311,11 @@ $licenseType = Get-MsolAccountSku
 # Get all licences for a summary view
 if ($NoNameTranslation)
 {
-    $licenseType | Where-Object { $_.TargetClass -eq 'User' } | Select-Object @{Name = 'AccountLicenseSKU'; Expression = { $($_.SkuPartNumber) } }, ActiveUnits, ConsumedUnits | Sort-Object 'AccountLicenseSKU' | Export-Csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
+    $licenseType | Where-Object { $_.TargetClass -eq 'User' } | Select-Object @{Name = 'AccountLicenseSKU'; Expression = { $($_.SkuPartNumber) } }, ActiveUnits, ConsumedUnits | Sort-Object 'AccountLicenseSKU'  | Export-Excel -Path $XLOutput -WorksheetName 'AllLicenses' -FreezeTopRowFirstColumn -AutoSize
 }
 else
 {
-    $licenseType | Where-Object { $_.TargetClass -eq 'User' } | Select-Object @{Name = 'AccountLicenseSKU(Friendly)'; Expression = { (LicenceTranslate -SKU $_.SkuPartNumber -LicenceLevel Root) } }, ActiveUnits, ConsumedUnits | Sort-Object 'AccountLicenseSKU(Friendly)' | Export-Csv $CSVPath\AllLicences.csv -NoTypeInformation -Delimiter `t
+    $licenseType | Where-Object { $_.TargetClass -eq 'User' } | Select-Object @{Name = 'AccountLicenseSKU(Friendly)'; Expression = { (LicenceTranslate -SKU $_.SkuPartNumber -LicenceLevel Root) } }, ActiveUnits, ConsumedUnits | Sort-Object 'AccountLicenseSKU(Friendly)'  | Export-Excel -Path $XLOutput -WorksheetName 'AllLicenses' -FreezeTopRowFirstColumn -AutoSize
 }
 $licenseType = $licenseType | Where-Object { $_.ConsumedUnits -ge 1 }
 #get all users with licence
@@ -322,8 +336,6 @@ foreach ($license in $licenseType)
     {
         $rootLicence = (LicenceTranslate -SKU $($license.SkuPartNumber) -LicenceLevel Root)
     }
-    #$logFile = $CompanyName + "-" +$rootLicence + ".csv"
-    $logFile = $CSVpath + '\' + $rootLicence + '.csv'
     $licensedUsers = New-Object System.Collections.Generic.List[System.Object]
     # Loop through all users and write them to the CSV file
     foreach ($user in $users)
@@ -368,7 +380,7 @@ foreach ($license in $licenseType)
                             $licensedGroups[$group] = $getGroup.DisplayName
                         }
                     }
-                    $groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $licensedGroups).DisplayName -Join ';'
+                    $groups = (Invoke-GroupGuidConversion -GroupGuid $groups -LicenseGroups $licensedGroups).DisplayName -Join "`r`n"
                 }
                 $userHashTable['DirectAssigned'] = $true
                 $userHashTable['GroupsAssigning'] = $groups
@@ -412,12 +424,48 @@ foreach ($license in $licenseType)
         }
         $licensedUsers.Add([PSCustomObject]$userHashTable) | Out-Null
     }
-    $licensedUsers | Select-Object DisplayName, UserPrincipalName, AccountEnabled, AccountSKU, DirectAssigned, GroupsAssigning, * -ErrorAction SilentlyContinue | Export-Csv -Path $logFile -Delimiter "`t" -Encoding UTF8 -NoClobber -NoTypeInformation
+    $licensedUsers | Select-Object DisplayName, UserPrincipalName, AccountEnabled, AccountSKU, DirectAssigned, GroupsAssigning, * -ErrorAction SilentlyContinue | Export-Excel -Path $XLOutput -WorksheetName $RootLicence -FreezeTopRowFirstColumn -AutoSize -AutoFilter
 }
-Write-Information ('Merging CSV Files')
-Merge-CSVFile -CSVPath $CSVPath -XLOutput $XLOutput | Out-Null
-Write-Information ('Tidying up - deleting CSV Files')
-Remove-Item $CSVPath -Recurse -Confirm:$false -Force
-Write-Information ('CSV Files Deleted')
+Write-Information 'Formatting Excel Workbook'
+$excel = Open-ExcelPackage -Path $XLOutput
+foreach ($worksheet in $excel.Workbook.Worksheets)
+{
+    $fullRange = ($worksheet.Dimension | Select-Object Address).Address
+    $worksheet.Select($fullRange)
+    $worksheet.SelectedRange.Style.Font.Name = 'Segoe UI'
+    $worksheet.SelectedRange.Style.Font.Size = 9
+    if ($worksheet.Name -eq 'AllLicenses')
+    {
+        $formattingRange = "A2:A$($worksheet.Dimension.Rows)"
+        $worksheet.Select($formattingRange)
+
+        foreach ($cell in $worksheet.SelectedRange)
+        {
+            if ($excel.Workbook.Worksheets | Where-Object { $_.name -eq $cell.Value })
+            {
+                $referenceAddress = "`'$($cell.Value)`'!A1"
+                $display = $($cell.Value)
+                $hyperlink = New-Object -TypeName OfficeOpenXml.ExcelHyperLink -ArgumentList $referenceAddress, $display
+                $cell.Hyperlink = $hyperlink
+                $cell.Style.Font.Color.SetColor([System.Drawing.Color]::Blue)
+                $cell.Style.Font.UnderLine = $true
+            }
+        }
+    }
+    else
+    {
+        $conditionalFormattingRange = $fullRange.Replace('A1', 'G2')
+        Add-ConditionalFormatting -Worksheet $worksheet -RuleType ContainsText -ConditionValue 'Success' -BackgroundColor ([System.Drawing.Color]::FromArgb(204, 255, 204)) -BackgroundPattern Solid -ForegroundColor ([System.Drawing.Color]::FromArgb(0, 51, 0)) -Range $conditionalFormattingRange
+        Add-ConditionalFormatting -Worksheet $worksheet -RuleType ContainsText -ConditionValue 'Pending' -BackgroundColor ([System.Drawing.Color]::FromArgb(255, 255, 153)) -BackgroundPattern Solid -ForegroundColor ([System.Drawing.Color]::FromArgb(128, 128, 0)) -Range $conditionalFormattingRange
+        Add-ConditionalFormatting -Worksheet $worksheet -RuleType ContainsText -ConditionValue 'Disabled' -BackgroundColor ([System.Drawing.Color]::FromArgb(255, 153, 204)) -BackgroundPattern Solid -ForegroundColor ([System.Drawing.Color]::FromArgb(128, 0, 0)) -Range $conditionalFormattingRange
+    }
+    $worksheet.Select($fullRange)
+    $worksheet.SelectedRange.AutoFitColumns()
+    Set-Format -Address $worksheet.Column(6) -WrapText
+    $worksheet.Select('A1')
+    $excel.workbook.View.ActiveTab = 0
+    $excel.Save()
+}
+$excel | Close-ExcelPackage
 Write-Information ("Script Completed.  Results available in $XLOutput")
 $InformationPreference = $initialInformationPreference
