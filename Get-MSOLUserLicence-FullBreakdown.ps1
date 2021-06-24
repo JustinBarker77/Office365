@@ -304,6 +304,9 @@ if ($null -eq $test365)
     } while ($null -eq $test365)
 }
 Write-Information 'Connected to Office 365'
+
+$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+
 # Get a list of all licences that exist within the tenant
 $licenseType = Get-MsolAccountSku
 # Replace the above with the below if only a single SKU is required
@@ -467,5 +470,12 @@ foreach ($worksheet in $excel.Workbook.Worksheets)
     $excel.Save()
 }
 $excel | Close-ExcelPackage
-Write-Information ("Script Completed.  Results available in $XLOutput")
+
+$stopwatch.Stop()
+$timeSpan = $stopwatch.Elapsed
+
+$timeTaken = "{0:00}:{1:00}:{2:00}.{3:00}" -f $timeSpan.Hours,$timeSpan.Minutes,$timeSpan.Seconds,$timeSpan.Milliseconds
+Write-Information ("Script completed in $($timetaken)")
+
 $InformationPreference = $initialInformationPreference
+return "Results available in $XLOutput"

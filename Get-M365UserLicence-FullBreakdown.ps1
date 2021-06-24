@@ -313,6 +313,8 @@ Write-Information ('Connected to Microsoft Graph for the tenant with a display n
 # Get a list of all licences that exist within the tenant
 #TODO: Test with a large number of different SKUs as Get-MGSubscribedSku doesn't support custom page sizes
 
+$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
+
 $licenseType = Get-MgSubscribedSku
 <#
     Replace the above with the below if only a single SKU is required
@@ -453,5 +455,12 @@ else
 {
     Write-Information 'You were connected at the start of this script, skipping disconnection'
 }
-Write-Information ("Script Completed. Results available in $XLOutput")
+
+$stopwatch.Stop()
+$timeSpan = $stopwatch.Elapsed
+
+$timeTaken = "{0:00}:{1:00}:{2:00}.{3:00}" -f $timeSpan.Hours,$timeSpan.Minutes,$timeSpan.Seconds,$timeSpan.Milliseconds
+Write-Information ("Script completed in $($timetaken)")
+
 $InformationPreference = $initialInformationPreference
+return "Results available in $XLOutput"
