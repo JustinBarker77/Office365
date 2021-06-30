@@ -126,6 +126,19 @@ param (
         })]
     [System.IO.DirectoryInfo]$OutputPath,
     [Parameter(
+        HelpMessage = 'Secondary workbook created with figure only reports (useful for graphing)',
+        ParameterSetName = 'DefaultParameters'
+    )]
+    [Parameter(
+        HelpMessage = 'Secondary workbook created with figure only reports (useful for graphing)',
+        ParameterSetName = 'Overwrite'
+    )]
+    [Parameter(
+        HelpMessage = 'Secondary workbook created with figure only reports (useful for graphing)',
+        ParameterSetName = 'NoOverWrite'
+    )]
+    [switch]$StatisticsReport,
+    [Parameter(
         HelpMessage = "This stops translation into Friendly Names of SKU's and Components",
         ParameterSetName = 'DefaultParameters'
     )]
@@ -139,12 +152,12 @@ param (
     )]
     [switch]$NoNameTranslation,
     [Parameter(
-        HelpMessage = "This will remove the output file without prompting in the script",
+        HelpMessage = 'This will remove the output file without prompting in the script',
         ParameterSetName = 'Overwrite'
     )]
     [switch]$OverwriteExistingFile,
     [Parameter(
-        HelpMessage = "This will not remove the output file and will exit if the file already exists",
+        HelpMessage = 'This will not remove the output file and will exit if the file already exists',
         ParameterSetName = 'NoOverWrite'
     )]
     [switch]$DoNotOverwriteExistingFile
@@ -228,49 +241,66 @@ else
 {
     $excelfilepath = $OutputPath.FullName
 }
-$XLOutput = $excelfilepath + "$CompanyName - $date.xlsx"
 
-if (Test-Path $XLOutput -ErrorAction SilentlyContinue)
+$outputFiles = New-Object System.Collections.Generic.List[String]
+$XLOutput = $excelfilepath + "$CompanyName - $date.xlsx"
+$outputFiles.Add($XLOutput) | Out-Null
+
+if ($StatisticsReport)
 {
-    if ($OverwriteExistingFile)
+    $statsReportLocation = $excelfilepath + "$CompanyName - Statistics - $date.xlsx"
+    $outputFiles.Add($statsReportLocation) | Out-Null
+}
+
+foreach ($file in $outputFiles)
+{
+    if (Test-Path $file -ErrorAction SilentlyContinue)
     {
-        try {
-            Remove-Item -Path $XLOutput -Force -Confirm:$false -ErrorAction Stop
-        }
-        catch
+        if ($OverwriteExistingFile)
         {
-            Write-Error "There has been an error removing the file $XLOutput - please remove this file and try again"
-            $InformationPreference = $initialInformationPreference
-            return
-        }
-    }
-    elseif ($DoNotOverwriteExistingFile) {
-        $InformationPreference = $initialInformationPreference
-        return "The file $XLOutput already exists and you do not want to remove it, please move the file and try again"
-    }
-    else
-    {
-        $message = "$XlOutput already exists, do you want to remove the file and continue?
-        [Y]es
-        [N]o"
-        Do {
-            $removeFile = Read-Host -Prompt $message
-        } until ("y","n" -contains $removeFile.ToLower())
-        if ($removeFile -eq "y")
-        {
-            try {
-                Remove-Item -Path $XLOutput -Force -Confirm:$false -ErrorAction Stop
+            try
+            {
+                Remove-Item -Path $file -Force -Confirm:$false -ErrorAction Stop
             }
             catch
             {
-                Write-Error "There has been an error removing the file $XLOutput - please remove this file and try again"
+                Write-Error "There has been an error removing the file $file - please remove this file and try again"
                 $InformationPreference = $initialInformationPreference
                 return
             }
         }
-        else {
+        elseif ($DoNotOverwriteExistingFile)
+        {
             $InformationPreference = $initialInformationPreference
-            return "Not deleting file, exiting script"
+            return "The file $file already exists and you do not want to remove it, please move the file and try again"
+        }
+        else
+        {
+            $message = "$file already exists, do you want to remove the file and continue?
+            [Y]es
+            [N]o"
+            Do
+            {
+                $removeFile = Read-Host -Prompt $message
+            } until ('y', 'n' -contains $removeFile.ToLower())
+            if ($removeFile -eq 'y')
+            {
+                try
+                {
+                    Remove-Item -Path $file -Force -Confirm:$false -ErrorAction Stop
+                }
+                catch
+                {
+                    Write-Error "There has been an error removing the file $file - please remove this file and try again"
+                    $InformationPreference = $initialInformationPreference
+                    return
+                }
+            }
+            else
+            {
+                $InformationPreference = $initialInformationPreference
+                return 'Not deleting file, exiting script'
+            }
         }
     }
 }
@@ -323,12 +353,20 @@ $licenseType = Get-MgSubscribedSku
 # Get all licences for a summary view
 if ($NoNameTranslation)
 {
-    $licenseType | Select-Object @{Name = 'AccountLicenseSKU'; Expression = { $($_.SkuPartNumber) } }, @{ Name = 'TotalLicenses'; Expression = { $_.PrepaidUnits.Enabled + $_.PrepaidUnits.Warning } }, @{ Name = 'LicensesInWarning'; Expression = { $_.PrepaidUnits.Warning } }, ConsumedUnits, AppliesTo | Sort-Object 'AccountLicenseSKU' | Export-Excel -Path $XLOutput -WorksheetName 'AllLicenses' -FreezeTopRowFirstColumn -AutoSize
+    $licenseSummary = $licenseType | Select-Object @{Name = 'Account License SKU'; Expression = { $($_.SkuPartNumber) } }, @{ Name = 'Total Licenses'; Expression = { $_.PrepaidUnits.Enabled + $_.PrepaidUnits.Warning } }, @{ Name = 'Licenses In Warning'; Expression = { $_.PrepaidUnits.Warning } }, @{ Name = 'Consumed Units'; Expression = { $_.ConsumedUnits } }, @{ Name = 'Applies To'; Expression = { $_.AppliesTo } } | Sort-Object 'Account License SKU'
 }
 else
 {
-    $licenseType | Select-Object @{Name = 'AccountLicenseSKU(Friendly)'; Expression = { (LicenceTranslate -SKU $_.SkuPartNumber -LicenceLevel Root) } }, @{ Name = 'TotalLicenses'; Expression = { $_.PrepaidUnits.Enabled + $_.PrepaidUnits.Warning } }, @{ Name = 'LicensesInWarning'; Expression = { $_.PrepaidUnits.Warning } }, ConsumedUnits, AppliesTo | Sort-Object 'AccountLicenseSKU(Friendly)' | Export-Excel -Path $XLOutput -WorksheetName 'AllLicenses' -FreezeTopRowFirstColumn -AutoSize
+    $licenseSummary = $licenseType | Select-Object @{Name = 'Account License SKU'; Expression = { (LicenceTranslate -SKU $_.SkuPartNumber -LicenceLevel Root) } }, @{ Name = 'Total Licenses'; Expression = { $_.PrepaidUnits.Enabled + $_.PrepaidUnits.Warning } }, @{ Name = 'Licenses In Warning'; Expression = { $_.PrepaidUnits.Warning } }, @{ Name = 'Consumed Units'; Expression = { $_.ConsumedUnits } }, @{ Name = 'Applies To'; Expression = { $_.AppliesTo } } | Sort-Object 'Account License SKU'
 }
+
+$licenseSummary | Export-Excel -Path $XLOutput -WorksheetName 'AllLicenses' -FreezeTopRowFirstColumn -AutoSize
+
+if ($StatisticsReport)
+{
+    $licenseSummary | Export-Excel -Path $statsReportLocation -WorksheetName 'AllLicenses' -FreezeTopRowFirstColumn -AutoSize
+}
+
 $licenseType = $licenseType | Where-Object { $_.ConsumedUnits -ge 1 -and $_.AppliesTo -eq 'User' }
 #get all users with licence
 Write-Information 'Retrieving all licensed users - this may take a while.'
@@ -398,10 +436,39 @@ foreach ($license in $licenseType)
                 else
                 {
                     LicenceTranslate -SKU $($row.ServicePlanName) -LicenceLevel Component
-                })
+                }
+            )
             $userHashTable[$serviceName] = $row.ProvisioningStatus
         }
         $licensedUsers.Add([PSCustomObject]$userHashTable) | Out-Null
+    }
+
+    if ($StatisticsReport)
+    {
+        $licenceStats = New-Object System.Collections.Generic.List[System.Object]
+        foreach ($status in 'Success', 'Pending', 'Disabled')
+        {
+            $componentHashTable = @{
+                Status = $status
+            }
+
+            foreach ($component in $($thislicense.ServicePlans))
+            {
+                $serviceName = $(
+                    if ($NoNameTranslation)
+                    {
+                        $($component.ServicePlanName)
+                    }
+                    else
+                    {
+                        LicenceTranslate -SKU $($component.ServicePlanName) -LicenceLevel Component
+                    }
+                )
+                $componentHashTable[$serviceName] = ($licensedUsers.$serviceName | Where-Object { $_ -like "$status*" }).count
+            }
+            $licenceStats.Add([PSCustomObject]$componentHashTable) | Out-Null
+        }
+        $licenceStats | Select-Object Status, * -ErrorAction SilentlyContinue | Export-Excel -Path $statsReportLocation -WorksheetName $RootLicence -FreezeTopRowFirstColumn
     }
     $licensedUsers | Select-Object DisplayName, UserPrincipalName, AccountEnabled, AccountSKU, DirectAssigned, GroupsAssigning, * -ErrorAction SilentlyContinue | Export-Excel -Path $XLOutput -WorksheetName $RootLicence -FreezeTopRowFirstColumn -AutoSize -AutoFilter
 }
@@ -459,8 +526,19 @@ else
 $stopwatch.Stop()
 $timeSpan = $stopwatch.Elapsed
 
-$timeTaken = "{0:00}:{1:00}:{2:00}.{3:00}" -f $timeSpan.Hours,$timeSpan.Minutes,$timeSpan.Seconds,$timeSpan.Milliseconds
+$timeTaken = '{0:00}:{1:00}:{2:00}.{3:00}' -f $timeSpan.Hours, $timeSpan.Minutes, $timeSpan.Seconds, $timeSpan.Milliseconds
 Write-Information ("Script completed in $($timetaken)")
 
 $InformationPreference = $initialInformationPreference
-return "Results available in $XLOutput"
+$joinString = $(
+    if ($outputFiles.Count -gt 1)
+    {
+        ' & '
+    }
+    else
+    {
+        ', '
+    }
+)
+$returnString = $('Results available in {0}' -f ($outputFiles -join $joinString))
+return $returnString
