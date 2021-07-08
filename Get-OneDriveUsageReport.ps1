@@ -22,7 +22,7 @@
 
     .NOTES
         Quick and dirty implementation to generate a simple XLSX report file
-        This script was sourced https://hochwald.net/post/powershell-usage-reporting-onedrive-business/ and has been updated to reflect our requirments
+        This script was sourced https://hochwald.net/post/powershell-usage-reporting-onedrive-business/ and has been updated to reflect our requirements
 #>
 [CmdletBinding(ConfirmImpact = 'None')]
 param
@@ -64,7 +64,8 @@ param
             }
         })]
     [IO.DirectoryInfo]
-    $OutputPath
+    $OutputPath,
+    [switch]$StatisticsReport
 )
 
 begin
@@ -211,7 +212,37 @@ end
             AutoSize                = $true
             AutoFilter              = $true
         }
-        ($Report | Sort-Object -Property CurrentUsage -Descending | Export-Excel @paramExportExcel)
+        $Report | Sort-Object -Property CurrentUsage -Descending | Export-Excel @paramExportExcel
+        if ($StatisticsReport)
+        {
+            $paramExportStatistics = @{
+                Path                    = ($OutputPath.FullName.TrimEnd([System.IO.Path]::DirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar + $TimeStamp + '-' + $TenantName + '-' + 'OneDriveUsageReport.xlsx')
+                WorksheetName           = 'OneDriveUsageStatistics'
+                ErrorAction             = 'Stop'
+                FreezeTopRowFirstColumn = $true
+                AutoSize                = $true
+                AutoFilter              = $true
+            }
+            $reportCount = $Report.Count
+            $reportStatistics = New-Object System.Collections.Generic.List[System.Object]
+            $usageHashTable = @{
+                Statistic        = 'Less than 1GB Utilisation'
+                'OneDrive Usage' = [Math]::Round((($Report.CurrentUsage | Where-Object { $_ -lt 1 }).Count / $reportCount), 4)
+            }
+            $reportStatistics.Add([PSCustomObject]$usageHashTable) | Out-Null
+            foreach ($numberOfDays in 30, 60, 90)
+            {
+                $usageHashTable = @{
+                    Statistic        = "Content not modified within the last $numberOfDays days"
+                    'OneDrive Usage' = [Math]::Round((($report.LastModifiedDate | Where-Object { (Get-Date $_) -lt (Get-Date).AddDays(-$numberOfDays) }).Count / $reportCount), 4)
+
+                }
+                $reportStatistics.Add([PSCustomObject]$usageHashTable) | Out-Null
+            }
+
+            $reportStatistics | Export-Excel @paramExportStatistics
+        }
+
     }
     catch
     {
@@ -254,28 +285,4 @@ end
     }
 }
 
-#region LICENSE
-<#
-      BSD 3-Clause License
-      Copyright (c) 2021,  enabling Technology
-      All rights reserved.
-      Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
-      1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-      2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
-      3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
-      THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#>
-#endregion LICENSE
 
-#region DISCLAIMER
-<#
-      DISCLAIMER:
-      - Use at your own risk, etc.
-      - This is open-source software, if you find an issue try to fix it yourself. There is no support and/or warranty in any kind
-      - This is a third-party Software
-      - The developer of this Software is NOT sponsored by or affiliated with Microsoft Corp (MSFT) or any of its subsidiaries in any way
-      - The Software is not supported by Microsoft Corp (MSFT)
-      - By using the Software, you agree to the License, Terms, and any Conditions declared and described above
-      - If you disagree with any of the terms, and any conditions declared: Just delete it and build your own solution
-#>
-#endregion DISCLAIMER
