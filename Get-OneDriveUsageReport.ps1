@@ -68,7 +68,7 @@ param
     [switch]$StatisticsReport
 )
 
-begin
+process
 {
     # Garbage Collection
     [GC]::Collect()
@@ -126,14 +126,26 @@ begin
         Region      = 'Default'
         ErrorAction = 'Stop'
     }
-    $null = (Connect-SPOService @paramConnectSPOService)
+    try {
+        Get-SPOTenant | Out-Null
+    }
+    catch {
+        Connect-SPOService @paramConnectSPOService | Out-Null
+    }
+    try
+    {
+        Get-SPOTenant -ErrorAction Stop | Out-Null
+    }
+    catch
+    {
+        return
+    }
+
 
     # Create new object
     $Report = New-Object System.Collections.Generic.List[System.Object]
-}
+    $outputFile = $OutputPath.FullName.TrimEnd([System.IO.Path]::DirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar + $TimeStamp + '-' + $TenantName + '-' + 'OneDriveUsageReport.xlsx'
 
-process
-{
     $paramGetSPOSite = @{
         IncludePersonalSite = $true
         Limit               = 'all'
@@ -194,10 +206,7 @@ process
             #endregion ErrorHandler
         }
     }
-}
 
-end
-{
     # Create a Timestamp (check if this is OK for you)
     $TimeStamp = (Get-Date -Format yyyyMMdd_HHmmss)
 
@@ -205,7 +214,7 @@ end
     try
     {
         $paramExportExcel = @{
-            Path                    = ($OutputPath.FullName.TrimEnd([System.IO.Path]::DirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar + $TimeStamp + '-' + $TenantName + '-' + 'OneDriveUsageReport.xlsx')
+            Path                    = $outputFile
             WorksheetName           = 'OneDriveUsageReport'
             ErrorAction             = 'Stop'
             FreezeTopRowFirstColumn = $true
@@ -216,20 +225,25 @@ end
         if ($StatisticsReport)
         {
             $paramExportStatistics = @{
-                Path                    = ($OutputPath.FullName.TrimEnd([System.IO.Path]::DirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar + $TimeStamp + '-' + $TenantName + '-' + 'OneDriveUsageReport.xlsx')
+                Path                    = $outputFile
                 WorksheetName           = 'OneDriveUsageStatistics'
                 ErrorAction             = 'Stop'
                 FreezeTopRowFirstColumn = $true
                 AutoSize                = $true
                 AutoFilter              = $true
+                Numberformat            = 'Percentage'
             }
+
             $reportCount = $Report.Count
             $reportStatistics = New-Object System.Collections.Generic.List[System.Object]
+
             $usageHashTable = @{
                 Statistic        = 'Less than 1GB Utilisation'
                 'OneDrive Usage' = [Math]::Round((($Report.CurrentUsage | Where-Object { $_ -lt 1 }).Count / $reportCount), 4)
             }
+
             $reportStatistics.Add([PSCustomObject]$usageHashTable) | Out-Null
+
             foreach ($numberOfDays in 30, 60, 90)
             {
                 $usageHashTable = @{
@@ -240,7 +254,7 @@ end
                 $reportStatistics.Add([PSCustomObject]$usageHashTable) | Out-Null
             }
 
-            $reportStatistics | Export-Excel @paramExportStatistics
+            $reportStatistics | Select-Object Statistic, OneDriveUsage | Export-Excel @paramExportStatistics
         }
 
     }
@@ -272,17 +286,24 @@ end
         Write-Error @paramWriteError
         #endregion ErrorHandler
     }
-    finally
-    {
-        # Cleanup
-        $Report = $null
-
-        # Disconnect from SharePoint Online
-        (Disconnect-SPOService -ErrorAction SilentlyContinue) | Out-Null
-
-        # Garbage Collection
-        [GC]::Collect()
-    }
+    Write-Output "Please find the report $outputFile"
 }
 
+end
+{
+    # Cleanup
+    $Report = $null
 
+    # Disconnect from SharePoint Online
+    try {
+        (Disconnect-SPOService -ErrorAction SilentlyContinue) | Out-Null
+    }
+    catch
+    {
+        [GC]::Collect()
+        return
+    }
+
+    # Garbage Collection
+    [GC]::Collect()
+}
