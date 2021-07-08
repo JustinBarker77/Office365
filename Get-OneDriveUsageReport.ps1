@@ -126,10 +126,12 @@ process
         Region      = 'Default'
         ErrorAction = 'Stop'
     }
-    try {
+    try
+    {
         Get-SPOTenant | Out-Null
     }
-    catch {
+    catch
+    {
         Connect-SPOService @paramConnectSPOService | Out-Null
     }
     try
@@ -295,7 +297,8 @@ end
     $Report = $null
 
     # Disconnect from SharePoint Online
-    try {
+    try
+    {
         (Disconnect-SPOService -ErrorAction SilentlyContinue) | Out-Null
     }
     catch
