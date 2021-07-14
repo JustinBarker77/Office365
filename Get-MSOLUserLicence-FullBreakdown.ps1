@@ -10,7 +10,8 @@
         This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
     .NOTES
-        Version 1.50
+        Version 1.51
+        Updated: 20210714    V1.51    Added DirectorySync column for each user
         Updated: 20210623    V1.50    Updated to use ImportExcel
         Updated: 20210607    V1.49    Moved Translates to json files
         Updated: 20210520    V1.48    1 tab = 4 spaces
@@ -344,11 +345,11 @@ $licenseType = Get-MsolAccountSku
 # Get all licences for a summary view
 if ($NoNameTranslation)
 {
-    $licenseSummary = $licenseType | Where-Object { $_.TargetClass -eq 'User' } | Select-Object @{Name = 'Account License SKU'; Expression = { $($_.SkuPartNumber) } }, @{ Name = 'Active Units'; Expression = { $($_.ActiveUnits) } }, @{ Name = 'Consumed Units'; Expression = { $($_.ConsumedUnits) } } | Sort-Object 'Account License SKU'
+    $licenseSummary = $licenseType | Where-Object { $_.TargetClass -eq 'User' } | Select-Object @{Name = 'Account License SKU'; Expression = { $($_.SkuPartNumber) } }, @{ Name = 'Active Units'; Expression = { $($_.ActiveUnits) } }, @{ Name = 'Licenses in Warning'; Expression = { $($_.WarningUnits) } }, @{ Name = 'Consumed Units'; Expression = { $($_.ConsumedUnits) } } | Sort-Object 'Account License SKU'
 }
 else
 {
-    $licenseSummary = $licenseType | Where-Object { $_.TargetClass -eq 'User' } | Select-Object @{Name = 'Account License SKU'; Expression = { (LicenceTranslate -SKU $_.SkuPartNumber -LicenceLevel Root) } }, @{ Name = 'Active Units'; Expression = { $($_.ActiveUnits) } }, @{ Name = 'Consumed Units'; Expression = { $($_.ConsumedUnits) } } | Sort-Object 'Account License SKU'
+    $licenseSummary = $licenseType | Where-Object { $_.TargetClass -eq 'User' } | Select-Object @{Name = 'Account License SKU'; Expression = { (LicenceTranslate -SKU $_.SkuPartNumber -LicenceLevel Root) } }, @{ Name = 'Active Units'; Expression = { $($_.ActiveUnits) } }, @{ Name = 'Licenses in Warning'; Expression = { $($_.WarningUnits) } }, @{ Name = 'Consumed Units'; Expression = { $($_.ConsumedUnits) } } | Sort-Object 'Account License SKU'
 }
 
 $licenseSummary | Export-Excel -Path $XLOutput -WorksheetName 'AllLicenses' -FreezeTopRowFirstColumn -AutoSize
@@ -395,6 +396,7 @@ foreach ($license in $licenseType)
             DisplayName       = $user.DisplayName
             UserPrincipalName = $user.UserPrincipalName
             AccountEnabled    = $enabled
+            DirectorySynced   = [bool]$user.LastDirSyncTime
             AccountSKU        = $rootLicence
         }
         if ($thislicense.GroupsAssigningLicense.Count -eq 0)
@@ -493,7 +495,7 @@ foreach ($license in $licenseType)
         }
         $licenceStats | Select-Object Status,* -ErrorAction SilentlyContinue | Export-Excel -Path $statsReportLocation -WorksheetName $RootLicence -FreezeTopRowFirstColumn
     }
-    $licensedUsers | Select-Object DisplayName, UserPrincipalName, AccountEnabled, AccountSKU, DirectAssigned, GroupsAssigning, * -ErrorAction SilentlyContinue | Export-Excel -Path $XLOutput -WorksheetName $RootLicence -FreezeTopRowFirstColumn -AutoSize -AutoFilter
+    $licensedUsers | Select-Object DisplayName, UserPrincipalName, AccountEnabled, DirectorySynced, AccountSKU, DirectAssigned, GroupsAssigning, * -ErrorAction SilentlyContinue | Export-Excel -Path $XLOutput -WorksheetName $RootLicence -FreezeTopRowFirstColumn -AutoSize -AutoFilter
 }
 Write-Information 'Formatting Excel Workbook'
 $excel = Open-ExcelPackage -Path $XLOutput
