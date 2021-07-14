@@ -9,7 +9,8 @@
         This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
     .NOTES
-        Version 2.00
+        Version 2.01
+        Updated: 20210714    V2.01    Added DirectorySync column for each user
         Updated: 20210604    V2.00    Migrated to the Microsoft Graph PowerShell SDK Module and enabled cross-platform support, also added more SKUs
         Updated: 20210520    V1.48    1 tab = 4 spaces
         Updated: 20210520    V1.47    Added more components, renamed some components and added more SKUs
@@ -370,7 +371,7 @@ if ($StatisticsReport)
 $licenseType = $licenseType | Where-Object { $_.ConsumedUnits -ge 1 -and $_.AppliesTo -eq 'User' }
 #get all users with licence
 Write-Information 'Retrieving all licensed users - this may take a while.'
-$allLicensedUsers = Get-MgUser -All -Property Id, DisplayName, UserPrincipalName, AccountEnabled, LicenseAssignmentStates, AssignedLicenses | Where-Object { $null -ne $_.AssignedLicenses }
+$allLicensedUsers = Get-MgUser -All -Property Id, DisplayName, UserPrincipalName, onPremisesSyncEnabled, AccountEnabled, LicenseAssignmentStates, AssignedLicenses | Where-Object { $null -ne $_.AssignedLicenses }
 $licensedGroups = @{}
 # Loop through all licence types found in the tenant
 foreach ($license in $licenseType)
@@ -396,6 +397,7 @@ foreach ($license in $licenseType)
             DisplayName       = $user.DisplayName
             UserPrincipalName = $user.UserPrincipalName
             AccountEnabled    = $user.AccountEnabled
+            DirectorySynced   = $user.onPremisesSyncEnabled
             AccountSKU        = $rootLicence
         }
         $licenseAssignmentStates = $user.LicenseAssignmentStates | Where-Object { $_.SkuId -eq $license.SkuId }
@@ -470,7 +472,7 @@ foreach ($license in $licenseType)
         }
         $licenceStats | Select-Object Status, * -ErrorAction SilentlyContinue | Export-Excel -Path $statsReportLocation -WorksheetName $RootLicence -FreezeTopRowFirstColumn
     }
-    $licensedUsers | Select-Object DisplayName, UserPrincipalName, AccountEnabled, AccountSKU, DirectAssigned, GroupsAssigning, * -ErrorAction SilentlyContinue | Export-Excel -Path $XLOutput -WorksheetName $RootLicence -FreezeTopRowFirstColumn -AutoSize -AutoFilter
+    $licensedUsers | Select-Object DisplayName, UserPrincipalName, AccountEnabled, DirectorySynced, AccountSKU, DirectAssigned, GroupsAssigning, * -ErrorAction SilentlyContinue | Export-Excel -Path $XLOutput -WorksheetName $RootLicence -FreezeTopRowFirstColumn -AutoSize -AutoFilter
 }
 Write-Information 'Formatting Excel Workbook'
 $excel = Open-ExcelPackage -Path $XLOutput
