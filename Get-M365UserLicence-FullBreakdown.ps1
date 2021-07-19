@@ -9,7 +9,8 @@
         This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
     .NOTES
-        Version 2.01
+        Version 2.02
+        Updated: 20210719    V2.02    Added Active Licenses column in License Summary page
         Updated: 20210714    V2.01    Added DirectorySync column for each user
         Updated: 20210604    V2.00    Migrated to the Microsoft Graph PowerShell SDK Module and enabled cross-platform support, also added more SKUs
         Updated: 20210520    V1.48    1 tab = 4 spaces
@@ -354,11 +355,11 @@ $licenseType = Get-MgSubscribedSku
 # Get all licences for a summary view
 if ($NoNameTranslation)
 {
-    $licenseSummary = $licenseType | Select-Object @{Name = 'Account License SKU'; Expression = { $($_.SkuPartNumber) } }, @{ Name = 'Total Licenses'; Expression = { $_.PrepaidUnits.Enabled + $_.PrepaidUnits.Warning } }, @{ Name = 'Licenses In Warning'; Expression = { $_.PrepaidUnits.Warning } }, @{ Name = 'Consumed Units'; Expression = { $_.ConsumedUnits } }, @{ Name = 'Applies To'; Expression = { $_.AppliesTo } } | Sort-Object 'Account License SKU'
+    $licenseSummary = $licenseType | Select-Object @{Name = 'Account License SKU'; Expression = { $($_.SkuPartNumber) } }, @{ Name = 'Total Licenses'; Expression = { $_.PrepaidUnits.Enabled + $_.PrepaidUnits.Warning } }, @{ Name = 'Active Licenses'; Expression = { $_.PrepaidUnits.Enabled } }, @{ Name = 'Licenses In Warning'; Expression = { $_.PrepaidUnits.Warning } }, @{ Name = 'Consumed Units'; Expression = { $_.ConsumedUnits } }, @{ Name = 'Applies To'; Expression = { $_.AppliesTo } } | Sort-Object 'Account License SKU'
 }
 else
 {
-    $licenseSummary = $licenseType | Select-Object @{Name = 'Account License SKU'; Expression = { (LicenceTranslate -SKU $_.SkuPartNumber -LicenceLevel Root) } }, @{ Name = 'Total Licenses'; Expression = { $_.PrepaidUnits.Enabled + $_.PrepaidUnits.Warning } }, @{ Name = 'Licenses In Warning'; Expression = { $_.PrepaidUnits.Warning } }, @{ Name = 'Consumed Units'; Expression = { $_.ConsumedUnits } }, @{ Name = 'Applies To'; Expression = { $_.AppliesTo } } | Sort-Object 'Account License SKU'
+    $licenseSummary = $licenseType | Select-Object @{Name = 'Account License SKU'; Expression = { (LicenceTranslate -SKU $_.SkuPartNumber -LicenceLevel Root) } }, @{ Name = 'Total Licenses'; Expression = { $_.PrepaidUnits.Enabled + $_.PrepaidUnits.Warning } }, @{ Name = 'Active Licenses'; Expression = { $_.PrepaidUnits.Enabled } }, @{ Name = 'Licenses In Warning'; Expression = { $_.PrepaidUnits.Warning } }, @{ Name = 'Consumed Units'; Expression = { $_.ConsumedUnits } }, @{ Name = 'Applies To'; Expression = { $_.AppliesTo } } | Sort-Object 'Account License SKU'
 }
 
 $licenseSummary | Export-Excel -Path $XLOutput -WorksheetName 'AllLicenses' -FreezeTopRowFirstColumn -AutoSize
