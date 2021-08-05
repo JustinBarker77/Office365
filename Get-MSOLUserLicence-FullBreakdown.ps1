@@ -10,8 +10,9 @@
         This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
     .NOTES
-        Version 1.52
-        Updated: 20210719    V2.02    Added Total Licenses column in License Summary page
+        Version 1.53
+        Updated: 20210805    V1.53    Updated Overwrite File prompt if files already exist
+        Updated: 20210719    V1.52    Added Total Licenses column in License Summary page
         Updated: 20210714    V1.51    Added DirectorySync column for each user
         Updated: 20210623    V1.50    Updated to use ImportExcel
         Updated: 20210607    V1.49    Moved Translates to json files
@@ -289,14 +290,14 @@ foreach ($file in $outputFiles)
         }
         else
         {
-            $message = "$file already exists, do you want to remove the file and continue?
-            [Y]es
-            [N]o"
-            Do
-            {
-                $removeFile = Read-Host -Prompt $message
-            } until ('y', 'n' -contains $removeFile.ToLower())
-            if ($removeFile -eq 'y')
+            $promptTitle = "$file already exists"
+            $promptMessage = "Please confirm that you would like to remove $file"
+            $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes", "Yes - Deletes $file"
+            $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No", 'No - Exits the script'
+            $promptOptions = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no)
+            $promptDecision = $host.ui.PromptForChoice($promptTitle, $promptMessage, $promptOptions, 0)
+
+            if ($promptDecision -eq 0)
             {
                 try
                 {
