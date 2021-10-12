@@ -1,4 +1,4 @@
-#Requires -Module MicrsoftTeams
+#Requires -Module MicrosoftTeams
 <#
 TODO: Help information
 #>
