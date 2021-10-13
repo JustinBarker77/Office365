@@ -8,8 +8,9 @@
 		This script will log in to Office 365 and then create a RoleGroup report in excel, applying formating and an autofilter.
 
 	.NOTES
-		Version: 0.2
-        	Updated: 14-08-2020	v0.2	Updated references
+		Version: 0.3
+        Updated: 13-10-2021 v0.3    Small fix to sheet names
+        Updated: 14-08-2020	v0.2	Updated references
 		Updated: 27-07-2020	v0.1	Initial draft
 
 		Authors: Luke Allinson, Justin Barker
@@ -62,7 +63,16 @@ Function Merge-CSVFiles {
 		## Generate truncated sheet names (31 character limit)
         $SheetName = ($CSV.name -split "\.")[0]
         If ($SheetName.Length -gt 30) {
-    		$TruncSheetName = ($SheetName.Split(" ") | ForEach-Object {$_.Substring(0,5)}) -join ""
+    		$TruncSheetName = ($SheetName.Split(" ") | ForEach-Object {
+                if  ($_.Length -lt 5)
+                {
+                    $_.Substring(0,5)
+                }
+                else
+                {
+                    $_
+                }
+            }) -join ""
         } Else {
             $TruncSheetName = $SheetName.Replace(" ","")
         }

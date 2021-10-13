@@ -23,9 +23,14 @@ param (
 $date = Get-Date -Format yyyyMMdd_hh_mm
 if (!$OutputPath.FullName.EndsWith([System.IO.Path]::DirectorySeparatorChar))
 {
-    $OutputPath = $OutputPath + [System.IO.Path]::DirectorySeparatorChar
+    $outputFolder = $OutputPath.FullName + [System.IO.Path]::DirectorySeparatorChar
 }
-$filepath = $OutputPath + "$date - Teams_PrivateChannels.csv"
+else
+{
+    $outputFolder = $OutputPath.FullName
+}
+
+$filepath = $outputFolder + "$date - Teams_PrivateChannels.csv"
 
 if (Test-Path $filepath -ErrorAction SilentlyContinue)
 {
