@@ -3,7 +3,7 @@ Scripts stored within this repo are to aid in the management/reporting of Micros
 
 All scripts within this repo are offered as-is without warranty or support.
 
-## Get-MSOLUserLicence-FullBreakdown.ps1
+## Export-MSOLUserLicenceBreakdown.ps1
 This PowerShell script is compatible with Windows PowerShell 5 & 5.1 but will not work on newer versions of PowerShell. This script pulls back all License SKU's in a Microsoft 365 Tenancy and then reports on a per SKU basis as to which components are assigned to which users in a color coded Excel Workbook in a Friendly manner which where possible (Excel Tab naming limits being the main limiting factor) translates the name to the name within the M365 admin portal. This script is retained for those cases where an enterprise application cannot be added to Azure AD (See [the issue logged here](https://github.com/microsoftgraph/msgraph-sdk-powershell/issues/684) for more information.)
 
 The original base scripts used to initially create from are referenced in the script itself. Co-authors for creating the updated script include [Mark Lofthouse](https://github.com/MarkLofthouse) and [Robin Dadswell](https://github.com/RobinDadswell).
@@ -17,7 +17,7 @@ This can be installed with the following command:
 Install-Module ImportExcel, MSOnline
 ```
 
-## Get-M365UserLicence-FullBreakdown.ps1
+## Export-M365UserLicenceBreakdown.ps1
 This PowerShell script is compatible with Windows PowerShell 5 and all newer versions of PowerShell. This script pulls back all License SKU's in a Microsoft 365 Tenancy and then reports on a per SKU basis as to which components are assigned to which users in a color coded Excel Workbook in a Friendly manner which where possible (Excel Tab naming limits being the main limiting factor) translates the name to the name within the M365 admin portal. 
 
 This requires the following module(s) installed: 
@@ -54,7 +54,7 @@ This can be installed with the following command:
 Install-Module MicrosoftTeams
 ```
 
-## Get-MSOLRoleGroupBreakdown.ps1
+## Export-MSOLRoleGroupBreakdown.ps1
 This exports a spreadsheet of all role group members using the MSOnline module. This PowerShell script is compatible with Windows PowerShell 5 but will not work on newer versions of PowerShell.
 
 This version of the script requires Microsoft Excel to be installed on the machine as it interacts with the COM Objects presented by this being installed and is not cross platform due to this. 
