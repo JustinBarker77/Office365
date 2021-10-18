@@ -98,6 +98,7 @@ param (
         Position = 1,
         ParameterSetName = 'NoOverWrite'
     )]
+    [ValidateNotNullOrEmpty()]
     [string]$CompanyName,
     [Parameter(
         Mandatory,
@@ -281,8 +282,8 @@ foreach ($file in $outputFiles)
         {
             $promptTitle = "$file already exists"
             $promptMessage = "Please confirm that you would like to remove $file"
-            $yes = New-Object System.Management.Automation.Host.ChoiceDescription "&Yes", "Yes - Deletes $file"
-            $no = New-Object System.Management.Automation.Host.ChoiceDescription "&No", 'No - Exits the script'
+            $yes = New-Object System.Management.Automation.Host.ChoiceDescription '&Yes', "Yes - Deletes $file"
+            $no = New-Object System.Management.Automation.Host.ChoiceDescription '&No', 'No - Exits the script'
             $promptOptions = [System.Management.Automation.Host.ChoiceDescription[]]($yes, $no)
             $promptDecision = $host.ui.PromptForChoice($promptTitle, $promptMessage, $promptOptions, 0)
 
