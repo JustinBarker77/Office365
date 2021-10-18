@@ -2,14 +2,15 @@
 
 <#
     .SYNOPSIS
-        Name: Get-M365UserLicence-FullBreakdown.ps1
+        Name: Export-M365UserLicenceBreakdown.ps1
         The purpose of this script is is to export licensing details to excel
 
     .DESCRIPTION
         This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
     .NOTES
-        Version 2.03
+        Version 2.04
+        Updated: 20211018    V2.04    Updated script to be use the Export Verb and renamed Noun to be more descriptive
         Updated: 20210805    V2.03    Updated Overwrite File prompt if files already exist
         Updated: 20210719    V2.02    Added Active Licenses column in License Summary page
         Updated: 20210714    V2.01    Added DirectorySync column for each user
@@ -69,12 +70,12 @@
         Authors: Mark Lofthouse, Justin Barker & Robin Dadswell
 
     .EXAMPLE
-    PS> ./Get-M365UserLicense-FullBreakdown.ps1 -CompanyName "Contoso" -OutputPath c:\temp
+    PS> ./Get-M365UserLicenseBreakdown.ps1 -CompanyName "Contoso" -OutputPath c:\temp
 
     This example shows how to run the script interactively for the Company Contoso and gives friendly names for SKUs
 
     .EXAMPLE
-    ./Get-M365UserLicense-FullBreakdown.ps1 -CompanyName "Contos" -OutputPath c:\temp -NoNameTranslation
+    ./Get-M365UserLicenseBreakdown.ps1 -CompanyName "Contos" -OutputPath c:\temp -NoNameTranslation
 
     This example shows how to run the script interactively for the Company Contoso and does not give friendly names for SKUs
 #>

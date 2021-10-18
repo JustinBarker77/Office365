@@ -3,14 +3,15 @@
 
 <#
     .SYNOPSIS
-        Name: Get-MSOLUserLicence-FullBreakdown.ps1
+        Name: Export-MSOLUserLicenceBreakdown.ps1
         The purpose of this script is is to export licensing details to excel
 
     .DESCRIPTION
         This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
     .NOTES
-        Version 1.53
+        Version 1.54
+        Updated: 20211018    V1.54    Updated script to be use the Export Verb and renamed Noun to be more descriptive
         Updated: 20210805    V1.53    Updated Overwrite File prompt if files already exist
         Updated: 20210719    V1.52    Added Total Licenses column in License Summary page
         Updated: 20210714    V1.51    Added DirectorySync column for each user

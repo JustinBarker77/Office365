@@ -1,14 +1,15 @@
 ﻿#Requires -Version 5
 <#
 	.SYNOPSIS
-		Name: Get-MSOLRoleGroupBreakdown.ps1
+		Name: Export-MSOLRoleGroupBreakdown.ps1
 		The purpose of this script is is to export MSOL RoleGroups to excel
 
 	.DESCRIPTION
 		This script will log in to Office 365 and then create a RoleGroup report in excel, applying formating and an autofilter.
 
 	.NOTES
-		Version: 0.3
+		Version: 0.4
+        Updated: 18-10-2021 V0.4    Updated script to be use the Export Verb and renamed Noun to be more descriptive
         Updated: 13-10-2021 v0.3    Small fix to sheet names
         Updated: 14-08-2020	v0.2	Updated references
 		Updated: 27-07-2020	v0.1	Initial draft
