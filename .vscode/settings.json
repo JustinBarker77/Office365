@@ -1,4 +1,8 @@
 {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4,
+    "editor.trimAutoWhitespace": true,
+    "files.insertFinalNewline": true,
     "powershell.codeFormatting.autoCorrectAliases": true,
     "powershell.codeFormatting.openBraceOnSameLine": false,
     "powershell.codeFormatting.preset": "Allman",
@@ -6,8 +10,5 @@
     "powershell.codeFormatting.useConstantStrings": true,
     "powershell.codeFormatting.useCorrectCasing": true,
     "powershell.codeFormatting.whitespaceBetweenParameters": true,
-    "powershell.scriptAnalysis.settingsPath": ".vscode\\PSScriptAnalyzerSettings.psd1",
-    "files.insertFinalNewline": true,
-    "editor.insertSpaces": true,
-    "editor.tabSize": 4
+    "powershell.scriptAnalysis.settingsPath": ".vscode\\PSScriptAnalyzerSettings.psd1"
 }
