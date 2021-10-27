@@ -9,7 +9,8 @@
         This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
     .NOTES
-        Version 2.04
+        Version 2.05
+        Updated: 20211027    V2.05    Added ability to filter the various outputs by adding an input CSV with the column UserPrincipalName
         Updated: 20211018    V2.04    Updated script to be use the Export Verb and renamed Noun to be more descriptive
         Updated: 20210805    V2.03    Updated Overwrite File prompt if files already exist
         Updated: 20210719    V2.02    Added Active Licenses column in License Summary page
@@ -131,6 +132,33 @@ param (
         })]
     [System.IO.DirectoryInfo]$OutputPath,
     [Parameter(
+        HelpMessage = 'Filter breakdown to list of users based on User Principal Name',
+        Position = 3,
+        ParameterSetName = 'DefaultParameters'
+    )]
+    [Parameter(
+        HelpMessage = 'Filter breakdown to list of users based on User Principal Name',
+        Position = 3,
+        ParameterSetName = 'Overwrite'
+    )]
+    [Parameter(
+        HelpMessage = 'Filter breakdown to list of users based on User Principal Name',
+        Position = 3,
+        ParameterSetName = 'NoOverWrite'
+    )]
+    [ValidateScript( {
+            if (!(Test-Path -Path $_))
+            {
+                throw "The folder $_ does not exist"
+            }
+            else
+            {
+                return $true
+            }
+        })]
+    [ValidateNotNullOrEmpty()]
+    [string]$FilterCSVPath,
+    [Parameter(
         HelpMessage = 'Secondary workbook created with figure only reports (useful for graphing)',
         ParameterSetName = 'DefaultParameters'
     )]
@@ -248,12 +276,12 @@ else
 }
 
 $outputFiles = New-Object System.Collections.Generic.List[String]
-$XLOutput = $excelfilepath + "$CompanyName - $date.xlsx"
+$XLOutput = $excelfilepath + "$CompanyName - License Breakdown - $date.xlsx"
 $outputFiles.Add($XLOutput) | Out-Null
 
 if ($StatisticsReport)
 {
-    $statsReportLocation = $excelfilepath + "$CompanyName - Statistics - $date.xlsx"
+    $statsReportLocation = $excelfilepath + "$CompanyName - License Breakdown - Statistics - $date.xlsx"
     $outputFiles.Add($statsReportLocation) | Out-Null
 }
 
@@ -365,17 +393,24 @@ else
     $licenseSummary = $licenseType | Select-Object @{Name = 'Account License SKU'; Expression = { (LicenceTranslate -SKU $_.SkuPartNumber -LicenceLevel Root) } }, @{ Name = 'Total Licenses'; Expression = { $_.PrepaidUnits.Enabled + $_.PrepaidUnits.Warning } }, @{ Name = 'Active Licenses'; Expression = { $_.PrepaidUnits.Enabled } }, @{ Name = 'Licenses In Warning'; Expression = { $_.PrepaidUnits.Warning } }, @{ Name = 'Consumed Units'; Expression = { $_.ConsumedUnits } }, @{ Name = 'Applies To'; Expression = { $_.AppliesTo } } | Sort-Object 'Account License SKU'
 }
 
-$licenseSummary | Export-Excel -Path $XLOutput -WorksheetName 'AllLicenses' -FreezeTopRowFirstColumn -AutoSize
+$licenseSummary | Export-Excel -Path $XLOutput -WorksheetName 'Tenant License Summary' -FreezeTopRowFirstColumn -AutoSize
 
 if ($StatisticsReport)
 {
-    $licenseSummary | Export-Excel -Path $statsReportLocation -WorksheetName 'AllLicenses' -FreezeTopRowFirstColumn -AutoSize
+    $licenseSummary | Export-Excel -Path $statsReportLocation -WorksheetName 'Tenant License Summary' -FreezeTopRowFirstColumn -AutoSize
 }
 
 $licenseType = $licenseType | Where-Object { $_.ConsumedUnits -ge 1 -and $_.AppliesTo -eq 'User' }
 #get all users with licence
 Write-Information 'Retrieving all licensed users - this may take a while.'
-$allLicensedUsers = Get-MgUser -All -Property Id, DisplayName, UserPrincipalName, onPremisesSyncEnabled, AccountEnabled, LicenseAssignmentStates, AssignedLicenses | Where-Object { $null -ne $_.AssignedLicenses }
+if ($FilterCSVPath)
+{
+    $filteredUsers = Import-Csv -Path $FilterCSVPath
+    $allLicensedUsers = Get-MgUser -All -Property Id, DisplayName, UserPrincipalName, onPremisesSyncEnabled, AccountEnabled, LicenseAssignmentStates, AssignedLicenses | Where-Object { $null -ne $_.AssignedLicenses -and $_.UserPrincipalName -in $filteredUsers.UserPrincipalName }
+}
+else {
+    $allLicensedUsers = Get-MgUser -All -Property Id, DisplayName, UserPrincipalName, onPremisesSyncEnabled, AccountEnabled, LicenseAssignmentStates, AssignedLicenses | Where-Object { $null -ne $_.AssignedLicenses }
+}
 $licensedGroups = @{}
 # Loop through all licence types found in the tenant
 foreach ($license in $licenseType)
@@ -476,7 +511,11 @@ foreach ($license in $licenseType)
         }
         $licenceStats | Select-Object Status, * -ErrorAction SilentlyContinue | Export-Excel -Path $statsReportLocation -WorksheetName $RootLicence -FreezeTopRowFirstColumn
     }
-    $licensedUsers | Select-Object DisplayName, UserPrincipalName, AccountEnabled, DirectorySynced, AccountSKU, DirectAssigned, GroupsAssigning, * -ErrorAction SilentlyContinue | Export-Excel -Path $XLOutput -WorksheetName $RootLicence -FreezeTopRowFirstColumn -AutoSize -AutoFilter
+    $output = @($licensedUsers | Select-Object DisplayName, UserPrincipalName, AccountEnabled, DirectorySynced, AccountSKU, DirectAssigned, GroupsAssigning, * -ErrorAction SilentlyContinue)
+    if ($output.count -gt 0)
+    {
+        $output | Export-Excel -Path $XLOutput -WorksheetName $RootLicence -FreezeTopRowFirstColumn -AutoSize -AutoFilter
+    }
 }
 Write-Information 'Formatting Excel Workbook'
 $excel = Open-ExcelPackage -Path $XLOutput
@@ -486,7 +525,7 @@ foreach ($worksheet in $excel.Workbook.Worksheets)
     $worksheet.Select($fullRange)
     $worksheet.SelectedRange.Style.Font.Name = 'Segoe UI'
     $worksheet.SelectedRange.Style.Font.Size = 9
-    if ($worksheet.Name -eq 'AllLicenses')
+    if ($worksheet.Name -eq 'Tenant License Summary')
     {
         $formattingRange = "A2:A$($worksheet.Dimension.Rows)"
         $worksheet.Select($formattingRange)
