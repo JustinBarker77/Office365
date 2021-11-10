@@ -9,7 +9,8 @@
         This script will log in to Microsoft 365 and then create a license report by SKU, with each component level status for each user, where 1 or more is assigned. This then conditionally formats the output to colours and autofilter.
 
     .NOTES
-        Version 2.05
+        Version 2.06
+        Updated: 20211110    V2.06    Fixed zero-value parameter positioning
         Updated: 20211027    V2.05    Added ability to filter the various outputs by adding an input CSV with the column UserPrincipalName
         Updated: 20211018    V2.04    Updated script to be use the Export Verb and renamed Noun to be more descriptive
         Updated: 20210805    V2.03    Updated Overwrite File prompt if files already exist
@@ -85,19 +86,19 @@ param (
     [Parameter(
         Mandatory,
         HelpMessage = 'Name of the Company you are running this against. This will form part of the output file name',
-        Position = 1,
+        Position = 0,
         ParameterSetName = 'DefaultParameters'
     )]
     [Parameter(
         Mandatory,
         HelpMessage = 'Name of the Company you are running this against. This will form part of the output file name',
-        Position = 1,
+        Position = 0,
         ParameterSetName = 'Overwrite'
     )]
     [Parameter(
         Mandatory,
         HelpMessage = 'Name of the Company you are running this against. This will form part of the output file name',
-        Position = 1,
+        Position = 0,
         ParameterSetName = 'NoOverWrite'
     )]
     [ValidateNotNullOrEmpty()]
@@ -105,19 +106,19 @@ param (
     [Parameter(
         Mandatory,
         HelpMessage = 'The location you would like the final excel file to reside',
-        Position = 2,
+        Position = 1,
         ParameterSetName = 'DefaultParameters'
     )]
     [Parameter(
         Mandatory,
         HelpMessage = 'The location you would like the final excel file to reside',
-        Position = 2,
+        Position = 1,
         ParameterSetName = 'Overwrite'
     )]
     [Parameter(
         Mandatory,
         HelpMessage = 'The location you would like the final excel file to reside',
-        Position = 2,
+        Position = 1,
         ParameterSetName = 'NoOverWrite'
     )]
     [ValidateScript( {
@@ -133,17 +134,17 @@ param (
     [System.IO.DirectoryInfo]$OutputPath,
     [Parameter(
         HelpMessage = 'Filter breakdown to list of users based on User Principal Name',
-        Position = 3,
+        Position = 2,
         ParameterSetName = 'DefaultParameters'
     )]
     [Parameter(
         HelpMessage = 'Filter breakdown to list of users based on User Principal Name',
-        Position = 3,
+        Position = 2,
         ParameterSetName = 'Overwrite'
     )]
     [Parameter(
         HelpMessage = 'Filter breakdown to list of users based on User Principal Name',
-        Position = 3,
+        Position = 2,
         ParameterSetName = 'NoOverWrite'
     )]
     [ValidateScript( {
@@ -207,8 +208,8 @@ function LicenceTranslate
 {
     param
     (
-        [parameter (Mandatory = $true, Position = 1)][string]$SKU,
-        [parameter (Mandatory = $true, Position = 2)][ValidateSet('Component', 'Root')]$LicenceLevel
+        [parameter (Mandatory = $true, Position = 0)][string]$SKU,
+        [parameter (Mandatory = $true, Position = 1)][ValidateSet('Component', 'Root')]$LicenceLevel
     )
     if ($LicenceLevel -eq 'Component')
     {
