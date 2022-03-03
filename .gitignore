@@ -176,6 +176,7 @@ packages.config.md5sum
 **/.idea/**/dataSources.local.xml
 **/.idea/**/sqlDataSources.xml
 **/.idea/**/dynamic.xml
+**/publish.ps1
 
 # Rider
 # Rider auto-generates .iml files, and contentModel.xml
@@ -194,3 +195,4 @@ node_modules.nosync
 *.docx
 *.ppt
 *.pptx
+

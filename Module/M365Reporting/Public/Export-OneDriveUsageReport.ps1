@@ -1,4 +1,4 @@
-#requires -Version 5.1 -Modules Microsoft.Online.SharePoint.PowerShell,ImportExcel
+#requires -Version 5.1 -Modules ImportExcel
 function Export-OneDriveUsageReport
 {
     <#
@@ -21,6 +21,12 @@ function Export-OneDriveUsageReport
         .PARAMETER TenantName
             The Tenant name, like contoso if the tenant is contoso.onmicrosoft.com
             vanity names, e.g. contoso.com, are NOT supported!
+
+        .PARAMETER OutputPath
+            The folder path that you would like the xlsx output to be placed
+
+        .PARAMETER NoStatisticsReport
+            This stops the statistics report summary page from being created
 
         .NOTES
             Quick and dirty implementation to generate a simple XLSX report file
@@ -64,7 +70,7 @@ function Export-OneDriveUsageReport
             })]
         [IO.DirectoryInfo]
         $OutputPath,
-        [switch]$StatisticsReport
+        [switch]$NoStatisticsReport
     )
 
     $report = Get-OneDriveUsageReport -TenantName $TenantName
@@ -86,7 +92,7 @@ function Export-OneDriveUsageReport
                 AutoFilter              = $true
             }
             $report | Sort-Object -Property CurrentUsage -Descending | Export-Excel @paramExportExcel
-            if ($StatisticsReport)
+            if (-not $NoStatisticsReport)
             {
                 $paramExportStatistics = @{
                     Path                    = $outputFile

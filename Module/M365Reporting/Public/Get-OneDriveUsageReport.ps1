@@ -1,6 +1,7 @@
-#requires -Version 5.1 -Modules Microsoft.Online.SharePoint.PowerShell
-function Get-OneDriveUsageReport {
-   <#
+#requires -Version 5.1 -Modules PnP.PowerShell
+function Get-OneDriveUsageReport
+{
+    <#
         .SYNOPSIS
             Generates a basic usage report for OneDrive for Business sites
 
@@ -53,73 +54,31 @@ function Get-OneDriveUsageReport {
         # Garbage Collection
         [GC]::Collect()
 
-        try
-        {
-            $paramImportModule = @{
-                Name                = 'Microsoft.Online.SharePoint.PowerShell'
-                DisableNameChecking = $true
-                NoClobber           = $true
-                Force               = $true
-                ErrorAction         = 'SilentlyContinue'
-                WarningAction       = 'Stop'
-            }
-            Import-Module @paramImportModule | Out-Null
-        }
-        catch
-        {
-            #region ErrorHandler
-            # get error record
-            [Management.Automation.ErrorRecord]$e = $_
-
-            # retrieve information about runtime error
-            $info = [PSCustomObject]@{
-                Exception = $e.Exception.Message
-                Reason    = $e.CategoryInfo.Reason
-                Target    = $e.CategoryInfo.TargetName
-                Script    = $e.InvocationInfo.ScriptName
-                Line      = $e.InvocationInfo.ScriptLineNumber
-                Column    = $e.InvocationInfo.OffsetInLine
-            }
-
-            # output information. Post-process collected info, and log info (optional)
-            $info | Out-String | Write-Verbose
-
-            $paramWriteError = @{
-                Message      = $e.Exception.Message
-                ErrorAction  = 'Stop'
-                Exception    = $e.Exception
-                TargetObject = $e.CategoryInfo.TargetName
-            }
-            Write-Error @paramWriteError
-
-            # Only here to catch a global ErrorAction overwrite
-            exit 1
-            #endregion ErrorHandler
-        }
 
         # Create the Connection URI
         $AdminURL = ('https://' + $TenantName + '-admin.sharepoint.com')
 
+        #TODO: Better cross platform authentication support (e.g. for headless environments etc.)
         # Connect to SharePoint Online
-        $paramConnectSPOService = @{
-            Url         = $AdminURL
-            Region      = 'Default'
-            ErrorAction = 'Stop'
+        $paramConnectPnPPowerShell = @{
+            URL = $AdminURL
+            ErrorAction    = 'Stop'
+            Interactive    = $true
         }
         try
         {
-            Get-SPOTenant -ErrorAction Stop | Out-Null
+            Get-PnPTenant -ErrorAction Stop | Out-Null
             $preConnected = $true
-            Write-Verbose "Previously connected to SPO Service, no extra authentication to occur"
+            Write-Verbose 'Previously connected to SPO Service, no extra authentication to occur'
         }
         catch
         {
-            Write-Verbose "Not Connected to SPO Service, connecting to SPO Service"
-            Connect-SPOService @paramConnectSPOService | Out-Null
+            Write-Verbose 'Not Connected to SPO Service, connecting to SPO Service'
+            Connect-PnPOnline @paramConnectPnPPowerShell | Out-Null
         }
         try
         {
-            Get-SPOTenant -ErrorAction Stop | Out-Null
+            Get-PnPTenant -ErrorAction Stop | Out-Null
         }
         catch
         {
@@ -130,38 +89,31 @@ function Get-OneDriveUsageReport {
         # Create new object
         $Report = New-Object System.Collections.Generic.List[System.Object]
 
-        $paramGetSPOSite = @{
-            IncludePersonalSite = $true
-            Limit               = 'all'
+        $paramGetO4BSites = @{
+            IncludeOneDriveSites = $true
             Filter              = "Url -like '-my.sharepoint.com/personal/'"
             ErrorAction         = 'SilentlyContinue'
         }
-        $Users = (Get-SPOSite @paramGetSPOSite)
+        $sites = (Get-PnPTenantSite @paramGetO4BSites)
 
-        foreach ($user in $Users)
+        foreach ($site in $sites)
         {
             try
             {
                 # Cleanup
                 $StatsReport = $null
 
-                # Get the dedicated Info for the user
-                $paramGetSPOSite = @{
-                    Identity    = $user.Url
-                    ErrorAction = 'Stop'
-                }
-
                 # Create the Reporting object
                 $StatsReport = [PSCustomObject]@{
-                    Owner                 = $user.Owner
-                    CurrentUsage          = '{0:F3}' -f ($user.StorageUsageCurrent / 1024) -as [decimal]
-                    PercentageOfQuotaUsed = ($user.StorageUsageCurrent / $user.StorageQuota) -as [decimal]
-                    Quota                 = '{0:F0}' -f ($user.StorageQuota / 1024) -as [int]
-                    QuotaWarning          = '{0:F0}' -f ($user.StorageQuotaWarningLevel / 1024) -as [int]
-                    QuotaType             = $user.StorageQuotaType
-                    LastModifiedDate      = $user.LastContentModifiedDate.ToLongDateString()
-                    URL                   = $user.URL
-                    Status                = $user.Status
+                    Owner                 = $site.Owner
+                    CurrentUsage          = '{0:F3}' -f ($site.StorageUsageCurrent / 1024) -as [decimal]
+                    PercentageOfQuotaUsed = ($site.StorageUsageCurrent / $site.StorageQuota) -as [decimal]
+                    Quota                 = '{0:F0}' -f ($site.StorageQuota / 1024) -as [int]
+                    QuotaWarning          = '{0:F0}' -f ($site.StorageQuotaWarningLevel / 1024) -as [int]
+                    QuotaType             = $site.StorageQuotaType
+                    LastModifiedDate      = $site.LastContentModifiedDate.ToLongDateString()
+                    URL                   = $site.URL
+                    Status                = $site.Status
                 }
 
                 # Append the report
@@ -198,12 +150,12 @@ function Get-OneDriveUsageReport {
         {
             if (-not $preConnected)
             {
-                Write-Verbose "Not previously connected to SPO Service, disconnecting from SPO"
-                (Disconnect-SPOService -ErrorAction SilentlyContinue) | Out-Null
+                Write-Verbose 'Not previously connected to SPO Service, disconnecting from SPO'
+                (Disconnect-PnPOnline -ErrorAction SilentlyContinue) | Out-Null
             }
             else
             {
-                Write-Verbose "Previously connected to SPO, will remain connected to SPO"
+                Write-Verbose 'Previously connected to SPO, will remain connected to SPO'
             }
         }
         catch
