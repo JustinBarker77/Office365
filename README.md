@@ -6,8 +6,12 @@ All scripts within this repo are offered as-is without warranty or support.
 ## M365Reporting Module
 
 This module contains the following cmdlets:
-- Export-MSOLUserLicence-FullBreakdown
 - Export-M365UserLicence-FullBreakdown
+- Export-MailboxSizes
+- Export-MSOLUserLicence-FullBreakdown
+- Export-OneDriveUsageReport 
+- Get-MailboxSizes
+- Get-OneDriveUsageReport
 
 ### Get-MSOLUserLicence-FullBreakdown
 This PowerShell script is compatible with Windows PowerShell 5 & 5.1 but will not work on newer versions of PowerShell. This script pulls back all License SKU's in a Microsoft 365 Tenancy and then reports on a per SKU basis as to which components are assigned to which users in a color coded Excel Workbook in a Friendly manner which where possible (Excel Tab naming limits being the main limiting factor) translates the name to the name within the M365 admin portal. This script is retained for those cases where an enterprise application cannot be added to Azure AD (See [the issue logged here](https://github.com/microsoftgraph/msgraph-sdk-powershell/issues/684) for more information.)

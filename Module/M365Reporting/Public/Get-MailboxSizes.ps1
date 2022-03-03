@@ -10,7 +10,8 @@ function Get-MailboxSizes
             This script connects to EXO and then gets Mailbox statistics
 
         .NOTES
-            Version: 0.11
+            Version: 0.12
+            Updated: 03-03-2033 v0.12   Removed DiscoveryMailboxes from results via where-object on initial Get-EXOMailbox
             Updated: 01-03-2022 v0.11   Updated to a Get Command - there will be a corresponding Export that utilises this data
             Updated: 01-03-2022 v0.10   Included a paramter to use an input CSV file
             Updated: 06-01-2022 v0.9    Changed output file date to match order of ISO8601 standard
@@ -96,7 +97,6 @@ function Get-MailboxSizes
             ParameterSetName = 'IncludeInactive'
         )]
         [ValidateSet(
-            'DiscoveryMailbox',
             'EquipmentMailbox',
             'GroupMailbox',
             'RoomMailbox',
@@ -254,20 +254,19 @@ function Get-MailboxSizes
     } #End function Compare-EmailAddresses
 
     #Check for EXO connection
-    try {
-    Write-Verbose "Checking connection to Exchange Online"
-    $connectionTest = @(Get-EXOMailbox -ResultSize 1 -ErrorAction Stop)
-    Write-Verbose "You are pre-connected to Exchange Online"
-    $preConnected = $true
+    try
+    {
+        Write-Verbose 'Checking connection to Exchange Online'
+        $connectionTest = @(Get-EXOMailbox -ResultSize 1 -ErrorAction Stop)
+        Write-Verbose 'You are pre-connected to Exchange Online'
+        $preConnected = $true
     }
     catch {}
 
     if ($preConnected -ne $true)
     {
-        Write-Verbose "Not connected, prompting for connection"
+        Write-Verbose 'Not connected, prompting for connection'
         #TODO: Logic around connecting using device on Linux or certificate/app authentication
-
-        $commandHashTable = @{}
 
         if ($DeviceAuthentication -and -not $IsWindows)
         {
@@ -275,7 +274,8 @@ function Get-MailboxSizes
         }
         else
         {
-            try {
+            try
+            {
                 Connect-ExchangeOnline -ErrorAction Stop
             }
             catch
@@ -287,7 +287,7 @@ function Get-MailboxSizes
 
         try
         {
-            Write-Verbose "Checking connection to Exchange Online"
+            Write-Verbose 'Checking connection to Exchange Online'
             $connectionTest = @(Get-EXOMailbox -ResultSize 1 -ErrorAction Stop)
         }
         catch
@@ -298,7 +298,7 @@ function Get-MailboxSizes
 
     if ($connectionTest.count -ne 1)
     {
-        throw "There was an issue with your connection to Exchange Online, please reconnect and try again"
+        throw 'There was an issue with your connection to Exchange Online, please reconnect and try again'
     }
 
     # Define constants for use later
@@ -308,7 +308,7 @@ function Get-MailboxSizes
     # Import and validate inputCSV if specified
     if ($InputCSV)
     {
-        Write-Verbose "Checking input CSV headers"
+        Write-Verbose 'Checking input CSV headers'
         $csv = Import-Csv $InputCSV -Delimiter ','
         $csvHeaders = ($csv | Get-Member -MemberType NoteProperty).Name.ToLower()
         if ('userprincipalname' -notin $csvHeaders -and 'emailaddress' -notin $csvHeaders -and 'primarysmtpaddress' -notin $csvHeaders)
@@ -394,7 +394,7 @@ function Get-MailboxSizes
     try
     {
         Write-Verbose 'Getting Mailboxes from Exchange Online'
-        $mailboxes = @(Get-EXOMailbox @commandHashTable)
+        $mailboxes = @(Get-EXOMailbox @commandHashTable | Where-Object { $_.RecipientTypeDetails -ne 'DiscoveryMailbox' } )
     }
     catch
     {
@@ -449,7 +449,7 @@ function Get-MailboxSizes
 
     if (-not $preConnected)
     {
-        Write-Verbose "You were not pre-connected to Exchange Online; disconnecting"
+        Write-Verbose 'You were not pre-connected to Exchange Online; disconnecting'
         Disconnect-ExchangeOnline -Confirm:$false
     }
 
@@ -462,7 +462,7 @@ function Get-MailboxSizes
         Write-Progress -Activity 'EXO Mailbox Size Report' -Id 1 -Completed
     }
 
-    Write-Verbose "Outputting results"
+    Write-Verbose 'Outputting results'
 
     if ($output)
     {
