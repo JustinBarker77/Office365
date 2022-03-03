@@ -76,6 +76,7 @@ function Export-MSOLUserLicenceBreakdown {
             References:
                 https://gallery.technet.microsoft.com/scriptcenter/Export-a-Licence-b200ca2a
     #>
+    [Alias("Export-MSOLUserLicenseBreakdown")]
     [CmdletBinding(DefaultParameterSetName = 'DefaultParameters')]
     [OutputType([String])]
     param (

@@ -81,6 +81,7 @@ function Export-UserLicenceBreakdown {
 
         This example shows how to run the script interactively for the Company Contoso and does not give friendly names for SKUs
     #>
+    [Alias("Export-UserLicenseBreakdown")]
     [CmdletBinding(DefaultParameterSetName = 'DefaultParameters')]
     [OutputType([String])]
     param (
