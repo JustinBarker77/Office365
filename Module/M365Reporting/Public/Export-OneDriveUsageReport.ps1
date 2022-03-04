@@ -53,6 +53,10 @@ function Export-OneDriveUsageReport
         [Alias('Tenant', 'M365Name', 'M365TenantName')]
         [string]
         $TenantName,
+        [Parameter()]
+        [Alias('Device', 'DeviceAuthentication')]
+        [switch]
+        $DeviceLogin,
         [Parameter(
             Mandatory
         )]
@@ -72,6 +76,15 @@ function Export-OneDriveUsageReport
         $OutputPath,
         [switch]$NoStatisticsReport
     )
+
+    $paramOneDriveUsageReport = @{
+        TenantName = $TenantName
+    }
+
+    if ($DeviceLogin)
+    {
+        $paramOneDriveUsageReport['DeviceLogin'] = $true
+    }
 
     $report = Get-OneDriveUsageReport -TenantName $TenantName
 
