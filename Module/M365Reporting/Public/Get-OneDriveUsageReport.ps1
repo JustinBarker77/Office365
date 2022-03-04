@@ -46,7 +46,11 @@ function Get-OneDriveUsageReport
         )]
         [Alias('Tenant', 'M365Name', 'M365TenantName')]
         [string]
-        $TenantName
+        $TenantName,
+        [Parameter()]
+        [Alias('Device', 'DeviceAuthentication')]
+        [switch]
+        $DeviceLogin
     )
 
     process
@@ -65,6 +69,12 @@ function Get-OneDriveUsageReport
             ErrorAction    = 'Stop'
             Interactive    = $true
         }
+
+        if ($DeviceLogin)
+        {
+            $paramConnectPnPPowerShell['DeviceLogin'] = $true
+        }
+
         try
         {
             Get-PnPTenant -ErrorAction Stop | Out-Null
