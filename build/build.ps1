@@ -1,7 +1,9 @@
 $ErrorActionPreference = 'Stop'
 $VerbosePreference = 'SilentlyContinue'
-#Install-PackageProvider -Name NuGet -force | Out-Null
-#Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
+
+#Setup Package Provider and PS Repository for easy install
+Install-PackageProvider -Name NuGet -force | Out-Null
+Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 #Gets Cloud Version in case of major change
 [version]$CloudVersion = (Find-Module M365Reporting).Version
 #Gets Manifest Version in case of major change
@@ -11,13 +13,14 @@ $manifest = Import-PowerShellDataFile '.\M365Reporting\M365Reporting.psd1'
 #Checks if Major Version Change to Module Manifest
 if ($LocalVersion -gt $CloudVersion)
 {
-    [version]$NewVersion = "{0}.{1}.{2}" -f $LocalVersion.Major, $LocalVersion.Minor, ($LocalVersion.Build + 1)
+    [version]$NewVersion = "{0}.{1}.{2}" -f $LocalVersion.Major, $LocalVersion.Minor, ($LocalVersion.Build)
 }
 else
 {
     [version]$NewVersion = "{0}.{1}.{2}" -f $CloudVersion.Major, $CloudVersion.Minor, ($CloudVersion.Build + 1)
 }
 
+#Installs Requires Modules
 foreach ($module in $manifest.RequiredModules.ModuleName)
 {
     Install-Module -Name $module -Confirm:$false -Force -AllowClobber
