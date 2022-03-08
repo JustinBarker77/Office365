@@ -180,6 +180,8 @@ function Get-M365RMailboxSizes
             }
         }
 
+        Write-Host 'Test Action for Warnings'
+
         # Store everything in an Arraylist
         $mailboxInfo = [ordered]@{
             UserPrincipalName     = $mailbox.UserPrincipalName
