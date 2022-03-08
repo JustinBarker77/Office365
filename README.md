@@ -5,6 +5,8 @@ All scripts within this repo are offered as-is without warranty or support.
 
 ## M365Reporting Module
 
+[![Publish PowerShell Module](https://github.com/JustinBarker77/Office365/actions/workflows/Publish-To-PowerShell-Gallery.yml/badge.svg)](https://github.com/JustinBarker77/Office365/actions/workflows/Publish-To-PowerShell-Gallery.yml) [![PowerShell Script Analyzer](https://github.com/JustinBarker77/Office365/actions/workflows/PSScriptAnalyzer.yml/badge.svg)](https://github.com/JustinBarker77/Office365/actions/workflows/PSScriptAnalyzer.yml)
+
 This module contains the following cmdlets:
 - Export-M365UserLicence-FullBreakdown
 - Export-MailboxSizes
