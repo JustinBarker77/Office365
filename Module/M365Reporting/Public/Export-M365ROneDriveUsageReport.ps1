@@ -1,5 +1,5 @@
 #requires -Version 5.1 -Modules ImportExcel
-function Export-OneDriveUsageReport
+function Export-M365ROneDriveUsageReport
 {
     <#
         .SYNOPSIS
@@ -86,7 +86,7 @@ function Export-OneDriveUsageReport
         $paramOneDriveUsageReport['DeviceLogin'] = $true
     }
 
-    $report = Get-OneDriveUsageReport -TenantName $TenantName
+    $report = Get-M365ROneDriveUsageReport -TenantName $TenantName
 
     $report
     $outputFile = $OutputPath.FullName.TrimEnd([System.IO.Path]::DirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar + (Get-Date -Format yyyyMMdd_HHmmss) + '-' + $TenantName + '-' + 'OneDriveUsageReport.xlsx'

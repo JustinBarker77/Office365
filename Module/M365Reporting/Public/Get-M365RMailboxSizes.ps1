@@ -1,5 +1,5 @@
 #Requires -Version 5 -Modules ExchangeOnlineManagement
-function Get-MailboxSizes
+function Get-M365RMailboxSizes
 {
     <#
         .SYNOPSIS
@@ -277,11 +277,11 @@ function Get-MailboxSizes
         {
             try
             {
-                Connect-ExchangeOnline -ErrorAction Stop
+                Connect-ExchangeOnline -ErrorAction Stop | Out-Null
             }
             catch
             {
-                Connect-ExchangeOnline
+                Connect-ExchangeOnline | Out-Null
             }
         }
 

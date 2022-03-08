@@ -1,5 +1,5 @@
 #requires -Version 5.1 -Modules PnP.PowerShell
-function Get-OneDriveUsageReport
+function Get-M365ROneDriveUsageReport
 {
     <#
         .SYNOPSIS
