@@ -12,11 +12,11 @@ $manifest = Import-PowerShellDataFile '.\M365Reporting\M365Reporting.psd1'
 #Checks if Major Version Change to Module Manifest
 if ($LocalVersion -gt $CloudVersion)
 {
-    [version]$NewVersion = "{0}.{1}.{2}" -f $LocalVersion.Major, $LocalVersion.Minor, ($LocalVersion.Build)
+    [version]$NewVersion = "{0}.{1}.{2}.{3}" -f $LocalVersion.Major, $LocalVersion.Minor, $LocalVersion.Build, $LocalVersion.Revision
 }
 else
 {
-    [version]$NewVersion = "{0}.{1}.{2}" -f $CloudVersion.Major, $CloudVersion.Minor, ($CloudVersion.Build + 1)
+    [version]$NewVersion = "{0}.{1}.{2}.{3}" -f $CloudVersion.Major, $CloudVersion.Minor, $CloudVersion.Build, ($CloudVersion.Revision + 1)
 }
 
 #Installs Requires Modules
