@@ -38,7 +38,7 @@ function Get-M365RMailboxSizes
 
         .PARAMETER RecipientTypeDetails
             Provide one or more RecipientTypeDetails values to return only mailboxes of those types in the results. Seperate multiple values by commas.
-            Valid values are: EquipmentMailbox, GroupMailbox, RoomMailbox, SchedulingMailbox, SharedMailbox, TeamMailbox, UserMailbox.
+            Valid values are: EquipmentMailbox, GroupMailbox, RoomMailbox, SharedMailbox, TeamMailbox, UserMailbox.
 
         .PARAMETER MailboxFilter
             Provide a filter to reduce the size of the Get-EXOMailbox query; this must follow oPath syntax standards.
@@ -101,7 +101,6 @@ function Get-M365RMailboxSizes
             'EquipmentMailbox',
             'GroupMailbox',
             'RoomMailbox',
-            'SchedulingMailbox',
             'SharedMailbox',
             'TeamMailbox',
             'UserMailbox'
@@ -395,7 +394,7 @@ function Get-M365RMailboxSizes
     try
     {
         Write-Verbose 'Getting mailboxes from Exchange Online'
-        $mailboxes = @(Get-EXOMailbox @commandHashTable | Where-Object { $_.RecipientTypeDetails -ne 'DiscoveryMailbox' } )
+        $mailboxes = @(Get-EXOMailbox @commandHashTable | Where-Object { $_.RecipientTypeDetails -notin ('DiscoveryMailbox', 'SchedulingMailbox') } )
     }
     catch
     {
