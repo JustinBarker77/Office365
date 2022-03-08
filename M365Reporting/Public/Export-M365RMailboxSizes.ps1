@@ -211,6 +211,8 @@ function Export-M365RMailboxSizes
 
     $output = Get-M365RMailboxSizes @commandHashTable
 
+    Write-Host "I hate this but it's a test"
+
     if ($output.Count -ge 1)
     {
         $output | Export-Excel -Path $outputFile -WorksheetName 'MailboxStats' -FreezeTopRow -AutoSize -AutoFilter -TableName 'MailboxStats'
