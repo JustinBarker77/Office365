@@ -21,7 +21,6 @@
             'PSAvoidAssignmentToAutomaticVariable',
             'PSAvoidDefaultValueSwitchParameter',
             'PSAvoidDefaultValueForMandatoryParameter',
-            'PSAvoidUsingEmptyCatchBlock',
             'PSAvoidGlobalAliases',
             'PSAvoidGlobalFunctions',
             'PSAvoidGlobalVars',
