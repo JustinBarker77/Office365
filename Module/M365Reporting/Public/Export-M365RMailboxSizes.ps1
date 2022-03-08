@@ -42,7 +42,7 @@ function Export-M365RMailboxSizes
 
         .PARAMETER RecipientTypeDetails
             Provide one or more RecipientTypeDetails values to return only mailboxes of those types in the results. Seperate multiple values by commas.
-            Valid values are: EquipmentMailbox, GroupMailbox, RoomMailbox, SchedulingMailbox, SharedMailbox, TeamMailbox, UserMailbox.
+            Valid values are: EquipmentMailbox, GroupMailbox, RoomMailbox, SharedMailbox, TeamMailbox, UserMailbox.
 
         .PARAMETER MailboxFilter
             Provide a filter to reduce the size of the Get-EXOMailbox query; this must follow oPath syntax standards.
@@ -136,7 +136,6 @@ function Export-M365RMailboxSizes
             'EquipmentMailbox',
             'GroupMailbox',
             'RoomMailbox',
-            'SchedulingMailbox',
             'SharedMailbox',
             'TeamMailbox',
             'UserMailbox'
