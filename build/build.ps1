@@ -1,8 +1,7 @@
 $ErrorActionPreference = 'Stop'
 $VerbosePreference = 'SilentlyContinue'
 
-#Setup Package Provider and PS Repository for easy install
-Install-PackageProvider -Name NuGet -force | Out-Null
+#Setup PS Repository for easy install
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 #Gets Cloud Version in case of major change
 [version]$CloudVersion = (Find-Module M365Reporting).Version
