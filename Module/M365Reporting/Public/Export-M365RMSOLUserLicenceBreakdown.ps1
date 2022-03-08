@@ -1,6 +1,6 @@
 #Requires -Modules @{ ModuleName = "ImportExcel"; ModuleVersion = "7.1.2"}, @{ ModuleName = "MSOnline"; ModuleVersion = "1.1.183.57" }
 #Requires -Version 5
-function Export-MSOLUserLicenceBreakdown {
+function Export-M365RMSOLUserLicenceBreakdown {
     <#
         .SYNOPSIS
             Name: Export-MSOLUserLicenceBreakdown
@@ -76,7 +76,7 @@ function Export-MSOLUserLicenceBreakdown {
             References:
                 https://gallery.technet.microsoft.com/scriptcenter/Export-a-Licence-b200ca2a
     #>
-    [Alias("Export-MSOLUserLicenseBreakdown")]
+    [Alias("Export-M365RMSOLUserLicenseBreakdown")]
     [CmdletBinding(DefaultParameterSetName = 'DefaultParameters')]
     [OutputType([String])]
     param (

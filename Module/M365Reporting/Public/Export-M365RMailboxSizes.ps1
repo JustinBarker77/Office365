@@ -1,5 +1,5 @@
 ﻿#Requires -Version 5 -Modules ExchangeOnlineManagement, ImportExcel
-function Export-MailboxSizes
+function Export-M365RMailboxSizes
 {
     <#
         .SYNOPSIS
@@ -210,7 +210,7 @@ function Export-MailboxSizes
     $timeStamp = Get-Date -Format yyyyMMdd-HHmm
     $outputFile = $OutputPath.FullName.TrimEnd([System.IO.Path]::DirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar + 'EXOMailboxSizes' + '_' + $timeStamp + '.xlsx'
 
-    $output = Get-MailboxSizes @commandHashTable
+    $output = Get-M365RMailboxSizes @commandHashTable
 
     if ($output.Count -ge 1)
     {

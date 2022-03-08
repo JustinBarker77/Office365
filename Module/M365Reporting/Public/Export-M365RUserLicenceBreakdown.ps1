@@ -1,5 +1,5 @@
 #Requires -Modules @{ ModuleName = "ImportExcel"; ModuleVersion = "7.1.2"}, @{ ModuleName = "Microsoft.Graph.Authentication"; ModuleVersion = "1.5.0"}, @{ ModuleName = "Microsoft.Graph.Identity.DirectoryManagement"; ModuleVersion = "1.5.0" }, @{ ModuleName = "Microsoft.Graph.Groups"; ModuleVersion = "1.5.0" }, @{ ModuleName = "Microsoft.Graph.Users"; ModuleVersion = "1.5.0" }
-function Export-UserLicenceBreakdown {
+function Export-M365RUserLicenceBreakdown {
     <#
         .SYNOPSIS
             Name: Export-UserLicenceBreakdown
@@ -81,7 +81,7 @@ function Export-UserLicenceBreakdown {
 
         This example shows how to run the script interactively for the Company Contoso and does not give friendly names for SKUs
     #>
-    [Alias("Export-UserLicenseBreakdown")]
+    [Alias("Export-M365RUserLicenseBreakdown")]
     [CmdletBinding(DefaultParameterSetName = 'DefaultParameters')]
     [OutputType([String])]
     param (
