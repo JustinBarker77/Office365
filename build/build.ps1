@@ -3,7 +3,7 @@ $VerbosePreference = 'SilentlyContinue'
 #Install-PackageProvider -Name NuGet -force | Out-Null
 #Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 
-[version]$CloudVersion = (Find-Module M365Reporting).ModuleVersion
+[version]$CloudVersion = (Find-Module M365Reporting).Version
 [version]$LocalVersion = (Import-PowerShellDataFile '.\M365Reporting\M365Reporting.psd1').ModuleVersion
 
 if ($LocalVersion -gt $CloudVersion)
