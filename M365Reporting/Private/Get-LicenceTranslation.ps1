@@ -6,26 +6,20 @@ function Get-LicenceTranslation
         [parameter (Mandatory = $true, Position = 0)][string]$SKU,
         [parameter (Mandatory = $true, Position = 1)][ValidateSet('Component', 'Root')]$LicenceLevel
     )
+    if (!$Script:translationFile)
+    {
+        $Script:translationFile = Invoke-RestMethod -Method Get -Uri "https://download.microsoft.com/download/e/3/e/e3e9faf2-f28b-490a-9ada-c6089a1fc5b0/Product%20names%20and%20service%20plan%20identifiers%20for%20licensing.csv" | ConvertFrom-Csv
+    }
+
     if ($LicenceLevel -eq 'Component')
     {
-        if (-not (Get-Variable -Name ComponentTranslateCache -Scope Script -ErrorAction SilentlyContinue))
-        {
-            $file = 'ComponentLicenses.json'
-            $Script:ComponentTranslateCache = Get-Content -Path ($PSScriptRoot + [IO.Path]::DirectorySeparatorChar + 'Translations' + [IO.Path]::DirectorySeparatorChar + 'SKUTranslations' + [IO.Path]::DirectorySeparatorChar + $file) | ConvertFrom-Json
-        }
-        $Translatation = $Script:ComponentTranslateCache
+        [string]$translateString = $Script:translationFile.where({$_.Service_Plan_Name -eq $SKU})[0].Service_Plans_Included_Friendly_Names
     }
     else
     {
-        if (-not (Get-Variable -Name RootTranslateCache -Scope Script -ErrorAction SilentlyContinue))
-        {
-            $file = 'RootLicenses.json'
-            $Script:RootTranslateCache = Get-Content -Path ($PSScriptRoot + [IO.Path]::DirectorySeparatorChar + 'Translations' + [IO.Path]::DirectorySeparatorChar + 'SKUTranslations' + [IO.Path]::DirectorySeparatorChar + $file) | ConvertFrom-Json
-        }
-        $Translatation = $Script:RootTranslateCache
+        [string]$translateString = $Script:translationFile.where({$_.String_Id -eq $SKU})[0].Product_Display_Name
     }
 
-    [string]$translateString = $Translatation.$SKU
     if ($translateString)
     {
         Write-Output $translateString
