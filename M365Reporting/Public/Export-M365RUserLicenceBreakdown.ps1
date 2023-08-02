@@ -82,6 +82,8 @@ function Export-M365RUserLicenceBreakdown {
         This example shows how to run the script interactively for the Company Contoso and does not give friendly names for SKUs
     #>
     [Alias("Export-M365RUserLicenseBreakdown")]
+    [Alias("Export-M365RMSOLUserLicenceBreakdown")]
+    [Alias("Export-M365RMSOLUserLicenseBreakdown")]
     [CmdletBinding(DefaultParameterSetName = 'DefaultParameters')]
     [OutputType([String])]
     param (
